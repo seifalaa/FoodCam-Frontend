@@ -9,6 +9,7 @@ class Signup extends StatefulWidget {
   _SignupState createState() => _SignupState();
 }
 
+//TODO: Refactor the fields to be separate widgets
 class _SignupState extends State<Signup> {
   GlobalKey _formKey = GlobalKey<FormState>();
 

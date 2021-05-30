@@ -35,38 +35,30 @@ class BG extends CustomPainter {
         0,
         160,
       ),
-      42.5,
-      circle2,
+      33,
+      circle3,
     );
     canvas.drawCircle(
       Offset(
         160,
-        0,
+        -50,
       ),
-      33,
-      circle3,
+      42.5,
+      circle2,
     );
     canvas.drawCircle(
       Offset(
         MediaQuery.of(context).size.width-165,
-        MediaQuery.of(context).size.height - 20,
+        MediaQuery.of(context).size.height - 40,
       ),
-      33,
-      circle3,
-    );
-    canvas.drawCircle(
-      Offset(
-        160,
-        0,
-      ),
-      33,
-      circle3,
+      42.5,
+      circle2,
     );
     canvas.drawCircle(
       Offset(MediaQuery.of(context).size.width,
           MediaQuery.of(context).size.height - 160),
-      42.5,
-      circle2,
+      33,
+      circle3,
     );
   }
 
