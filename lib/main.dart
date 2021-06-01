@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/pages/login.dart';
 import 'package:foodcam_frontend/pages/signup.dart';
 import 'package:foodcam_frontend/widgets/text_form_field.dart';
@@ -14,7 +15,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: Login(),
+      routes: {
+        'login': (context) => Login(),
+        'signup': (context) => Signup(),
+        'home': (context) => Home(),
+      },
+      initialRoute: 'home',
     );
   }
 }
