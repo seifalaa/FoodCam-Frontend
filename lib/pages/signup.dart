@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/controllers/auth_controller.dart';
+import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/widgets/login_bg.dart';
 import 'package:foodcam_frontend/widgets/text_form_field.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
@@ -10,17 +13,24 @@ class Signup extends StatefulWidget {
   _SignupState createState() => _SignupState();
 }
 
-//TODO: Refactor the fields to be separate widgets
 class _SignupState extends State<Signup> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _repasswordController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _rePasswordController = TextEditingController();
+  bool _isLoading = false;
+  AuthController _controller = AuthController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: LoadingOverlay(
+        isLoading: _isLoading,
+        color: Colors.black,
+        opacity: 0.3,
+        progressIndicator: CircularProgressIndicator(
+          color: KPrimaryColor,
+        ),
         child: Stack(
           children: [
             Container(
@@ -77,17 +87,16 @@ class _SignupState extends State<Signup> {
                             padding: const EdgeInsets.only(top: 20.0),
                             child: CustomTextFormField(
                               validator: (input) {
-                                var password = _passwordController.text;
                                 if (input == '') {
-                                  return 'Username cannot be empty';
+                                  return 'Repeat password cannot be empty';
                                 }
-                                if (password != input) {
-                                  return 'passwords is not identical';
+                                if (_passwordController.text != input) {
+                                  return 'Passwords is not identical';
                                 }
                                 return null;
                               },
-                              hint: "Repatpassword",
-                              controller: _repasswordController,
+                              hint: "Repeat password",
+                              controller: _rePasswordController,
                               isObscure: true,
                             ),
                           ),
@@ -95,9 +104,7 @@ class _SignupState extends State<Signup> {
                             padding: const EdgeInsets.only(top: 20.0),
                             child: ElevatedButton(
                               onPressed: () {
-                                if(_formKey.currentState!.validate()){}
-
-
+                                if (_formKey.currentState!.validate()) {}
                               },
                               style: ElevatedButton.styleFrom(
                                 primary: KPrimaryColor,
@@ -157,14 +164,40 @@ class _SignupState extends State<Signup> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              bool response =
+                                  await _controller.loginWithFacebook();
+                              if (response) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Home()),
+                                    (route) => false);
+                              }
+                            },
                             child: Image.asset(
                               'lib/assets/facebook.png',
                               width: 40,
                               height: 40,
                             )),
                         TextButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              bool response =
+                                  await _controller.loginWithGoogle();
+                              if (response) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Home()),
+                                    (route) => false);
+                              }
+                            },
                             child: Image.asset(
                               'lib/assets/search.png',
                               width: 40,
@@ -173,16 +206,18 @@ class _SignupState extends State<Signup> {
                       ],
                     ),
                   ),
-                /*  Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Have an account?'),
+                      Text('Already have an account?'),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                         child: Text('Login'),
                       )
                     ],
-                  ),*/
+                  ),
                 ],
               ),
             )

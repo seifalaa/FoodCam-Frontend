@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1097424995418",
+    "project_id": "django-social-auth-315508",
+    "storage_bucket": "django-social-auth-315508.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1097424995418:android:0b30784a1a29175dc00463",
+        "android_client_info": {
+          "package_name": "com.example.foodcam_frontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1097424995418-63qcnbhmgvfirf4s9tng2h197ore60aa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.foodcam_frontend",
+            "certificate_hash": "4ddbc77c71662eb31d0e6344d1f3783e2c854467"
+          }
+        },
+        {
+          "client_id": "1097424995418-sd55meeb11v9enecns5av24gn2pb1ahq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCXI4fq7vTvhXXsbQabLpZr_KT0jppbKg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1097424995418-jetk81lspm358rkr0b4gntuoa7b2jqhc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

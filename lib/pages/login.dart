@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
-import 'package:foodcam_frontend/controllers/login_controller.dart';
+import 'package:foodcam_frontend/controllers/auth_controller.dart';
 import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/pages/signup.dart';
 import 'package:foodcam_frontend/widgets/login_bg.dart';
@@ -16,10 +16,10 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final _controller = LoginController();
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  AuthController _controller = AuthController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
   @override
@@ -54,7 +54,7 @@ class _LoginState extends State<Login> {
                             'Login',
                             style: TextStyle(
                               color: KTextColor,
-                              fontSize: 30,
+                              fontSize: 35,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -108,9 +108,10 @@ class _LoginState extends State<Login> {
                                   setState(() {
                                     _isLoading = true;
                                   });
-                                  bool response = await _controller.getToken(
-                                      _usernameController.text,
-                                      _passwordController.text);
+                                  var response = await _controller
+                                      .loginWithEmailAndPassword(
+                                          _usernameController.text,
+                                          _passwordController.text);
                                   setState(() {
                                     _isLoading = false;
                                   });
@@ -182,7 +183,22 @@ class _LoginState extends State<Login> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            bool response =
+                                await _controller.loginWithFacebook();
+                            setState(() {
+                              _isLoading = false;
+                            });
+                            if (response) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => Home()),
+                              );
+                            }
+                          },
                           child: Image.asset(
                             'lib/assets/facebook.png',
                             width: 40,
@@ -190,7 +206,21 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            bool response = await _controller.loginWithGoogle();
+                            setState(() {
+                              _isLoading = false;
+                            });
+                            if (response) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => Home()),
+                              );
+                            }
+                          },
                           child: Image.asset(
                             'lib/assets/search.png',
                             width: 40,

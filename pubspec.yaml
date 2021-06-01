@@ -30,6 +30,8 @@ dependencies:
   cupertino_icons: ^1.0.3
   http: ^0.13.3
   loading_overlay: ^0.3.0
+  google_sign_in: ^5.0.4
+  flutter_facebook_auth: ^3.4.0
 
 dev_dependencies:
   flutter_test:
