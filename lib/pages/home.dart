@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
+import 'package:foodcam_frontend/widgets/drawer.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
 import 'package:foodcam_frontend/widgets/tab_view.dart';
 
@@ -30,7 +31,7 @@ class Home extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
       ),
-      drawer: Drawer(),
+      drawer: CustomDrawer(name: "Saeed Muhammed",),
       bottomNavigationBar: CustomButtonNavigationBar(),
       body: Center(
           child: CustomTabView(
