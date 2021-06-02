@@ -1,124 +1,125 @@
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 
-import 'Customize_drawer_listitem.dart';
+import 'drawer_list_item.dart';
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({ Key? key,
-  required this.name,
-  
-   }) : super(key: key);
+  const CustomDrawer({
+    Key? key,
+    required this.name,
+  }) : super(key: key);
   final name;
+
   @override
   Widget build(BuildContext context) {
     return Theme(
-        data:Theme.of(context).copyWith(canvasColor:Colors.grey[200]),
-        child: Drawer(
-          child: ListView(
-            children: [
-              Container(
-                height: 150.0,
-                margin: EdgeInsets.all(0.0),
-                padding: EdgeInsets.all(0.0),
-                child: DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: KSecondaryColor,
-                  ),
-                  child: Row(
-                    children: [
-                       ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: Image.asset(
-              'lib/assets/avatar.png',
-              width: 70,
-              height: 70,
-              fit: BoxFit.cover,
-            ),
-          ),
-                      Padding(
-                        padding: EdgeInsets.only(left:15.0),
-                        child: Text(
-                          name,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
-                            color: KTextColor,
-                          ),
-                        ),
-                         ),
-                                          ],
-                     
-                  ),
-                ),
+      data: Theme.of(context).copyWith(
+        canvasColor: Color(0xFFF6F6F6),
+      ),
+      child: Drawer(
+        child: Column(
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: KSecondaryColor,
               ),
-              Column(
-                mainAxisSize: MainAxisSize.max,
+              child: Row(
                 children: [
-                  SizedBox(height: 50.0),
-                  CustomDrawerListitem(
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image.asset(
+                      'lib/assets/avatar.png',
+                      width: 70,
+                      height: 70,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 15.0),
+                    child: Text(
+                      name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                        color: KTextColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  DrawerListItem(
                     text: "Account",
                     icon: Icons.person_outline_rounded,
                     onTap: () {},
                   ),
                   SizedBox(height: 25.0),
-                  CustomDrawerListitem(
+                  DrawerListItem(
                     text: "Collections",
                     icon: Icons.collections_bookmark,
                     onTap: () {},
                   ),
                   SizedBox(height: 25.0),
-                  CustomDrawerListitem(
+                  DrawerListItem(
                     text: "Allergy",
                     icon: Icons.no_food_outlined,
                     onTap: () {},
                   ),
                   SizedBox(height: 25.0),
-                  CustomDrawerListitem(
+                  DrawerListItem(
                     text: "Settings",
                     icon: Icons.settings_outlined,
                     onTap: () {},
                   ),
-                  
-              
-           
-             
-             Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,   
-                       children: [
-                         Text("Food Cam V1",style:TextStyle(
-
-                           color: KTextColor,
-                         ), ),
-                            ElevatedButton(
-                             
-                             style:ElevatedButton.styleFrom(
-                              primary: KPrimaryColor,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),  
-                               )   ,
-                             onPressed: () {}, child: Padding(
-                               padding:EdgeInsets.all(10.0),
-                               child: Text("Logout",style: TextStyle(
-                                 fontSize: 15.0,
-                               
-      
-                               ),),
-                             ),
-                             ),
-                         
-                       ],
-                                    ),
-             
-                  
-                 
-                
                 ],
               ),
-              
-              
-              
-            ],
-          ),
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        "Food Cam V0",
+                        style: TextStyle(
+                          color: Color(0x40262626),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: KPrimaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                            "Logout",
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 }

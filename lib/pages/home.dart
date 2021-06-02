@@ -3,6 +3,7 @@ import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/drawer.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
+import 'package:foodcam_frontend/widgets/search_delegate.dart';
 import 'package:foodcam_frontend/widgets/tab_view.dart';
 
 class Home extends StatelessWidget {
@@ -21,7 +22,12 @@ class Home extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: CustomSearchDelegate(),
+              );
+            },
             icon: Icon(
               Icons.search,
             ),
@@ -31,36 +37,39 @@ class Home extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
       ),
-      drawer: CustomDrawer(name: "Saeed Muhammed",),
+      drawer: CustomDrawer(
+        name: "Saeed Muhammed",
+      ),
       bottomNavigationBar: CustomButtonNavigationBar(),
       body: Center(
-          child: CustomTabView(
-        tabs: ['Top rated', 'Categories', 'Recently searched'],
-        pages: [
-          ListView(
-            children: [
-              RecipeBox(),
-              RecipeBox(),
-              RecipeBox(),
-              RecipeBox(),
-              RecipeBox(),
-              RecipeBox(),
-            ],
-          ),
-          Container(
-            color: Colors.green,
-            child: Center(
-              child: Text('page2'),
+        child: CustomTabView(
+          tabs: ['Top rated', 'Categories', 'Recently searched'],
+          pages: [
+            ListView(
+              children: [
+                RecipeBox(),
+                RecipeBox(),
+                RecipeBox(),
+                RecipeBox(),
+                RecipeBox(),
+                RecipeBox(),
+              ],
             ),
-          ),
-          Container(
-            color: Colors.blue,
-            child: Center(
-              child: Text('page3'),
+            Container(
+              color: Colors.green,
+              child: Center(
+                child: Text('page2'),
+              ),
             ),
-          ),
-        ],
-      )),
+            Container(
+              color: Colors.blue,
+              child: Center(
+                child: Text('page3'),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

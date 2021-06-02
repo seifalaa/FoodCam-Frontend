@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/pages/login.dart';
 import 'package:foodcam_frontend/pages/signup.dart';
@@ -12,6 +13,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primaryColor: KPrimaryColor,
+        splashColor: KSecondaryColor,
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: KPrimaryColor,
+        ),
+        scaffoldBackgroundColor: KBgColor,
+      ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       routes: {
