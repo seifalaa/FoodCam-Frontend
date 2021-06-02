@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/pages/login.dart';
 import 'package:foodcam_frontend/pages/signup.dart';
-import 'package:foodcam_frontend/widgets/text_form_field.dart';
 
 void main() {
   runApp(MyApp());

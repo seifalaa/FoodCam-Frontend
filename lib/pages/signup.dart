@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/auth_controller.dart';
 import 'package:foodcam_frontend/pages/home.dart';
-import 'package:foodcam_frontend/widgets/login_bg.dart';
+import 'package:foodcam_frontend/widgets/bg.dart';
 import 'package:foodcam_frontend/widgets/text_form_field.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
@@ -45,14 +45,14 @@ class _SignupState extends State<Signup> {
                   Form(
                     key: _formKey,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             "Create Account",
                             style: TextStyle(
-                              fontSize: 30,
+                              fontSize: 50,
                               color: KTextColor,
                               fontWeight: FontWeight.bold,
                             ),
@@ -115,7 +115,7 @@ class _SignupState extends State<Signup> {
                               child: Padding(
                                 padding: const EdgeInsets.all(15.0),
                                 child: Text(
-                                  "Create account",
+                                  "Create",
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,

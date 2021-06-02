@@ -34,7 +34,7 @@ class Home extends StatelessWidget {
       bottomNavigationBar: CustomButtonNavigationBar(),
       body: Center(
           child: CustomTabView(
-        tabs: ['tab1', 'tab2', 'tab3'],
+        tabs: ['Top rated', 'Categories', 'Recently searched'],
         pages: [
           ListView(
             children: [

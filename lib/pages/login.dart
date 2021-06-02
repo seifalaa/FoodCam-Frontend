@@ -4,7 +4,7 @@ import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/auth_controller.dart';
 import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/pages/signup.dart';
-import 'package:foodcam_frontend/widgets/login_bg.dart';
+import 'package:foodcam_frontend/widgets/bg.dart';
 import 'package:foodcam_frontend/widgets/text_form_field.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
@@ -46,7 +46,7 @@ class _LoginState extends State<Login> {
                   Form(
                     key: _formKey,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -54,8 +54,8 @@ class _LoginState extends State<Login> {
                             'Login',
                             style: TextStyle(
                               color: KTextColor,
-                              fontSize: 35,
                               fontWeight: FontWeight.bold,
+                              fontSize: 50,
                             ),
                           ),
                           SizedBox(
