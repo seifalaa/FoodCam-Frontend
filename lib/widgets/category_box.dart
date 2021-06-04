@@ -28,7 +28,7 @@ class CategoryBox extends StatelessWidget {
             height: 200,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: Color(0x30000000),
+              color: Color(0x70000000),
             ),
           ),
           Positioned(
@@ -44,12 +44,15 @@ class CategoryBox extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 20),
                 ),
-                Text(
-                  "6 Items",
-                  style: TextStyle(
-                      color: Color(0xFFFFC107),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: Text(
+                    "6 Recipes",
+                    style: TextStyle(
+                        color: Color(0xFFFFC107),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
+                  ),
                 ),
               ],
             ),

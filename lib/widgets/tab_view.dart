@@ -47,12 +47,10 @@ class _CustomTabViewState extends State<CustomTabView> {
                   children: widget.tabs.map((tab) {
                     var index = widget.tabs.indexOf(tab);
                     return TextButton(
-                      
                       style: TextButton.styleFrom(
                         backgroundColor:
                             index == _selectedTab ? KPrimaryColor : null,
                         shape: RoundedRectangleBorder(
-                          
                           borderRadius: BorderRadius.circular(100),
                         ),
                       ),
@@ -64,13 +62,19 @@ class _CustomTabViewState extends State<CustomTabView> {
                               curve: Curves.fastLinearToSlowEaseIn);
                         });
                       },
-                      child: Text(
-                        tab,
-                        style: TextStyle(
-                          color:
-                              index == _selectedTab ? Colors.white : KTextColor,
-                          fontWeight:
-                              index == _selectedTab ? FontWeight.bold : null,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                        ),
+                        child: Text(
+                          tab,
+                          style: TextStyle(
+                            color: index == _selectedTab
+                                ? Colors.white
+                                : KTextColor,
+                            fontWeight:
+                                index == _selectedTab ? FontWeight.bold : null,
+                          ),
                         ),
                       ),
                     );
@@ -81,7 +85,8 @@ class _CustomTabViewState extends State<CustomTabView> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 20.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
               child: PageView(
                 controller: _pageController,
                 onPageChanged: (pageIndex) {

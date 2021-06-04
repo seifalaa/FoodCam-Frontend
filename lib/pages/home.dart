@@ -6,6 +6,7 @@ import 'package:foodcam_frontend/widgets/drawer.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
 import 'package:foodcam_frontend/widgets/search_delegate.dart';
 import 'package:foodcam_frontend/widgets/tab_view.dart';
+import 'package:responsive_grid/responsive_grid.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -46,21 +47,32 @@ class Home extends StatelessWidget {
         child: CustomTabView(
           tabs: ['Top rated', 'Categories', 'Recently searched'],
           pages: [
+            GridView.count(
+                childAspectRatio: 2,
+                crossAxisCount:
+                    MediaQuery.of(context).size.width <= KMobileScreenSize
+                        ? 1
+                        : 2,
+                children: [
+                  RecipeBox(),
+                  RecipeBox(),
+                  RecipeBox(),
+                  RecipeBox(),
+                ]),
             ListView(
               children: [
-                RecipeBox(),
-                RecipeBox(),
-                RecipeBox(),
-                RecipeBox(),
-                RecipeBox(),
-                RecipeBox(),
-              ],
-            ),
-           ListView(
-              children: [
-                CategoryBox(imagePath:'lib/assets/breakfast2.jpg' ,category: 'Breakfast',),
-                CategoryBox(imagePath:'lib/assets/lunch2.jpg' ,category: 'Lunch',),
-                CategoryBox(imagePath:'lib/assets/dinner2.jpg' ,category: 'Dinner',),
+                CategoryBox(
+                  imagePath: 'lib/assets/breakfast2.jpg',
+                  category: 'Breakfast',
+                ),
+                CategoryBox(
+                  imagePath: 'lib/assets/lunch2.jpg',
+                  category: 'Lunch',
+                ),
+                CategoryBox(
+                  imagePath: 'lib/assets/dinner2.jpg',
+                  category: 'Dinner',
+                ),
               ],
             ),
             Container(
