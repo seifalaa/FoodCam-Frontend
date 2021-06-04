@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
+import 'package:foodcam_frontend/widgets/category_box.dart';
 import 'package:foodcam_frontend/widgets/drawer.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
 import 'package:foodcam_frontend/widgets/search_delegate.dart';
@@ -55,11 +56,12 @@ class Home extends StatelessWidget {
                 RecipeBox(),
               ],
             ),
-            Container(
-              color: Colors.green,
-              child: Center(
-                child: Text('page2'),
-              ),
+           ListView(
+              children: [
+                CategoryBox(imagePath:'lib/assets/breakfast2.jpg' ,category: 'Breakfast',),
+                CategoryBox(imagePath:'lib/assets/lunch2.jpg' ,category: 'Lunch',),
+                CategoryBox(imagePath:'lib/assets/dinner2.jpg' ,category: 'Dinner',),
+              ],
             ),
             Container(
               color: Colors.blue,

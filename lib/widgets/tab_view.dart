@@ -47,10 +47,12 @@ class _CustomTabViewState extends State<CustomTabView> {
                   children: widget.tabs.map((tab) {
                     var index = widget.tabs.indexOf(tab);
                     return TextButton(
+                      
                       style: TextButton.styleFrom(
                         backgroundColor:
                             index == _selectedTab ? KPrimaryColor : null,
                         shape: RoundedRectangleBorder(
+                          
                           borderRadius: BorderRadius.circular(100),
                         ),
                       ),
