@@ -12,7 +12,7 @@ class CustomButtonNavigationBar extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 20.0),
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.08,
+        height:  MediaQuery.of(context).size.height * 0.08,
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -88,8 +88,9 @@ class CustomButtonNavigationBar extends StatelessWidget {
                   onTap: () {},
                   borderRadius: BorderRadius.circular(100),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                padding: const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 0.0),
                     child: Column(
+                      
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
