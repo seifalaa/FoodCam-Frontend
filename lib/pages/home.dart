@@ -59,9 +59,15 @@ class Home extends StatelessWidget {
                   RecipeBox(),
                   RecipeBox(),
                 ]),
-            ListView(
-              children: [
-                CategoryBox(
+
+                GridView.count(
+                childAspectRatio: 2,
+                crossAxisCount:
+                    MediaQuery.of(context).size.width <= KMobileScreenSize
+                        ? 1
+                        : 2,
+                children: [
+                  CategoryBox(
                   imagePath: 'lib/assets/breakfast2.jpg',
                   category: 'Breakfast',
                 ),
@@ -73,8 +79,9 @@ class Home extends StatelessWidget {
                   imagePath: 'lib/assets/dinner2.jpg',
                   category: 'Dinner',
                 ),
-              ],
-            ),
+                  
+                ]),
+           
             Container(
               color: Colors.blue,
               child: Center(
