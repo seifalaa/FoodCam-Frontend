@@ -5,11 +5,11 @@ class DrawerListItem extends StatelessWidget {
   const DrawerListItem({
     Key? key,
     required this.text,
-    required this.iconPath,
+    required this.icon,
     required this.onTap,
   }) : super(key: key);
   final text;
-  final iconPath;
+  final icon;
   final onTap;
 
   @override
@@ -41,10 +41,7 @@ class DrawerListItem extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Row(
                 children: [
-                  Image.asset(iconPath,
-                  width: 20.0,
-                  height: 20.0,
-                  ),
+                  icon,
                   Padding(
                     padding: EdgeInsets.only(left: 15.0),
                     child: Text(

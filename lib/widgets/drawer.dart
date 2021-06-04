@@ -55,25 +55,25 @@ class CustomDrawer extends StatelessWidget {
                 children: [
                   DrawerListItem(
                     text: "Account",
-                    iconPath: 'lib/assets/user.png',
+                    icon: Icon(Icons.person_rounded),
                     onTap: () {},
                   ),
                   SizedBox(height: 25.0),
                   DrawerListItem(
                     text: "Collections",
-                    iconPath: 'lib/assets/window.png',
+                    icon: Icon(Icons.list_rounded),
                     onTap: () {},
                   ),
                   SizedBox(height: 25.0),
                   DrawerListItem(
                     text: "Allergy",
-                    iconPath: 'lib/assets/allergy.png',
+                    icon: Icon(Icons.no_food_rounded),
                     onTap: () {},
                   ),
                   SizedBox(height: 25.0),
                   DrawerListItem(
                     text: "Settings",
-                    iconPath: 'lib/assets/settings.png',
+                    icon: Icon(Icons.settings_rounded),
                     onTap: () {},
                   ),
                 ],

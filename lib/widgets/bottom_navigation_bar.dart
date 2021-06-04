@@ -12,15 +12,14 @@ class CustomButtonNavigationBar extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 20.0),
       child: Container(
-        height:  MediaQuery.of(context).size.height * 0.08,
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Color(0x66000000),
-              offset: Offset(0, 2),
+              color: Color(0x77000000),
+              offset: Offset(1, 3),
               blurRadius: 4,
-              spreadRadius: 0,
+              spreadRadius: 2,
             )
           ],
           borderRadius: BorderRadius.circular(100),
@@ -65,18 +64,22 @@ class CustomButtonNavigationBar extends StatelessWidget {
                   ),
                 ),
               ),
-              Material(
-                color: KPrimaryColor,
-                borderRadius: BorderRadius.circular(100),
-                child: InkWell(
-                  splashColor: Colors.white24,
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Material(
+                  color: KPrimaryColor,
                   borderRadius: BorderRadius.circular(100),
-                  onTap: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Icon(
-                      Icons.camera,
-                      color: Colors.white,
+                  child: InkWell(
+                    splashColor: Colors.white24,
+                    borderRadius: BorderRadius.circular(100),
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Icon(
+                        Icons.camera,
+                        size: 25,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

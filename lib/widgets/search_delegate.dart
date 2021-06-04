@@ -113,7 +113,8 @@ class CustomSearchDelegate extends SearchDelegate {
                             for (var i = 0; i < 5; i++)
                               Icon(
                                 Icons.star_rounded,
-                                color: Colors.orangeAccent,
+                                color: Color(0xFFFFC107),
+
                               )
                           ],
                         ),
@@ -247,7 +248,8 @@ class CustomSearchDelegate extends SearchDelegate {
                               for (var i = 0; i < 5; i++)
                                 Icon(
                                   Icons.star_rounded,
-                                  color: Colors.orangeAccent,
+                                  color: Color(0xFFFFC107),
+
                                 )
                             ],
                           ),

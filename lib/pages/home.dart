@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
@@ -6,7 +7,6 @@ import 'package:foodcam_frontend/widgets/drawer.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
 import 'package:foodcam_frontend/widgets/search_delegate.dart';
 import 'package:foodcam_frontend/widgets/tab_view.dart';
-import 'package:responsive_grid/responsive_grid.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -42,47 +42,56 @@ class Home extends StatelessWidget {
       drawer: CustomDrawer(
         name: "Saeed Muhammed",
       ),
-      bottomNavigationBar: CustomButtonNavigationBar(),
-      body: Center(
-        child: CustomTabView(
-          tabs: ['Top rated', 'Categories', 'Recently searched'],
-          pages: [
-            GridView.count(
-                childAspectRatio: 2,
-                crossAxisCount:
-                    MediaQuery.of(context).size.width <= KMobileScreenSize
-                        ? 1
-                        : 2,
-                children: [
-                  RecipeBox(),
-                  RecipeBox(),
-                  RecipeBox(),
-                  RecipeBox(),
-                ]),
-            ListView(
-              children: [
-                CategoryBox(
-                  imagePath: 'lib/assets/breakfast2.jpg',
-                  category: 'Breakfast',
+      body: Stack(
+        children: [
+          Center(
+            child: CustomTabView(
+              tabs: ['Top rated', 'Categories', 'Recently searched'],
+              pages: [
+                GridView.count(
+                    childAspectRatio: 2,
+                    crossAxisCount:
+                        MediaQuery.of(context).size.width <= KMobileScreenSize
+                            ? 1
+                            : 2,
+                    children: [
+                      RecipeBox(),
+                      RecipeBox(),
+                      RecipeBox(),
+                      RecipeBox(),
+                    ]),
+                ListView(
+                  children: [
+                    CategoryBox(
+                      imagePath: 'lib/assets/breakfast2.jpg',
+                      category: 'Breakfast',
+                    ),
+                    CategoryBox(
+                      imagePath: 'lib/assets/lunch2.jpg',
+                      category: 'Lunch',
+                    ),
+                    CategoryBox(
+                      imagePath: 'lib/assets/dinner2.jpg',
+                      category: 'Dinner',
+                    ),
+                  ],
                 ),
-                CategoryBox(
-                  imagePath: 'lib/assets/lunch2.jpg',
-                  category: 'Lunch',
-                ),
-                CategoryBox(
-                  imagePath: 'lib/assets/dinner2.jpg',
-                  category: 'Dinner',
+                Container(
+                  color: Colors.blue,
+                  child: Center(
+                    child: Text('page3'),
+                  ),
                 ),
               ],
             ),
-            Container(
-              color: Colors.blue,
-              child: Center(
-                child: Text('page3'),
-              ),
-            ),
-          ],
-        ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 10,
+            child: CustomButtonNavigationBar(),
+          ),
+        ],
       ),
     );
   }
