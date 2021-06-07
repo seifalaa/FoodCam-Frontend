@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/auth_controller.dart';
 import 'package:foodcam_frontend/pages/home.dart';
-import 'package:foodcam_frontend/pages/signup.dart';
+import 'package:foodcam_frontend/pages/signup1.dart';
+import 'package:foodcam_frontend/pages/signup2.dart';
 import 'package:foodcam_frontend/widgets/bg.dart';
 import 'package:foodcam_frontend/widgets/text_form_field.dart';
 import 'package:loading_overlay/loading_overlay.dart';
@@ -238,7 +239,7 @@ class _LoginState extends State<Login> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Signup()),
+                            MaterialPageRoute(builder: (context) => Signup1()),
                           );
                         },
                         child: Text('Signup'),

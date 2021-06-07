@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/pages/email_verification.dart';
 import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/pages/login.dart';
-import 'package:foodcam_frontend/pages/signup.dart';
+import 'package:foodcam_frontend/pages/signup1.dart';
+import 'package:foodcam_frontend/pages/signup2.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,11 +26,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       routes: {
-        'login': (context) => Login(),
-        'signup': (context) => Signup(),
-        'home': (context) => Home(),
+        'login/': (context) => Login(),
+        'signup/': (context) => Signup1(),
+        'home/': (context) => Home(),
       },
-      initialRoute: 'home',
+      initialRoute: 'signup/',
     );
   }
 }

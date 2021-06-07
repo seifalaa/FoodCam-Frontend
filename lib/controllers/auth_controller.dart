@@ -76,4 +76,24 @@ class AuthController {
       return false;
     }
   }
+
+  Future<bool> register(
+      username, email, password, password2, firstName, lastName) async {
+    var url = Uri.parse('http://10.0.2.2:8000/register/');
+    var response = await http.post(url,
+        body: convert.jsonEncode(<String, dynamic>{
+          'username': username,
+          'email': email,
+          'password1': password,
+          'password2': password2,
+          'first_name': firstName,
+          'last_name': lastName,
+        }),
+        headers: {'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
