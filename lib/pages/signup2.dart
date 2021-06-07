@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/auth_controller.dart';
@@ -16,8 +17,11 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _usernameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _rePasswordController = TextEditingController();
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
   bool _isLoading = false;
   AuthController _controller = AuthController();
 
@@ -61,21 +65,59 @@ class _SignupState extends State<Signup> {
                             height: 50,
                           ),
                           CustomTextFormField(
-                            validator: (input) {
-                              return input == ''
-                                  ? 'Username cannot be empty'
-                                  : null;
-                            },
-                            hint: "Username",
-                            controller: _usernameController,
-                            isObscure: false,
+                              validator: (input) {
+                                return input == ''
+                                    ? 'First name cannot be empty'
+                                    : null;
+                              },
+                              hint: 'First name',
+                              controller: _firstNameController,
+                              isObscure: false),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20.0),
+                            child: CustomTextFormField(
+                              validator: (input) {
+                                return input == ''
+                                    ? 'Last name cannot be empty'
+                                    : null;
+                              },
+                              hint: 'Last name',
+                              controller: _lastNameController,
+                              isObscure: false,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top:20.0),
+                            child: CustomTextFormField(
+                              validator: (input) {
+                                return input == ''
+                                    ? 'Username cannot be empty'
+                                    : null;
+                              },
+                              hint: "Username",
+                              controller: _usernameController,
+                              isObscure: false,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top:20.0),
+                            child: CustomTextFormField(
+                              validator: (input) {
+                                return input == ''
+                                    ? 'Email cannot be empty'
+                                    : null;
+                              },
+                              hint: "Email",
+                              controller: _emailController,
+                              isObscure: false,
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 20.0),
                             child: CustomTextFormField(
                               validator: (input) {
                                 return input == ''
-                                    ? 'password cannot be empty'
+                                    ? 'Password cannot be empty'
                                     : null;
                               },
                               hint: "Password",
