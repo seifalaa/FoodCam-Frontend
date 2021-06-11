@@ -4,8 +4,10 @@ import 'package:foodcam_frontend/pages/collections_page.dart';
 import 'package:foodcam_frontend/pages/email_verification.dart';
 import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/pages/login.dart';
+import 'package:foodcam_frontend/pages/preferred_ingredients.dart';
 import 'package:foodcam_frontend/pages/profile.dart';
 import 'package:foodcam_frontend/pages/recipe_page.dart';
+import 'package:foodcam_frontend/pages/collections_recipes_page.dart';
 import 'package:foodcam_frontend/pages/signup1.dart';
 import 'package:foodcam_frontend/pages/signup2.dart';
 
@@ -34,8 +36,9 @@ class MyApp extends StatelessWidget {
         'signup/': (context) => Signup1(),
         'home/': (context) => Home(),
         'profile/': (context) => Profile(),
+        'collections/': (context) => CollectionPage(),  
       },
-      // home: CollectionPage(),
+      //home: PreferrredIngredients(),
       initialRoute: 'home/',
     );
   }

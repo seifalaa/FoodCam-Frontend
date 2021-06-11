@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foodcam_frontend/pages/collections_recipes_page.dart';
+import 'package:foodcam_frontend/pages/recipe_page.dart';
 
 import '../constants.dart';
 
@@ -8,10 +10,14 @@ class CollectionBox extends StatelessWidget {
     required this.imagePath,
     required this.category,
     this.recipeNumber,
+    required this.isRescipe,
+    required this.isIngredient,
   }) : super(key: key);
   final imagePath;
   final recipeNumber;
   final category;
+  final bool isRescipe;
+  final bool isIngredient;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +87,27 @@ class CollectionBox extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               highlightColor: Colors.transparent,
               splashColor: Color(0x50D0F1DD),
-              onTap: () {},
+              onTap: () {
+                if(!isRescipe && !isIngredient){
+                 Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CollectionsRecipes( collectionName: category ,),
+                            ),
+                          );
+                }
+                if(isRescipe){
+                     Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RecipePage(),
+                            ),
+                          );
+
+                }
+                 
+
+              },
               onLongPress: () {
                 showModalBottomSheet(
                   isScrollControlled: true,
