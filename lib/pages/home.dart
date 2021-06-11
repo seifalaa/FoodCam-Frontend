@@ -13,85 +13,116 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: KTextColor),
-        title: Text(
-          'Home',
-          style: TextStyle(
-            color: KTextColor,
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        extendBody: true,
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: KTextColor),
+          title: Text(
+            'Home',
+            style: TextStyle(
+              color: KTextColor,
+            ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: CustomSearchDelegate(),
+                );
+              },
+              icon: Icon(
+                Icons.search,
+              ),
+            ),
+          ],
+          backgroundColor: Colors.white,
+          elevation: 1,
+          centerTitle: true,
+          bottom: const TabBar(
+            labelPadding: EdgeInsets.all(10.0),
+            indicatorColor: KPrimaryColor,
+            labelStyle: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+            ),
+            labelColor: KPrimaryColor,
+            unselectedLabelColor: KTextColor,
+            unselectedLabelStyle: TextStyle(
+              fontSize: 17,
+            ),
+            tabs: [
+              Text(
+                'Top Rated',
+              ),
+              Text(
+                'Categories',
+              ),
+              Text(
+                'Recently Searched',
+              ),
+            ],
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: CustomSearchDelegate(),
-              );
-            },
-            icon: Icon(
-              Icons.search,
+        body: TabBarView(
+          children: [
+            GridView.builder(
+              itemCount: 50,
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 600,
+                childAspectRatio: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                return RecipeBox();
+              },
             ),
-          ),
-        ],
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-      ),
-      drawer: CustomDrawer(
-        name: "Saeed Muhammed",
-      ),
-      body: Stack(
-        children: [
-          Center(
-            child: CustomTabView(
-              tabs: ['Top rated', 'Categories', 'Recently searched'],
-              pages: [
-                GridView.count(
-                    childAspectRatio: 2,
-                    crossAxisCount:
-                        MediaQuery.of(context).size.width <= KMobileScreenSize
-                            ? 1
-                            : 2,
-                    children: [
-                      RecipeBox(),
-                      RecipeBox(),
-                      RecipeBox(),
-                      RecipeBox(),
-                    ]),
-                ListView(
-                  children: [
-                    CategoryBox(
-                      imagePath: 'lib/assets/breakfast2.jpg',
-                      category: 'Breakfast',
-                    ),
-                    CategoryBox(
-                      imagePath: 'lib/assets/lunch2.jpg',
-                      category: 'Lunch',
-                    ),
-                    CategoryBox(
-                      imagePath: 'lib/assets/dinner2.jpg',
-                      category: 'Dinner',
-                    ),
-                  ],
-                ),
-                Container(
-                  color: Colors.blue,
-                  child: Center(
-                    child: Text('page3'),
-                  ),
-                ),
-              ],
+            GridView.builder(
+              itemCount: 50,
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 600,
+                  childAspectRatio: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                return RecipeBox();
+              },
             ),
+            GridView.builder(
+              itemCount: 50,
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 600,
+                  childAspectRatio: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                return RecipeBox();
+              },
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          elevation: 20,
+          backgroundColor: KPrimaryColor,
+          child: Icon(
+            Icons.shopping_basket_rounded,
+            color: Colors.white,
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 10,
-            child: CustomButtonNavigationBar(),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: ClipRRect(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(20),
+            topLeft: Radius.circular(20),
           ),
-        ],
+          child: const CustomButtonNavigationBar(),
+        ),
       ),
     );
   }

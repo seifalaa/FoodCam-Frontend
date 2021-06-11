@@ -38,7 +38,7 @@ class DrawerListItem extends StatelessWidget {
             // splashColor: Colors.yellow,
             borderRadius: BorderRadius.circular(100),
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 20.0),
               child: Row(
                 children: [
                   icon,

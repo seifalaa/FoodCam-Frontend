@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/pages/recipe_page.dart';
 
 class RecipeBox extends StatelessWidget {
   const RecipeBox({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class RecipeBox extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
-                'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.jpg',
+                'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
                 fit: BoxFit.cover,
               ),
             ),
@@ -79,7 +80,14 @@ class RecipeBox extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               highlightColor: Colors.transparent,
               splashColor: Color(0x50D0F1DD),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RecipePage(),
+                  ),
+                );
+              },
             ),
           )),
         ],

@@ -9,3 +9,12 @@ const KClientSecret =
     'Xk2Aphx090vmyoaflMkFL3ylTnRWrFU2BDgGBHxGIu0PTKFsP3RfhxWv2qKZrANhmlnItDCrTF5HCMEeNqT6djkIbCicJ9gip6onmVXwZa9sBlUgqVLm17bg18b5MpsA';
 const KMobileScreenSize = 500;
 const KTabletScreenSize = 768;
+
+Widget makeDismissible({required Widget child,required BuildContext context}) => GestureDetector(
+  behavior: HitTestBehavior.opaque,
+  onTap: () => Navigator.of(context).pop(),
+  child: GestureDetector(
+    onTap: () {},
+    child: child,
+  ),
+);

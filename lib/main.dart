@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/pages/collections_page.dart';
 import 'package:foodcam_frontend/pages/email_verification.dart';
 import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/pages/login.dart';
+import 'package:foodcam_frontend/pages/profile.dart';
+import 'package:foodcam_frontend/pages/recipe_page.dart';
 import 'package:foodcam_frontend/pages/signup1.dart';
 import 'package:foodcam_frontend/pages/signup2.dart';
 
@@ -16,6 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        accentColor: KSecondaryColor,
         primaryColor: KPrimaryColor,
         splashColor: KSecondaryColor,
         textSelectionTheme: TextSelectionThemeData(
@@ -29,8 +33,10 @@ class MyApp extends StatelessWidget {
         'login/': (context) => Login(),
         'signup/': (context) => Signup1(),
         'home/': (context) => Home(),
+        'profile/': (context) => Profile(),
       },
-      initialRoute: 'signup/',
+      // home: CollectionPage(),
+      initialRoute: 'home/',
     );
   }
 }
