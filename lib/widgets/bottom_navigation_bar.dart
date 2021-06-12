@@ -193,7 +193,7 @@ class CustomButtonNavigationBar extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             color: ModalRoute.of(context)!.settings.name ==
-                                    'profile/'
+                                    'profile/' 
                                 ? KPrimaryColor
                                 : Color(0x70262626),
                           ),

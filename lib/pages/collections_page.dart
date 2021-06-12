@@ -19,6 +19,7 @@ class _CollectionPageState extends State<CollectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       extendBody: true,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
@@ -59,26 +60,36 @@ class _CollectionPageState extends State<CollectionPage> {
             category: 'test',
             imagePath: 'lib/assets/breakfast2.jpg',
             recipeNumber: 'test',
+            isRescipe: false,
+            isIngredient: false,
+          ),
+          CollectionBox(
+            category: 'test2',
+            imagePath: 'lib/assets/breakfast2.jpg',
+            recipeNumber: 'test',
+            isRescipe: false,
+            isIngredient: false,
           ),
           CollectionBox(
             category: 'test',
             imagePath: 'lib/assets/breakfast2.jpg',
             recipeNumber: 'test',
+            isRescipe: false,
+            isIngredient: false,
           ),
           CollectionBox(
             category: 'test',
             imagePath: 'lib/assets/breakfast2.jpg',
             recipeNumber: 'test',
+            isRescipe: false,
+            isIngredient: false,
           ),
           CollectionBox(
             category: 'test',
             imagePath: 'lib/assets/breakfast2.jpg',
             recipeNumber: 'test',
-          ),
-          CollectionBox(
-            category: 'test',
-            imagePath: 'lib/assets/breakfast2.jpg',
-            recipeNumber: 'test',
+            isRescipe: false,
+            isIngredient: false,
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),

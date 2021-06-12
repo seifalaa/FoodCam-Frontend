@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/pages/allergies_page.dart';
 import 'package:foodcam_frontend/pages/collections_page.dart';
+import 'package:foodcam_frontend/pages/dispreferred_ingredients.dart';
+import 'package:foodcam_frontend/pages/preferred_ingredients.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/drawer_list_item.dart';
 
@@ -13,6 +15,7 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       extendBody: true,
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         backgroundColor: KPrimaryColor,
@@ -183,7 +186,16 @@ class Profile extends StatelessWidget {
                           Icons.arrow_forward_rounded,
                           color: KPrimaryColor,
                         ),
-                        onTap: () {},
+                        onTap: () {
+
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PreferrredIngredients(),
+                            ),
+                          );
+
+                        },
                       ),
                     ),
                   ),
@@ -207,7 +219,16 @@ class Profile extends StatelessWidget {
                           Icons.arrow_forward_rounded,
                           color: KPrimaryColor,
                         ),
-                        onTap: () {},
+                        onTap: () {
+
+                              Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DisPreferrredIngredients(),
+                            ),
+                          );
+
+                        },
                       ),
                     ),
                   ),
