@@ -15,5 +15,12 @@
     "knowYourName": "Let us know your name!",
     "haveAccount": "Already have an account?",
     "fnameError": "First name cannot be empty!",
-    "lnameError": "Last name cannot be empty!"
+    "lnameError": "Last name cannot be empty!",
+	"hi": "Hi, ",
+	"continueAccountSetup": "Let us continue your account setup!",
+	"emailError": "Email cannot be empty!",
+	"repeatPassword": "Repeat password",
+	"repeatPasswordError": "Repeat password cannot be empty!",
+	"repeatPasswordErrorIdentical": "Passwords do not match!",
+	"create": "Create"
 }

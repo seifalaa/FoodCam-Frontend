@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/widgets/text_form_field.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants.dart';
@@ -25,7 +24,6 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     double _screenWidth = MediaQuery.of(context).size.width;
-    double _screenHeight = MediaQuery.of(context).size.height;
     return Form(
       key: widget.formKey,
       child: Padding(
@@ -46,7 +44,9 @@ class _LoginFormState extends State<LoginForm> {
             ),
             CustomTextFormField(
               validator: (input) {
-                return input == '' ? AppLocalizations.of(context)!.usernameError : null;
+                return input == ''
+                    ? AppLocalizations.of(context)!.usernameError
+                    : null;
               },
               hint: AppLocalizations.of(context)!.username,
               controller: widget.usernameController,
@@ -58,7 +58,9 @@ class _LoginFormState extends State<LoginForm> {
                 controller: widget.passwordController,
                 hint: AppLocalizations.of(context)!.password,
                 validator: (input) {
-                  return input == '' ? AppLocalizations.of(context)!.passwordError : null;
+                  return input == ''
+                      ? AppLocalizations.of(context)!.passwordError
+                      : null;
                 },
                 isObscure: true,
               ),
@@ -88,11 +90,14 @@ class _LoginFormState extends State<LoginForm> {
                   widget.onLogin();
                 },
                 child: Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10.0,
+                    vertical: 15.0,
+                  ),
                   child: Text(
                     AppLocalizations.of(context)!.login,
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: _screenWidth * 0.04,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

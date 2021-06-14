@@ -15,5 +15,12 @@
     "knowYourName": "عرفنا بنفسك!",
     "haveAccount": "تمتلك حساب بالفعل؟",
     "fnameError": "الأسم الأول يجب ألا يكون فارغاً!",
-    "lnameError": "اللقب يجب ألا يكون فارغاً!"
+    "lnameError": "اللقب يجب ألا يكون فارغاً!",
+	"hi": "أهلاً, ",
+	"continueAccountSetup": "دعنا نكمل إعداد حسابك!",
+	"emailError": "البريدالألكتروني يجب ألا يكون فارغاً!",
+	"repeatPassword": "أعد كلمة السر",
+	"repeatPasswordError": "إعادة كلمة السر يجب ألا تكون فارغة!",
+	"repeatPasswordErrorIdentical": "كلمات السر غير متطابقة!",
+	"create": "إنشاء"
 }
