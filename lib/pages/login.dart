@@ -4,10 +4,11 @@ import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/auth_controller.dart';
 import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/pages/signup1.dart';
-import 'package:foodcam_frontend/pages/signup2.dart';
 import 'package:foodcam_frontend/widgets/bg.dart';
-import 'package:foodcam_frontend/widgets/text_form_field.dart';
+import 'package:foodcam_frontend/widgets/login_form.dart';
+import 'package:foodcam_frontend/widgets/social_auth.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -44,197 +45,23 @@ class _LoginState extends State<Login> {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  Form(
-                    key: _formKey,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Login',
-                            style: TextStyle(
-                              color: KTextColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 50,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          CustomTextFormField(
-                            validator: (input) {
-                              return input == ''
-                                  ? 'Username cannot be empty'
-                                  : null;
-                            },
-                            hint: 'Username',
-                            controller: _usernameController,
-                            isObscure: false,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: CustomTextFormField(
-                              controller: _passwordController,
-                              hint: 'Password',
-                              validator: (input) {
-                                return input == ''
-                                    ? 'Password cannot be empty'
-                                    : null;
-                              },
-                              isObscure: true,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                onPressed: () {},
-                                child: Text('forget your password?'),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: KPrimaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                              ),
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  setState(() {
-                                    _isLoading = true;
-                                  });
-                                  var response = await _controller
-                                      .loginWithEmailAndPassword(
-                                          _usernameController.text,
-                                          _passwordController.text);
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                  if (!response) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text('Invalid Credentials'),
-                                      ),
-                                    );
-                                  } else {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Home(),
-                                      ),
-                                    );
-                                  }
-                                }
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Text(
-                                  'Login',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                  LoginForm(
+                    usernameController: _usernameController,
+                    passwordController: _passwordController,
+                    formKey: _formKey,
+                    onLogin: onLogin,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 40.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: KTextColor,
-                            thickness: 2,
-                            indent: 50,
-                            endIndent: 5,
-                          ),
-                        ),
-                        Text(
-                          'Or with',
-                          style: TextStyle(
-                            color: KTextColor,
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: KTextColor,
-                            thickness: 2,
-                            indent: 5,
-                            endIndent: 50,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          onPressed: () async {
-                            setState(() {
-                              _isLoading = true;
-                            });
-                            bool response =
-                                await _controller.loginWithFacebook();
-                            setState(() {
-                              _isLoading = false;
-                            });
-                            if (response) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => Home()),
-                              );
-                            }
-                          },
-                          child: Image.asset(
-                            'lib/assets/facebook.png',
-                            width: 40,
-                            height: 40,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            setState(() {
-                              _isLoading = true;
-                            });
-                            bool response = await _controller.loginWithGoogle();
-                            setState(() {
-                              _isLoading = false;
-                            });
-                            if (response) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => Home()),
-                              );
-                            }
-                          },
-                          child: Image.asset(
-                            'lib/assets/search.png',
-                            width: 40,
-                            height: 40,
-                          ),
-                        ),
-                      ],
+                    child: SocialAuth(
+                      onFacebookAuth: onFacebookAuth,
+                      onGoogleAuth: onGoogleAuth,
                     ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Don\'t have an account?'),
+                      Text(AppLocalizations.of(context)!.dontHaveAccount),
                       TextButton(
                         onPressed: () {
                           Navigator.push(
@@ -242,7 +69,7 @@ class _LoginState extends State<Login> {
                             MaterialPageRoute(builder: (context) => Signup1()),
                           );
                         },
-                        child: Text('Signup'),
+                        child: Text(AppLocalizations.of(context)!.signup),
                       )
                     ],
                   ),
@@ -253,5 +80,64 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  void onLogin() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      var response = await _controller.loginWithEmailAndPassword(
+          _usernameController.text, _passwordController.text);
+      setState(() {
+        _isLoading = false;
+      });
+      if (!response) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Invalid Credentials'),
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Home(),
+          ),
+        );
+      }
+    }
+  }
+
+  void onGoogleAuth() async {
+    setState(() {
+      _isLoading = true;
+    });
+    bool response = await _controller.loginWithGoogle();
+    setState(() {
+      _isLoading = false;
+    });
+    if (response) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Home()),
+      );
+    }
+  }
+
+  void onFacebookAuth() async {
+    setState(() {
+      _isLoading = true;
+    });
+    bool response = await _controller.loginWithFacebook();
+    setState(() {
+      _isLoading = false;
+    });
+    if (response) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Home()),
+      );
+    }
   }
 }

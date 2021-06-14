@@ -15,6 +15,7 @@ class AllergiesPage extends StatefulWidget {
 
 class _AllergiesPageState extends State<AllergiesPage> {
   AllergyProvider _allergyProvider = AllergyProvider();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -184,6 +185,8 @@ class _AllergiesPageState extends State<AllergiesPage> {
                             imagePath:
                                 'lib/assets/5dad7f27320ca_HERO-alergia-al-pescado.jpg',
                             category: _allergyProvider.allergies[i],
+                            isRecipe: false,
+                            isIngredient: true,
                           ),
                         ),
                         Visibility(
@@ -201,7 +204,8 @@ class _AllergiesPageState extends State<AllergiesPage> {
                                     style: ElevatedButton.styleFrom(
                                       primary: Colors.red,
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(100),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
                                       ),
                                     ),
                                     onPressed: () {},

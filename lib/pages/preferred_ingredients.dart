@@ -64,22 +64,14 @@ class _PreferrredIngredientsState extends State<PreferrredIngredients> {
           CollectionBox(
             category: 'Meat',
             imagePath: 'lib/assets/meat-80049790.png',
-            isRescipe: false,
+            isRecipe: false,
             isIngredient: true,
             
           ),
           CollectionBox(
             category: 'Meat',
             imagePath: 'lib/assets/meat-80049790.png',
-                        isRescipe: false,
-            isIngredient: true,
-
-            
-          ),
-          CollectionBox(
-            category: 'Meat',
-            imagePath: 'lib/assets/meat-80049790.png',
-                        isRescipe: false,
+                        isRecipe: false,
             isIngredient: true,
 
             
@@ -87,7 +79,7 @@ class _PreferrredIngredientsState extends State<PreferrredIngredients> {
           CollectionBox(
             category: 'Meat',
             imagePath: 'lib/assets/meat-80049790.png',
-            isRescipe: false,
+                        isRecipe: false,
             isIngredient: true,
 
             
@@ -95,7 +87,15 @@ class _PreferrredIngredientsState extends State<PreferrredIngredients> {
           CollectionBox(
             category: 'Meat',
             imagePath: 'lib/assets/meat-80049790.png',
-                        isRescipe: false,
+            isRecipe: false,
+            isIngredient: true,
+
+            
+          ),
+          CollectionBox(
+            category: 'Meat',
+            imagePath: 'lib/assets/meat-80049790.png',
+                        isRecipe: false,
             isIngredient: true,
 
             

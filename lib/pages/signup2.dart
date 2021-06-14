@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/auth_controller.dart';
 import 'package:foodcam_frontend/pages/email_verification.dart';
-import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/widgets/bg.dart';
 import 'package:foodcam_frontend/widgets/text_form_field.dart';
 import 'package:loading_overlay/loading_overlay.dart';

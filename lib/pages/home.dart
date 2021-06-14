@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/pages/basket.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/category_box.dart';
 import 'package:foodcam_frontend/widgets/drawer.dart';
@@ -71,11 +72,10 @@ class Home extends StatelessWidget {
             GridView.builder(
               itemCount: 50,
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 600,
-                childAspectRatio: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10
-              ),
+                  maxCrossAxisExtent: 600,
+                  childAspectRatio: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10),
               itemBuilder: (BuildContext context, int index) {
                 return RecipeBox();
               },
@@ -86,8 +86,7 @@ class Home extends StatelessWidget {
                   maxCrossAxisExtent: 600,
                   childAspectRatio: 2,
                   crossAxisSpacing: 10,
-                  mainAxisSpacing: 10
-              ),
+                  mainAxisSpacing: 10),
               itemBuilder: (BuildContext context, int index) {
                 return RecipeBox();
               },
@@ -98,8 +97,7 @@ class Home extends StatelessWidget {
                   maxCrossAxisExtent: 600,
                   childAspectRatio: 2,
                   crossAxisSpacing: 10,
-                  mainAxisSpacing: 10
-              ),
+                  mainAxisSpacing: 10),
               itemBuilder: (BuildContext context, int index) {
                 return RecipeBox();
               },
@@ -107,7 +105,10 @@ class Home extends StatelessWidget {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => BasketPage()));
+          },
           elevation: 20,
           backgroundColor: KPrimaryColor,
           child: Icon(

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/controllers/auth_controller.dart';
-import 'package:foodcam_frontend/pages/signup2.dart';
 import 'package:foodcam_frontend/widgets/bg.dart';
-import 'package:foodcam_frontend/widgets/text_form_field.dart';
+import 'package:foodcam_frontend/widgets/signup_form1.dart';
+import 'package:foodcam_frontend/widgets/social_auth.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../constants.dart';
 import 'home.dart';
@@ -43,171 +44,27 @@ class _Signup1State extends State<Signup1> {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  Form(
-                    key: _formKey,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Welcome",
-                            style: TextStyle(
-                              fontSize: 50,
-                              color: KTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text('Let us know your name!'),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          CustomTextFormField(
-                              validator: (input) {
-                                return input == ''
-                                    ? 'First name cannot be empty'
-                                    : null;
-                              },
-                              hint: 'First name',
-                              controller: _firstNameController,
-                              isObscure: false),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: CustomTextFormField(
-                              validator: (input) {
-                                return input == ''
-                                    ? 'Last name cannot be empty'
-                                    : null;
-                              },
-                              hint: 'Last name',
-                              controller: _lastNameController,
-                              isObscure: false,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Signup(
-                                        firstName: _firstNameController.text,
-                                        lastName: _lastNameController.text,
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: KPrimaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                              ),
-                              child: Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Icon(
-                                    Icons.arrow_forward_rounded,
-                                    color: Colors.white,
-                                  )),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  SignupForm1(
+                    firstNameController: _firstNameController,
+                    lastNameController: _lastNameController,
+                    formKey: _formKey,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 40.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: KTextColor,
-                            thickness: 2,
-                            indent: 50,
-                            endIndent: 5,
-                          ),
-                        ),
-                        Text(
-                          "Or with",
-                          style: TextStyle(
-                            color: KTextColor,
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: KTextColor,
-                            thickness: 2,
-                            indent: 5,
-                            endIndent: 50,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                            onPressed: () async {
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              bool response =
-                                  await _controller.loginWithFacebook();
-                              if (response) {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Home()),
-                                    (route) => false);
-                              }
-                            },
-                            child: Image.asset(
-                              'lib/assets/facebook.png',
-                              width: 40,
-                              height: 40,
-                            )),
-                        TextButton(
-                            onPressed: () async {
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              bool response =
-                                  await _controller.loginWithGoogle();
-                              if (response) {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Home()),
-                                    (route) => false);
-                              }
-                            },
-                            child: Image.asset(
-                              'lib/assets/search.png',
-                              width: 40,
-                              height: 40,
-                            )),
-                      ],
+                    child: SocialAuth(
+                      onGoogleAuth: onGoogleAuth,
+                      onFacebookAuth: onFacebookAuth,
                     ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Already have an account?'),
+                      Text(AppLocalizations.of(context)!.haveAccount),
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text('Login'),
+                        child: Text(AppLocalizations.of(context)!.login),
                       )
                     ],
                   ),
@@ -218,5 +75,37 @@ class _Signup1State extends State<Signup1> {
         ),
       ),
     );
+  }
+
+  void onGoogleAuth() async {
+    setState(() {
+      _isLoading = true;
+    });
+    bool response = await _controller.loginWithGoogle();
+    setState(() {
+      _isLoading = false;
+    });
+    if (response) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Home()),
+      );
+    }
+  }
+
+  void onFacebookAuth() async {
+    setState(() {
+      _isLoading = true;
+    });
+    bool response = await _controller.loginWithFacebook();
+    setState(() {
+      _isLoading = false;
+    });
+    if (response) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Home()),
+      );
+    }
   }
 }

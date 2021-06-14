@@ -10,13 +10,13 @@ class CollectionBox extends StatelessWidget {
     required this.imagePath,
     required this.category,
     this.recipeNumber,
-    required this.isRescipe,
+    required this.isRecipe,
     required this.isIngredient,
   }) : super(key: key);
   final imagePath;
   final recipeNumber;
   final category;
-  final bool isRescipe;
+  final bool isRecipe;
   final bool isIngredient;
 
   @override
@@ -88,25 +88,24 @@ class CollectionBox extends StatelessWidget {
               highlightColor: Colors.transparent,
               splashColor: Color(0x50D0F1DD),
               onTap: () {
-                if(!isRescipe && !isIngredient){
-                 Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CollectionsRecipes( collectionName: category ,),
-                            ),
-                          );
+                if (!isRecipe && !isIngredient) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CollectionsRecipes(
+                        collectionName: category,
+                      ),
+                    ),
+                  );
                 }
-                if(isRescipe){
-                     Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RecipePage(),
-                            ),
-                          );
-
+                if (isRecipe) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RecipePage(),
+                    ),
+                  );
                 }
-                 
-
               },
               onLongPress: () {
                 showModalBottomSheet(
@@ -145,7 +144,8 @@ class CollectionBox extends StatelessWidget {
                                 height: 30,
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 50.0),
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     primary: Colors.red,
@@ -171,7 +171,8 @@ class CollectionBox extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ), context: context,
+                    ),
+                    context: context,
                   ),
                 );
               },

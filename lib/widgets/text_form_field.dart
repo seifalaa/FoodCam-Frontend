@@ -21,34 +21,36 @@ class CustomTextFormField extends StatelessWidget {
       controller: controller,
       validator: validator,
       decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(100),
-            borderSide: BorderSide(
-              color: KPrimaryColor,
-            ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(100),
+          borderSide: BorderSide(
+            color: KPrimaryColor,
           ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(100),
-            borderSide: BorderSide(
-              color: Colors.red,
-            ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(100),
+          borderSide: BorderSide(
+            color: Colors.red,
           ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(100),
-            borderSide: BorderSide(
-              color: Colors.red,
-            ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(100),
+          borderSide: BorderSide(
+            color: Colors.red,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(100),
-            borderSide: BorderSide(
-              color: Colors.blue,
-            ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(100),
+          borderSide: BorderSide(
+            color: Colors.blue,
           ),
-          filled: true,
-          fillColor: Colors.white,
-          hintText: hint,
-          hintStyle: TextStyle(color: Colors.black38)),
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        hintText: hint,
+        contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+        hintStyle: TextStyle(color: Colors.black38),
+      ),
     );
   }
 }

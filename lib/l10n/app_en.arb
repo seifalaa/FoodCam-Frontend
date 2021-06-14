@@ -1,0 +1,19 @@
+{
+    "login": "Login",
+    "username": "Username",
+    "password": "Password",
+    "email": "Email",
+    "fname": "First name",
+    "lname": "Last name",
+    "forgetPassword": "forget your passwowrd?",
+    "orWith": "or with",
+    "signup": "Signup",
+    "dontHaveAccount": "Don't have an account?",
+    "usernameError": "Username cannot be empty!",
+    "passwordError": "Password cannot be empty!",
+    "welcome": "Welcome",
+    "knowYourName": "Let us know your name!",
+    "haveAccount": "Already have an account?",
+    "fnameError": "First name cannot be empty!",
+    "lnameError": "Last name cannot be empty!"
+}

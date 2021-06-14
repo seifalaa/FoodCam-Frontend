@@ -24,7 +24,9 @@ class BG extends CustomPainter {
     );
     canvas.drawCircle(
       Offset(
-        MediaQuery.of(context).size.width,
+        Localizations.localeOf(context).languageCode == 'ar'
+            ? -MediaQuery.of(context).size.width
+            : MediaQuery.of(context).size.width,
         MediaQuery.of(context).size.height,
       ),
       157,
@@ -33,14 +35,14 @@ class BG extends CustomPainter {
     canvas.drawCircle(
       Offset(
         0,
-        MediaQuery.of(context).size.height * 0.22,
+        157,
       ),
       33,
       circle3,
     );
     canvas.drawCircle(
       Offset(
-        MediaQuery.of(context).size.width * 0.37,
+        Localizations.localeOf(context).languageCode == 'ar' ? -157 : 157,
         0,
       ),
       42.5,
@@ -48,8 +50,9 @@ class BG extends CustomPainter {
     );
     canvas.drawCircle(
       Offset(
-        MediaQuery.of(context).size.width -
-            MediaQuery.of(context).size.width * 0.37,
+        Localizations.localeOf(context).languageCode == 'ar'
+            ? -MediaQuery.of(context).size.width + 157
+            : MediaQuery.of(context).size.width - 157,
         MediaQuery.of(context).size.height,
       ),
       42.5,
@@ -57,9 +60,10 @@ class BG extends CustomPainter {
     );
     canvas.drawCircle(
       Offset(
-        MediaQuery.of(context).size.width,
-        MediaQuery.of(context).size.height -
-            MediaQuery.of(context).size.height * 0.22,
+        Localizations.localeOf(context).languageCode == 'ar'
+            ? -MediaQuery.of(context).size.width
+            : MediaQuery.of(context).size.width,
+        MediaQuery.of(context).size.height - 157,
       ),
       33,
       circle3,

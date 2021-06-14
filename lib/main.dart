@@ -11,6 +11,9 @@ import 'package:foodcam_frontend/pages/signup1.dart';
 import 'package:foodcam_frontend/pages/signup2.dart';
 import 'package:foodcam_frontend/providers/allergy_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(
@@ -26,7 +29,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', ''), // English, no country code
+        const Locale('ar', ''), // Arabic, no country code
+      ],
+      locale: Locale('ar'),
       theme: ThemeData(
+        fontFamily: GoogleFonts.cairo().fontFamily,
         accentColor: KSecondaryColor,
         primaryColor: KPrimaryColor,
         splashColor: KSecondaryColor,
@@ -43,8 +58,8 @@ class MyApp extends StatelessWidget {
         'home/': (context) => Home(),
         'profile/': (context) => Profile(),
       },
-      home: AllergiesPage(),
-      //initialRoute: 'home/',
+      // home: Login(),
+      initialRoute: 'login/',
     );
   }
 }

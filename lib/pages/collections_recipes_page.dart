@@ -63,14 +63,14 @@ class _CollectionsRecipesState extends State<CollectionsRecipes> {
           CollectionBox(
             category: 'MeatBalls',
             imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-            isRescipe: true,
+            isRecipe: true,
             isIngredient: false,
             
           ),
           CollectionBox(
             category: 'MeatBalls',
             imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-                        isRescipe: true,
+                        isRecipe: true,
                         isIngredient: false,
 
             
@@ -78,7 +78,7 @@ class _CollectionsRecipesState extends State<CollectionsRecipes> {
           CollectionBox(
             category: 'MeatBalls',
             imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-                        isRescipe: true,
+                        isRecipe: true,
                         isIngredient: false,
 
             
@@ -86,7 +86,7 @@ class _CollectionsRecipesState extends State<CollectionsRecipes> {
           CollectionBox(
             category: 'MeatBalls',
             imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-            isRescipe: true,
+            isRecipe: true,
             isIngredient: false,
 
             
@@ -94,7 +94,7 @@ class _CollectionsRecipesState extends State<CollectionsRecipes> {
           CollectionBox(
             category: 'MeatBalls',
             imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-                        isRescipe: true,
+                        isRecipe: true,
                         isIngredient: false,
 
             
