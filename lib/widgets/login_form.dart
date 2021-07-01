@@ -3,7 +3,7 @@ import 'package:foodcam_frontend/widgets/text_form_field.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants.dart';
 
-class LoginForm extends StatefulWidget {
+class LoginForm extends StatelessWidget {
   const LoginForm({
     Key? key,
     required this.usernameController,
@@ -17,15 +17,10 @@ class LoginForm extends StatefulWidget {
   final onLogin;
 
   @override
-  _LoginFormState createState() => _LoginFormState();
-}
-
-class _LoginFormState extends State<LoginForm> {
-  @override
   Widget build(BuildContext context) {
     double _screenWidth = MediaQuery.of(context).size.width;
     return Form(
-      key: widget.formKey,
+      key: formKey,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
@@ -49,13 +44,13 @@ class _LoginFormState extends State<LoginForm> {
                     : null;
               },
               hint: AppLocalizations.of(context)!.username,
-              controller: widget.usernameController,
+              controller: usernameController,
               isObscure: false,
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: CustomTextFormField(
-                controller: widget.passwordController,
+                controller: passwordController,
                 hint: AppLocalizations.of(context)!.password,
                 validator: (input) {
                   return input == ''
@@ -87,7 +82,7 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ),
                 onPressed: () {
-                  widget.onLogin();
+                  onLogin();
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(

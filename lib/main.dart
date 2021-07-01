@@ -34,7 +34,9 @@ class MyApp extends StatelessWidget {
               cursorColor: KPrimaryColor,
             ),
             scaffoldBackgroundColor: KBgColor,
-            fontFamily: Localizations.localeOf(context).languageCode == 'ar' ? GoogleFonts.cairo().fontFamily : null,
+            fontFamily: Localizations.localeOf(context).languageCode == 'ar'
+                ? GoogleFonts.cairo().fontFamily
+                : null,
           ),
           child: Container(
             child: navigator,
@@ -60,8 +62,7 @@ class MyApp extends StatelessWidget {
         'home/': (context) => Home(),
         'profile/': (context) => Profile(),
       },
-      // home: Login(),
-      initialRoute: 'login/',
+      initialRoute: 'home/',
     );
   }
 }

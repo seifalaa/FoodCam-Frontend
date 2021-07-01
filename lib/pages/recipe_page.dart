@@ -2,14 +2,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foodcam_frontend/constants.dart';
-import 'package:foodcam_frontend/widgets/drawer.dart';
+import 'package:foodcam_frontend/generated/l10n.dart';
+import 'package:foodcam_frontend/models/recipe.dart';
+import 'package:foodcam_frontend/widgets/recipe_rate_buttom_sheet.dart';
+import 'package:foodcam_frontend/widgets/recipe_steps_bottom_sheet.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RecipePage extends StatelessWidget {
-  const RecipePage({Key? key}) : super(key: key);
+  const RecipePage({
+    Key? key,
+    required this.recipe,
+  }) : super(key: key);
+  final Recipe recipe;
 
   @override
   Widget build(BuildContext context) {
+    String _lang = Localizations.localeOf(context).languageCode;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -19,54 +28,8 @@ class RecipePage extends StatelessWidget {
             backgroundColor: Colors.transparent,
             context: context,
             builder: (context) => makeDismissible(
-              child: DraggableScrollableSheet(
-                maxChildSize: 0.7,
-                minChildSize: 0.5,
-                initialChildSize: 0.7,
-                builder: (context, scrollController) => Container(
-                  color: KBgColor,
-                  child: ListView(
-                    controller: scrollController,
-                    children: [
-                      Material(
-                        elevation: 1,
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text(
-                              'Steps',
-                              style: TextStyle(
-                                color: KTextColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 30,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      for (var i = 0; i < 20; i++)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Column(
-                            children: [
-                              ListTile(
-                                leading: Icon(
-                                  Icons.arrow_right_rounded,
-                                  color: KPrimaryColor,
-                                ),
-                                title: Text(
-                                    'Sunt castores fallere superbus, fatalis impositioes Sunt castores fallere superbus, fatalis impositioes Sunt castores fallere superbus, fatalis impositioes.'),
-                              ),
-                              Divider(),
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
+              child: RecipeStepsBottomSheet(
+                steps: recipe.steps,
               ),
               context: context,
             ),
@@ -92,132 +55,45 @@ class RecipePage extends StatelessWidget {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text('Meat Balls'),
+                      Text(
+                        recipe.recipeName,
+                      ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 5.0),
+                        padding: _lang == 'ar'
+                            ? const EdgeInsets.only(right: 10.0)
+                            : const EdgeInsets.only(left: 10.0),
                         child: Material(
                           color: Colors.transparent,
                           borderRadius: BorderRadius.circular(5),
                           child: InkWell(
-                              highlightColor: Colors.transparent,
-                              splashColor: Colors.white54,
-                              borderRadius: BorderRadius.circular(5),
-                              onTap: () {
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.white54,
+                            borderRadius: BorderRadius.circular(5),
+                            onTap: () {
+                              showModalBottomSheet(
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                context: context,
+                                builder: (context) => makeDismissible(
+                                  child: RecipeRateBottomSheet(),
                                   context: context,
-                                  builder: (context) => makeDismissible(
-                                    child: DraggableScrollableSheet(
-                                      initialChildSize: 0.35,
-                                      maxChildSize: 0.35,
-                                      minChildSize: 0.3,
-                                      builder: (context, scrollController) =>
-                                          Container(
-                                        color: KBgColor,
-                                        child: Material(
-                                          color: KBgColor,
-                                          child: ListView(
-                                            controller: scrollController,
-                                            children: [
-                                              Material(
-                                                elevation: 1,
-                                                child: Center(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            20.0),
-                                                    child: Text(
-                                                      'Rate',
-                                                      style: TextStyle(
-                                                        color: KTextColor,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 30,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 30,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  for (int i = 0; i < 5; i++)
-                                                    IconButton(
-                                                      onPressed: () {},
-                                                      icon: Icon(
-                                                        Icons.star_rounded,
-                                                        color: Colors.grey,
-                                                        size: 35,
-                                                      ),
-                                                    ),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 100.0,
-                                                        vertical: 20),
-                                                child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    primary: KPrimaryColor,
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              100),
-                                                    ),
-                                                  ),
-                                                  onPressed: () {},
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            10.0),
-                                                    child: Text(
-                                                      'Submit',
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ), context: context,
-                                  ),
-                                );
-                              },
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 2.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.star_rounded,
-                                      color: Color(0xFFFFC107),
-                                    ),
-                                    Text(
-                                      '3.5',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
                                 ),
-                              )),
+                              );
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 2.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: _lang == 'ar'
+                                    ? buildRateButton().reversed.toList()
+                                    : buildRateButton().toList(),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -225,7 +101,7 @@ class RecipePage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
-                      'Lunch Meal - 30 Minutes',
+                      'وجبة غداء  -  30 دقيقة',
                       style: TextStyle(fontSize: 12, color: Colors.white70),
                     ),
                   ),
@@ -236,7 +112,7 @@ class RecipePage extends StatelessWidget {
                 children: [
                   Positioned.fill(
                     child: Image.asset(
-                      'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
+                      recipe.recipeImageUrl,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -257,7 +133,7 @@ class RecipePage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Text(
-                      'Nutrition Info',
+                      AppLocalizations.of(context)!.nutritionInfo,
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -279,7 +155,9 @@ class RecipePage extends StatelessWidget {
                           percent: 0.4,
                           center: Text('40%'),
                           progressColor: KPrimaryColor,
-                          footer: Text('Protein'),
+                          footer: Text(
+                            AppLocalizations.of(context)!.protein,
+                          ),
                         ),
                       ),
                       Padding(
@@ -293,7 +171,9 @@ class RecipePage extends StatelessWidget {
                           animationDuration: 1200,
                           center: Text('30%'),
                           progressColor: KPrimaryColor,
-                          footer: Text('Protein'),
+                          footer: Text(
+                            AppLocalizations.of(context)!.carb,
+                          ),
                         ),
                       ),
                       Padding(
@@ -307,7 +187,9 @@ class RecipePage extends StatelessWidget {
                           animationDuration: 1200,
                           center: Text('30%'),
                           progressColor: KPrimaryColor,
-                          footer: Text('Protein'),
+                          footer: Text(
+                            AppLocalizations.of(context)!.sugar,
+                          ),
                         ),
                       ),
                       Padding(
@@ -321,7 +203,9 @@ class RecipePage extends StatelessWidget {
                           animationDuration: 1200,
                           center: Text('30%'),
                           progressColor: KPrimaryColor,
-                          footer: Text('Protein'),
+                          footer: Text(
+                            AppLocalizations.of(context)!.cal,
+                          ),
                         ),
                       ),
                     ],
@@ -330,7 +214,7 @@ class RecipePage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Text(
-                      'Ingredients',
+                      AppLocalizations.of(context)!.ingredients,
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -347,154 +231,52 @@ class RecipePage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  for (int i = 0; i < recipe.ingredients.length; i++)
+                    Column(
                       children: [
-                        Row(
-                          children: [
-                            Material(
-                              borderRadius: BorderRadius.circular(20),
-                              elevation: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Image.asset(
-                                  'lib/assets/istockphoto-466175630-612x612.png',
-                                  width: 50,
-                                  height: 50,
-                                ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15.0, vertical: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Material(
+                                    borderRadius: BorderRadius.circular(20),
+                                    elevation: 1,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Image.asset(
+                                        recipe
+                                            .ingredients[i].ingredientImageUrl,
+                                        width: 50,
+                                        height: 50,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: _lang == 'ar'
+                                        ? const EdgeInsets.only(right: 20.0)
+                                        : const EdgeInsets.only(left: 20.0),
+                                    child: Text(
+                                      recipe.ingredients[i].ingredientName,
+                                      style: TextStyle(
+                                        color: KTextColor,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
-                              child: Text(
-                                'Tomato',
-                                style: TextStyle(
-                                    color: KTextColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ],
+                              Text('2 pce'),
+                            ],
+                          ),
                         ),
-                        Text('2 pce'),
+                        Divider(),
                       ],
                     ),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Material(
-                              borderRadius: BorderRadius.circular(20),
-                              elevation: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Image.asset(
-                                  'lib/assets/istockphoto-466175630-612x612.png',
-                                  width: 50,
-                                  height: 50,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
-                              child: Text(
-                                'Tomato',
-                                style: TextStyle(
-                                    color: KTextColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text('2 pce'),
-                      ],
-                    ),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Material(
-                              borderRadius: BorderRadius.circular(20),
-                              elevation: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Image.asset(
-                                  'lib/assets/istockphoto-466175630-612x612.png',
-                                  width: 50,
-                                  height: 50,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
-                              child: Text(
-                                'Tomato',
-                                style: TextStyle(
-                                    color: KTextColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text('2 pce'),
-                      ],
-                    ),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Material(
-                              borderRadius: BorderRadius.circular(20),
-                              elevation: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Image.asset(
-                                  'lib/assets/istockphoto-466175630-612x612.png',
-                                  width: 50,
-                                  height: 50,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
-                              child: Text(
-                                'Tomato',
-                                style: TextStyle(
-                                    color: KTextColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text('2 pce'),
-                      ],
-                    ),
-                  ),
-                  Divider(),
                   SizedBox(
                     height: 50,
                   ),
@@ -505,5 +287,21 @@ class RecipePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  List<Widget> buildRateButton() {
+    return [
+      Icon(
+        Icons.star_rounded,
+        color: Color(0xFFFFC107),
+      ),
+      Text(
+        recipe.recipeRate.toString(),
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ];
   }
 }

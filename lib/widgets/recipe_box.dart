@@ -1,10 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/pages/recipe_page.dart';
 
 class RecipeBox extends StatelessWidget {
-  const RecipeBox({Key? key}) : super(key: key);
+  const RecipeBox({
+    Key? key,
+    required this.recipe,
+  }) : super(key: key);
+  final Recipe recipe;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,7 @@ class RecipeBox extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
-                'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
+                recipe.recipeImageUrl,
                 fit: BoxFit.cover,
               ),
             ),
@@ -39,11 +44,11 @@ class RecipeBox extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Meat Balls',
+                    recipe.recipeName,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: _screenWidth <= KMobileScreenSize
-                          ? _screenWidth * 0.045
+                          ? _screenWidth * 0.05
                           : _screenWidth * 0.0225,
                       fontWeight: FontWeight.bold,
                     ),
@@ -51,7 +56,7 @@ class RecipeBox extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      for (var i = 0; i < 4; i++)
+                      for (int i = 0; i < recipe.recipeRate.toInt(); i++)
                         Icon(
                           Icons.star_rounded,
                           size: _screenWidth <= KMobileScreenSize
@@ -59,13 +64,24 @@ class RecipeBox extends StatelessWidget {
                               : _screenWidth * 0.0225,
                           color: Color(0xFFFFC107),
                         ),
-                      Icon(
-                        Icons.star_rounded,
-                        size: _screenWidth <= KMobileScreenSize
-                            ? _screenWidth * 0.045
-                            : _screenWidth * 0.0225,
-                        color: Colors.white54,
-                      )
+                      if (recipe.recipeRate - recipe.recipeRate.toInt() != 0)
+                        Icon(
+                          Icons.star_half_rounded,
+                          size: _screenWidth <= KMobileScreenSize
+                              ? _screenWidth * 0.045
+                              : _screenWidth * 0.0225,
+                          color: Color(0xFFFFC107),
+                        ),
+                      for (int i = 0;
+                          i < 5 - recipe.recipeRate.toInt() - 1;
+                          i++)
+                        Icon(
+                          Icons.star_rounded,
+                          size: _screenWidth <= KMobileScreenSize
+                              ? _screenWidth * 0.045
+                              : _screenWidth * 0.0225,
+                          color: Colors.white54,
+                        )
                     ],
                   )
                 ],
@@ -84,7 +100,9 @@ class RecipeBox extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => RecipePage(),
+                    builder: (context) => RecipePage(
+                      recipe: recipe,
+                    ),
                   ),
                 );
               },

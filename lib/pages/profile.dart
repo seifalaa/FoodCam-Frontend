@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/pages/allergies_page.dart';
+import 'package:foodcam_frontend/pages/basket.dart';
 import 'package:foodcam_frontend/pages/collections_page.dart';
 import 'package:foodcam_frontend/pages/dispreferred_ingredients.dart';
 import 'package:foodcam_frontend/pages/preferred_ingredients.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
-import 'package:foodcam_frontend/widgets/drawer_list_item.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants.dart';
 
 class Profile extends StatelessWidget {
@@ -14,10 +14,16 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String _lang = Localizations.localeOf(context).languageCode;
     return Scaffold(
-       extendBody: true,
+      extendBody: true,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => BasketPage()),
+          );
+        },
         backgroundColor: KPrimaryColor,
         child: Icon(
           Icons.shopping_basket_rounded,
@@ -25,16 +31,10 @@ class Profile extends StatelessWidget {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(20),
-          topLeft: Radius.circular(20),
-        ),
-        child: CustomButtonNavigationBar(),
-      ),
+      bottomNavigationBar: CustomButtonNavigationBar(),
       appBar: AppBar(
         title: Text(
-          'Profile',
+          AppLocalizations.of(context)!.profile,
           style: TextStyle(
             color: KTextColor,
           ),
@@ -86,7 +86,9 @@ class Profile extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
+                        padding: _lang == 'ar'
+                            ? const EdgeInsets.only(right: 20.0)
+                            : const EdgeInsets.only(left: 20.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -118,7 +120,7 @@ class Profile extends StatelessWidget {
                     ),
                     onPressed: () {},
                     child: Text(
-                      'Edit profile',
+                      AppLocalizations.of(context)!.editProfile,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -150,7 +152,9 @@ class Profile extends StatelessWidget {
                           Icons.grid_3x3_rounded,
                           color: KPrimaryColor,
                         ),
-                        title: Text('Collections'),
+                        title: Text(
+                          AppLocalizations.of(context)!.collections,
+                        ),
                         trailing: Icon(
                           Icons.arrow_forward_rounded,
                           color: KPrimaryColor,
@@ -181,20 +185,20 @@ class Profile extends StatelessWidget {
                           Icons.sentiment_satisfied_rounded,
                           color: KPrimaryColor,
                         ),
-                        title: Text('Preferred Ingredients'),
+                        title: Text(
+                          AppLocalizations.of(context)!.prefIng,
+                        ),
                         trailing: Icon(
                           Icons.arrow_forward_rounded,
                           color: KPrimaryColor,
                         ),
                         onTap: () {
-
-                            Navigator.push(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => PreferrredIngredients(),
                             ),
                           );
-
                         },
                       ),
                     ),
@@ -214,20 +218,18 @@ class Profile extends StatelessWidget {
                           Icons.sentiment_dissatisfied_rounded,
                           color: KPrimaryColor,
                         ),
-                        title: Text('Disliked Ingredients'),
+                        title: Text(AppLocalizations.of(context)!.disIng),
                         trailing: Icon(
                           Icons.arrow_forward_rounded,
                           color: KPrimaryColor,
                         ),
                         onTap: () {
-
-                              Navigator.push(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => DisPreferrredIngredients(),
                             ),
                           );
-
                         },
                       ),
                     ),
@@ -247,7 +249,9 @@ class Profile extends StatelessWidget {
                           Icons.no_food_outlined,
                           color: KPrimaryColor,
                         ),
-                        title: Text('Allergies'),
+                        title: Text(
+                          AppLocalizations.of(context)!.allergies,
+                        ),
                         trailing: Icon(
                           Icons.arrow_forward_rounded,
                           color: KPrimaryColor,
@@ -278,7 +282,9 @@ class Profile extends StatelessWidget {
                           Icons.language_rounded,
                           color: KPrimaryColor,
                         ),
-                        title: Text('Languages'),
+                        title: Text(
+                          AppLocalizations.of(context)!.lang,
+                        ),
                         trailing: Icon(
                           Icons.arrow_forward_rounded,
                           color: KPrimaryColor,
@@ -302,7 +308,9 @@ class Profile extends StatelessWidget {
                           Icons.logout_rounded,
                           color: KPrimaryColor,
                         ),
-                        title: Text('Logout'),
+                        title: Text(
+                          AppLocalizations.of(context)!.logout,
+                        ),
                         trailing: Icon(
                           Icons.arrow_forward_rounded,
                           color: KPrimaryColor,

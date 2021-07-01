@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/models/ingredient.dart';
+import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/pages/basket.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/category_box.dart';
-import 'package:foodcam_frontend/widgets/drawer.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
 import 'package:foodcam_frontend/widgets/search_delegate.dart';
-import 'package:foodcam_frontend/widgets/tab_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -21,7 +23,7 @@ class Home extends StatelessWidget {
         appBar: AppBar(
           iconTheme: IconThemeData(color: KTextColor),
           title: Text(
-            'Home',
+            AppLocalizations.of(context)!.home,
             style: TextStyle(
               color: KTextColor,
             ),
@@ -42,27 +44,29 @@ class Home extends StatelessWidget {
           backgroundColor: Colors.white,
           elevation: 1,
           centerTitle: true,
-          bottom: const TabBar(
+          bottom: TabBar(
             labelPadding: EdgeInsets.all(10.0),
             indicatorColor: KPrimaryColor,
             labelStyle: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
+              fontFamily: GoogleFonts.cairo().fontFamily,
             ),
             labelColor: KPrimaryColor,
             unselectedLabelColor: KTextColor,
             unselectedLabelStyle: TextStyle(
               fontSize: 17,
+              fontFamily: GoogleFonts.cairo().fontFamily,
             ),
             tabs: [
               Text(
-                'Top Rated',
+                AppLocalizations.of(context)!.topRated,
               ),
               Text(
-                'Categories',
+                AppLocalizations.of(context)!.categories,
               ),
               Text(
-                'Recently Searched',
+                AppLocalizations.of(context)!.recentSearch,
               ),
             ],
           ),
@@ -72,34 +76,130 @@ class Home extends StatelessWidget {
             GridView.builder(
               itemCount: 50,
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 600,
-                  childAspectRatio: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10),
+                maxCrossAxisExtent: 600,
+                childAspectRatio: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
               itemBuilder: (BuildContext context, int index) {
-                return RecipeBox();
+                return RecipeBox(
+                  recipe: Recipe(
+                    recipeImageUrl:
+                        'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
+                    recipeName: 'كرات لحم',
+                    recipeRate: 3.5,
+                    steps: ['step1', 'step2', 'step3'],
+                    ingredients: [
+                      Ingredient(
+                        ingredientName: 'طماطم',
+                        ingredientImageUrl:
+                            'lib/assets/istockphoto-466175630-612x612.png',
+                      ),
+                      Ingredient(
+                        ingredientName: 'طماطم',
+                        ingredientImageUrl:
+                            'lib/assets/istockphoto-466175630-612x612.png',
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
             GridView.builder(
               itemCount: 50,
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 600,
-                  childAspectRatio: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10),
+                maxCrossAxisExtent: 600,
+                childAspectRatio: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
               itemBuilder: (BuildContext context, int index) {
-                return RecipeBox();
+                return CategoryBox(
+                  imagePath: 'lib/assets/breakfast2.jpg',
+                  categoryName: 'فطور',
+                  recipes: [
+                    Recipe(
+                      recipeImageUrl:
+                          'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
+                      recipeName: 'كرات لحم',
+                      recipeRate: 3.5,
+                      steps: ['step1', 'step2', 'step3'],
+                      ingredients: [
+                        Ingredient(
+                            ingredientName: 'طماطم',
+                            ingredientImageUrl:
+                                'lib/assets/istockphoto-466175630-612x612.png'),
+                        Ingredient(
+                            ingredientName: 'طماطم',
+                            ingredientImageUrl:
+                                'lib/assets/istockphoto-466175630-612x612.png'),
+                      ],
+                    ),
+                    Recipe(
+                      recipeImageUrl:
+                          'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
+                      recipeName: 'كرات لحم',
+                      recipeRate: 3.5,
+                      steps: ['step1', 'step2', 'step3'],
+                      ingredients: [
+                        Ingredient(
+                            ingredientName: 'طماطم',
+                            ingredientImageUrl:
+                                'lib/assets/istockphoto-466175630-612x612.png'),
+                        Ingredient(
+                            ingredientName: 'طماطم',
+                            ingredientImageUrl:
+                                'lib/assets/istockphoto-466175630-612x612.png'),
+                      ],
+                    ),
+                    Recipe(
+                      recipeImageUrl:
+                          'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
+                      recipeName: 'كرات لحم',
+                      recipeRate: 3.5,
+                      steps: ['step1', 'step2', 'step3'],
+                      ingredients: [
+                        Ingredient(
+                            ingredientName: 'طماطم',
+                            ingredientImageUrl:
+                                'lib/assets/istockphoto-466175630-612x612.png'),
+                        Ingredient(
+                            ingredientName: 'طماطم',
+                            ingredientImageUrl:
+                                'lib/assets/istockphoto-466175630-612x612.png'),
+                      ],
+                    ),
+                  ],
+                );
               },
             ),
             GridView.builder(
               itemCount: 50,
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 600,
-                  childAspectRatio: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10),
+                maxCrossAxisExtent: 600,
+                childAspectRatio: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
               itemBuilder: (BuildContext context, int index) {
-                return RecipeBox();
+                return RecipeBox(
+                  recipe: Recipe(
+                      recipeImageUrl:
+                          'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
+                      recipeName: 'كرات لحم',
+                      recipeRate: 3.5,
+                      steps: [
+                        'step1',
+                        'step2',
+                        'step3'
+                      ],
+                      ingredients: [
+                        Ingredient(
+                            ingredientName: 'طماطم',
+                            ingredientImageUrl:
+                                'lib/assets/istockphoto-466175630-612x612.png'),
+                      ]),
+                );
               },
             ),
           ],
@@ -117,13 +217,7 @@ class Home extends StatelessWidget {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(20),
-            topLeft: Radius.circular(20),
-          ),
-          child: const CustomButtonNavigationBar(),
-        ),
+        bottomNavigationBar: const CustomButtonNavigationBar(),
       ),
     );
   }

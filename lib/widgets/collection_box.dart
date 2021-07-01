@@ -98,14 +98,14 @@ class CollectionBox extends StatelessWidget {
                     ),
                   );
                 }
-                if (isRecipe) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RecipePage(),
-                    ),
-                  );
-                }
+                // if (isRecipe) {
+                //   Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => RecipePage(),
+                //     ),
+                //   );
+                // }
               },
               onLongPress: () {
                 showModalBottomSheet(

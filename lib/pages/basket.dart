@@ -1,9 +1,11 @@
 import 'dart:io';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/pages/search_results.dart';
+import 'package:foodcam_frontend/widgets/add_box.dart';
+import 'package:foodcam_frontend/widgets/add_ingredient_bottom_sheet.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/collection_box.dart';
 import 'package:foodcam_frontend/widgets/preferred_search_delegate.dart';
@@ -17,15 +19,16 @@ class BasketPage extends StatefulWidget {
 }
 
 class _BasketPageState extends State<BasketPage> {
+  final picker = ImagePicker();
+  List<String> _items = ['adsasd', 'adsad'];
+  late File _image;
+
   @override
   Widget build(BuildContext context) {
-    List<String> _items = [];
-    File _image;
-    final picker = ImagePicker();
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Basket',
+          AppLocalizations.of(context)!.basket,
           style: TextStyle(
             color: KTextColor,
           ),
@@ -53,91 +56,7 @@ class _BasketPageState extends State<BasketPage> {
                   isScrollControlled: true,
                   context: context,
                   builder: (context) => makeDismissible(
-                    child: DraggableScrollableSheet(
-                      maxChildSize: 0.4,
-                      minChildSize: 0.3,
-                      initialChildSize: 0.3,
-                      builder: (context, scrollController) => Container(
-                        color: KBgColor,
-                        child: Material(
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Material(
-                                      elevation: 1,
-                                      child: Center(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(20.0),
-                                          child: Text(
-                                            'Add Ingredient',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 25,
-                                              color: KTextColor,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              ListView(
-                                shrinkWrap: true,
-                                controller: scrollController,
-                                children: [
-                                  ListTile(
-                                    leading: Icon(
-                                      Icons.camera_alt_outlined,
-                                      color: KTextColor,
-                                    ),
-                                    title: Text(
-                                      'Scan Ingredient',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    onTap: () async {
-                                      final pickedImage = await picker.getImage(
-                                        source: ImageSource.camera,
-                                      );
-                                      setState(() {
-                                        if (pickedImage != null) {
-                                          _image = File(pickedImage.path);
-                                        } else {
-                                          print('No image selected.');
-                                        }
-                                      });
-                                    },
-                                  ),
-                                  Divider(),
-                                  ListTile(
-                                    leading: Icon(
-                                      Icons.search_rounded,
-                                      color: KTextColor,
-                                    ),
-                                    title: Text(
-                                      'Search for ingredient',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      showSearch(
-                                        context: context,
-                                        delegate: PreferredSearchDelegate(),
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    child: AddIngredientBottomSheet(pickImage: pickImage),
                     context: context,
                   ),
                 );
@@ -179,7 +98,7 @@ class _BasketPageState extends State<BasketPage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0),
                     child: Text(
-                      'Add ingredients to start',
+                      AppLocalizations.of(context)!.addIngToStart,
                       style: TextStyle(
                           color: Colors.black38,
                           fontSize: 25,
@@ -192,8 +111,8 @@ class _BasketPageState extends State<BasketPage> {
           : GridView(
               shrinkWrap: true,
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 300,
-                childAspectRatio: 1,
+                maxCrossAxisExtent: 150,
+                childAspectRatio: 0.8,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 5,
               ),
@@ -209,123 +128,34 @@ class _BasketPageState extends State<BasketPage> {
                       isIngredient: true,
                     ),
                   ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Material(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.black12,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(20),
-                      onTap: () {
-                        showModalBottomSheet(
-                          backgroundColor: Colors.transparent,
-                          isScrollControlled: true,
-                          context: context,
-                          builder: (context) => makeDismissible(
-                            child: DraggableScrollableSheet(
-                              maxChildSize: 0.4,
-                              minChildSize: 0.3,
-                              initialChildSize: 0.3,
-                              builder: (context, scrollController) => Container(
-                                color: KBgColor,
-                                child: Material(
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Material(
-                                              elevation: 1,
-                                              child: Center(
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      20.0),
-                                                  child: Text(
-                                                    'Add Ingredient',
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 25,
-                                                      color: KTextColor,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      ListView(
-                                        shrinkWrap: true,
-                                        controller: scrollController,
-                                        children: [
-                                          ListTile(
-                                            leading: Icon(
-                                              Icons.camera_alt_outlined,
-                                              color: KTextColor,
-                                            ),
-                                            title: Text(
-                                              'Scan Ingredient',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                              ),
-                                            ),
-                                            onTap: () async {
-                                              final pickedImage =
-                                                  await picker.getImage(
-                                                source: ImageSource.camera,
-                                              );
-                                              setState(() {
-                                                if (pickedImage != null) {
-                                                  _image =
-                                                      File(pickedImage.path);
-                                                } else {
-                                                  print('No image selected.');
-                                                }
-                                              });
-                                            },
-                                          ),
-                                          Divider(),
-                                          ListTile(
-                                            leading: Icon(
-                                              Icons.search_rounded,
-                                              color: KTextColor,
-                                            ),
-                                            title: Text(
-                                              'Search for ingredient',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              showSearch(
-                                                context: context,
-                                                delegate:
-                                                    PreferredSearchDelegate(),
-                                              );
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            context: context,
-                          ),
-                        );
-                      },
-                      child: Icon(
-                        Icons.add_rounded,
-                        size: 50,
-                        color: KBgColor,
-                      ),
-                    ),
-                  ),
-                ),
+                AddBox(onTab: addItem),
               ],
             ),
+    );
+  }
+
+  void pickImage() async {
+    final pickedImage = await picker.getImage(
+      source: ImageSource.camera,
+    );
+    setState(() {
+      if (pickedImage != null) {
+        _image = File(pickedImage.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  void addItem() {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => makeDismissible(
+        child: AddIngredientBottomSheet(pickImage: pickImage),
+        context: context,
+      ),
     );
   }
 }
