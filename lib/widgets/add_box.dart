@@ -11,7 +11,7 @@ class AddBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(8.0),
       child: Material(
         borderRadius: BorderRadius.circular(20),
         color: Colors.black12,

@@ -5,8 +5,11 @@ import 'package:foodcam_frontend/pages/basket.dart';
 import 'package:foodcam_frontend/pages/collections_page.dart';
 import 'package:foodcam_frontend/pages/dispreferred_ingredients.dart';
 import 'package:foodcam_frontend/pages/preferred_ingredients.dart';
+import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:foodcam_frontend/widgets/language_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 import '../constants.dart';
 
 class Profile extends StatelessWidget {
@@ -289,7 +292,19 @@ class Profile extends StatelessWidget {
                           Icons.arrow_forward_rounded,
                           color: KPrimaryColor,
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          showModalBottomSheet(
+                            backgroundColor: Colors.transparent,
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) => makeDismissible(
+                              child: LanguageBottomSheet(
+                                provider: Provider.of(context, listen: false),
+                              ),
+                              context: context,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),

@@ -48,5 +48,8 @@
 	"cal" : "Calories",
 	"sugar" : "Sugar",
 	"rate": "Rate",
-	"submit": "Submit"
+	"submit": "Submit",
+	"changeLang": "Change Language",
+	"ar": "العربية",
+	"en": "English"
 }

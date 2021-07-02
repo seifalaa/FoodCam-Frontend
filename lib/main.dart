@@ -5,6 +5,7 @@ import 'package:foodcam_frontend/pages/login.dart';
 import 'package:foodcam_frontend/pages/profile.dart';
 import 'package:foodcam_frontend/pages/signup1.dart';
 import 'package:foodcam_frontend/providers/allergy_provider.dart';
+import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -12,8 +13,13 @@ import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => AllergyProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AllergyProvider>(
+            create: (_) => AllergyProvider()),
+        ChangeNotifierProvider<LangUageProvider>(
+            create: (_) => LangUageProvider()),
+      ],
       child: MyApp(),
     ),
   );
@@ -23,6 +29,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final String lang = Provider.of<LangUageProvider>(context).langCode;
     return MaterialApp(
       builder: (context, navigator) {
         return Theme(
@@ -53,7 +60,7 @@ class MyApp extends StatelessWidget {
         const Locale('en', ''), // English, no country code
         const Locale('ar', ''), // Arabic, no country code
       ],
-      locale: Locale('ar'),
+      locale: Locale(lang),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       routes: {

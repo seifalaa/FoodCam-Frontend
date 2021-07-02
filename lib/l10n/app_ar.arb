@@ -48,5 +48,8 @@
 	"cal" : "سعرات",
 	"sugar" : "سكر",
 	"rate": "تقييم",
-	"submit": "حفظ"
+	"submit": "حفظ",
+	"changeLang": "تغيير اللغة",
+	"ar": "العربية",
+	"en": "English"
 }

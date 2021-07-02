@@ -108,28 +108,28 @@ class _BasketPageState extends State<BasketPage> {
                 ],
               ),
             )
-          : GridView(
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 150,
-                childAspectRatio: 0.8,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 5,
-              ),
-              children: [
-                for (int i = 0; i < _items.length; i++)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CollectionBox(
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GridView(
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 300,
+                  childAspectRatio: 0.8,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                ),
+                children: [
+                  for (int i = 0; i < _items.length; i++)
+                    CollectionBox(
                       imagePath:
                           'lib/assets/5dad7f27320ca_HERO-alergia-al-pescado.jpg',
                       category: _items[i],
                       isRecipe: false,
                       isIngredient: true,
                     ),
-                  ),
-                AddBox(onTab: addItem),
-              ],
+                  AddBox(onTab: addItem),
+                ],
+              ),
             ),
     );
   }

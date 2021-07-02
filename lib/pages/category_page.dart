@@ -42,19 +42,22 @@ class CategoryPage extends StatelessWidget {
         elevation: 1,
         centerTitle: true,
       ),
-      body: GridView(
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 300,
-          childAspectRatio: 0.8,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 5,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GridView(
+          shrinkWrap: true,
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 300,
+            childAspectRatio: 0.8,
+            crossAxisSpacing: 5,
+            mainAxisSpacing: 5,
+          ),
+          children: [
+            for (var i = 0; i < recipes.length; i++)
+              RecipeBox(recipe: recipes[i]),
+            AddBox(onTab: () {}),
+          ],
         ),
-        children: [
-          for (var i = 0; i < recipes.length; i++)
-            RecipeBox(recipe: recipes[i]),
-          AddBox(onTab: () {}),
-        ],
       ),
     );
   }
