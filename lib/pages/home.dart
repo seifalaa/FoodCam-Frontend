@@ -1,21 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/controllers/recipe_controller.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/pages/basket.dart';
+import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/category_box.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
 import 'package:foodcam_frontend/widgets/search_delegate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final RecipeController _recipeController = RecipeController();
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -73,37 +77,29 @@ class Home extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            GridView.builder(
-              itemCount: 50,
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 600,
-                childAspectRatio: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return RecipeBox(
-                  recipe: Recipe(
-                    recipeImageUrl:
-                        'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-                    recipeName: 'كرات لحم',
-                    recipeRate: 3.5,
-                    steps: ['step1', 'step2', 'step3'],
-                    ingredients: [
-                      Ingredient(
-                        ingredientName: 'طماطم',
-                        ingredientImageUrl:
-                            'lib/assets/istockphoto-466175630-612x612.png',
-                      ),
-                      Ingredient(
-                        ingredientName: 'طماطم',
-                        ingredientImageUrl:
-                            'lib/assets/istockphoto-466175630-612x612.png',
-                      ),
-                    ],
-                  ),
-                );
-              },
+            FutureBuilder(
+              future: _recipeController
+                  .getRecipes(Provider.of<LangUageProvider>(context).langCode),
+              builder: (context, AsyncSnapshot<List<Recipe>> snapshot) =>
+                  snapshot.hasData? GridView.builder(
+                itemCount: snapshot.data!.length,
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 600,
+                  childAspectRatio: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  return RecipeBox(
+                    recipe: Recipe(
+                        recipeImageUrl: snapshot.data![index].recipeImageUrl,
+                        recipeName: snapshot.data![index].recipeName,
+                        recipeRate: snapshot.data![index].recipeRate,
+                        steps: snapshot.data![index].steps,
+                        ingredients: snapshot.data![index].ingredients),
+                  );
+                },
+              ):Center(child: CircularProgressIndicator(color: KPrimaryColor,),),
             ),
             GridView.builder(
               itemCount: 50,

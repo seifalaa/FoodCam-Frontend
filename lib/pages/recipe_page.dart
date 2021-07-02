@@ -111,7 +111,7 @@ class RecipePage extends StatelessWidget {
               background: Stack(
                 children: [
                   Positioned.fill(
-                    child: Image.asset(
+                    child: Image.network(
                       recipe.recipeImageUrl,
                       fit: BoxFit.cover,
                     ),
@@ -247,7 +247,7 @@ class RecipePage extends StatelessWidget {
                                     elevation: 1,
                                     child: Padding(
                                       padding: const EdgeInsets.all(5.0),
-                                      child: Image.asset(
+                                      child: Image.network(
                                         recipe
                                             .ingredients[i].ingredientImageUrl,
                                         width: 50,

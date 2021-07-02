@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'ingredient.dart';
 
 class Recipe {
@@ -15,12 +17,12 @@ class Recipe {
   final List<String> steps;
   final List<Ingredient> ingredients;
 
-  static Recipe fromMap(Map<String, dynamic> map) {
+  static Recipe fromMap(Map<String, dynamic> map){
     return Recipe(
       recipeName: map['recipeName'],
       recipeRate: map['recipeRate'],
       recipeImageUrl: map['recipeImageUrl'],
-      steps: map['steps'],
+      steps: map['steps'].split(','),
       ingredients: map['ingredients'],
     );
   }

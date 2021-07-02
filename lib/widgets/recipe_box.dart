@@ -22,7 +22,7 @@ class RecipeBox extends StatelessWidget {
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
+              child: Image.network(
                 recipe.recipeImageUrl,
                 fit: BoxFit.cover,
               ),
