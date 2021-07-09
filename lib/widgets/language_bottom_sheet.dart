@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:foodcam_frontend/generated/l10n.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-
 class LanguageBottomSheet extends StatelessWidget {
-  const LanguageBottomSheet({Key? key,required this.provider}) : super(key: key);
-  final LangUageProvider provider;
+  const LanguageBottomSheet({Key? key, required this.provider})
+      : super(key: key);
+  final LanguageProvider provider;
+
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
@@ -39,10 +37,9 @@ class LanguageBottomSheet extends StatelessWidget {
                 ),
               ),
               ListTile(
-                onTap: () {
+                onTap: () async {
                   if (provider.langCode != 'ar') {
-                    Provider.of<LangUageProvider>(context, listen: false)
-                        .changeLang('ar');
+                    provider.changeLang('ar');
                   }
                 },
                 title: Text(
@@ -56,20 +53,18 @@ class LanguageBottomSheet extends StatelessWidget {
                   'lib/assets/saudi-arabia.png',
                   height: 50,
                 ),
-                trailing:
-                   provider.langCode == 'ar'
-                        ? Icon(
-                            Icons.check_outlined,
-                            color: KPrimaryColor,
-                          )
-                        : null,
+                trailing: provider.langCode == 'ar'
+                    ? Icon(
+                        Icons.check_outlined,
+                        color: KPrimaryColor,
+                      )
+                    : null,
               ),
               Divider(),
               ListTile(
                 onTap: () {
                   if (provider.langCode != 'en') {
-                    provider
-                        .changeLang('en');
+                    provider.changeLang('en');
                   }
                 },
                 title: Text(
@@ -83,13 +78,12 @@ class LanguageBottomSheet extends StatelessWidget {
                   'lib/assets/united-states.png',
                   height: 50,
                 ),
-                trailing:
-                   provider.langCode == 'en'
-                        ? Icon(
-                            Icons.check_outlined,
-                            color: KPrimaryColor,
-                          )
-                        : null,
+                trailing: provider.langCode == 'en'
+                    ? Icon(
+                        Icons.check_outlined,
+                        color: KPrimaryColor,
+                      )
+                    : null,
               ),
             ],
           ),

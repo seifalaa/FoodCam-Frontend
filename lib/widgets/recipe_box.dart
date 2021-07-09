@@ -54,36 +54,8 @@ class RecipeBox extends StatelessWidget {
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      for (int i = 0; i < recipe.recipeRate.toInt(); i++)
-                        Icon(
-                          Icons.star_rounded,
-                          size: _screenWidth <= KMobileScreenSize
-                              ? _screenWidth * 0.045
-                              : _screenWidth * 0.0225,
-                          color: Color(0xFFFFC107),
-                        ),
-                      if (recipe.recipeRate - recipe.recipeRate.toInt() != 0)
-                        Icon(
-                          Icons.star_half_rounded,
-                          size: _screenWidth <= KMobileScreenSize
-                              ? _screenWidth * 0.045
-                              : _screenWidth * 0.0225,
-                          color: Color(0xFFFFC107),
-                        ),
-                      for (int i = 0;
-                          i < 5 - recipe.recipeRate.toInt() - 1;
-                          i++)
-                        Icon(
-                          Icons.star_rounded,
-                          size: _screenWidth <= KMobileScreenSize
-                              ? _screenWidth * 0.045
-                              : _screenWidth * 0.0225,
-                          color: Colors.white54,
-                        )
-                    ],
-                  )
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: getRate(recipe.recipeRate, _screenWidth))
                 ],
               ),
             ),
@@ -111,5 +83,48 @@ class RecipeBox extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  List<Widget> getRate(double rate, _screenWidth) {
+    List<Widget> stars = [];
+    for (int i = 0; i < rate.toInt(); i++) {
+      stars.add(Icon(
+        Icons.star_rounded,
+        size: _screenWidth <= KMobileScreenSize
+            ? _screenWidth * 0.045
+            : _screenWidth * 0.0225,
+        color: Color(0xFFFFC107),
+      ));
+    }
+    bool noHalves = rate.toInt() == rate;
+    if (noHalves) {
+      for (int i = 0; i < 5 - recipe.recipeRate.toInt(); i++) {
+        stars.add(Icon(
+          Icons.star_rounded,
+          size: _screenWidth <= KMobileScreenSize
+              ? _screenWidth * 0.045
+              : _screenWidth * 0.0225,
+          color: Colors.white54,
+        ));
+      }
+    } else {
+      stars.add(Icon(
+        Icons.star_half_rounded,
+        size: _screenWidth <= KMobileScreenSize
+            ? _screenWidth * 0.045
+            : _screenWidth * 0.0225,
+        color: Color(0xFFFFC107),
+      ));
+      for (int i = 0; i < 5 - recipe.recipeRate.toInt() - 1; i++) {
+        stars.add(Icon(
+          Icons.star_rounded,
+          size: _screenWidth <= KMobileScreenSize
+              ? _screenWidth * 0.045
+              : _screenWidth * 0.0225,
+          color: Colors.white54,
+        ));
+      }
+    }
+    return stars;
   }
 }

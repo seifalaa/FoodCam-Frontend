@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
-import 'package:foodcam_frontend/controllers/recipe_controller.dart';
-import 'package:foodcam_frontend/models/ingredient.dart';
+import 'package:foodcam_frontend/controllers/homepage_controller.dart';
+import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/pages/basket.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
@@ -19,7 +21,9 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final RecipeController _recipeController = RecipeController();
+    final HomePageController _homePageController = HomePageController();
+    final FirebaseFirestore firebase = FirebaseFirestore.instance;
+    final String lang = Provider.of<LanguageProvider>(context).langCode;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -77,126 +81,115 @@ class Home extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            FutureBuilder(
-              future: _recipeController
-                  .getRecipes(Provider.of<LangUageProvider>(context).langCode),
-              builder: (context, AsyncSnapshot<List<Recipe>> snapshot) =>
-                  snapshot.hasData? GridView.builder(
-                itemCount: snapshot.data!.length,
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 600,
-                  childAspectRatio: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return RecipeBox(
-                    recipe: Recipe(
-                        recipeImageUrl: snapshot.data![index].recipeImageUrl,
-                        recipeName: snapshot.data![index].recipeName,
-                        recipeRate: snapshot.data![index].recipeRate,
-                        steps: snapshot.data![index].steps,
-                        ingredients: snapshot.data![index].ingredients),
-                  );
-                },
-              ):Center(child: CircularProgressIndicator(color: KPrimaryColor,),),
+            StreamBuilder(
+              stream: lang == 'ar'
+                  ? firebase.collection('Recipes-ar').snapshots()
+                  : firebase.collection('Recipes').snapshots(),
+              builder: (context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          snapshot) =>
+                  snapshot.hasData
+                      ? GridView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 600,
+                            childAspectRatio: 2,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            QueryDocumentSnapshot<Map<String, dynamic>> doc =
+                                snapshot.data!.docs[index];
+                            return FutureBuilder<Recipe>(
+                                future: _homePageController
+                                    .recipeFromQueryDocumentSnapshot(doc),
+                                builder: (context, recipeSnapshot) {
+                                  return recipeSnapshot.hasData
+                                      ? RecipeBox(recipe: recipeSnapshot.data!)
+                                      : Container();
+                                });
+                          },
+                        )
+                      : Center(
+                          child: CircularProgressIndicator(
+                            color: KPrimaryColor,
+                          ),
+                        ),
             ),
-            GridView.builder(
-              itemCount: 50,
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 600,
-                childAspectRatio: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return CategoryBox(
-                  imagePath: 'lib/assets/breakfast2.jpg',
-                  categoryName: 'فطور',
-                  recipes: [
-                    Recipe(
-                      recipeImageUrl:
-                          'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-                      recipeName: 'كرات لحم',
-                      recipeRate: 3.5,
-                      steps: ['step1', 'step2', 'step3'],
-                      ingredients: [
-                        Ingredient(
-                            ingredientName: 'طماطم',
-                            ingredientImageUrl:
-                                'lib/assets/istockphoto-466175630-612x612.png'),
-                        Ingredient(
-                            ingredientName: 'طماطم',
-                            ingredientImageUrl:
-                                'lib/assets/istockphoto-466175630-612x612.png'),
-                      ],
-                    ),
-                    Recipe(
-                      recipeImageUrl:
-                          'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-                      recipeName: 'كرات لحم',
-                      recipeRate: 3.5,
-                      steps: ['step1', 'step2', 'step3'],
-                      ingredients: [
-                        Ingredient(
-                            ingredientName: 'طماطم',
-                            ingredientImageUrl:
-                                'lib/assets/istockphoto-466175630-612x612.png'),
-                        Ingredient(
-                            ingredientName: 'طماطم',
-                            ingredientImageUrl:
-                                'lib/assets/istockphoto-466175630-612x612.png'),
-                      ],
-                    ),
-                    Recipe(
-                      recipeImageUrl:
-                          'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-                      recipeName: 'كرات لحم',
-                      recipeRate: 3.5,
-                      steps: ['step1', 'step2', 'step3'],
-                      ingredients: [
-                        Ingredient(
-                            ingredientName: 'طماطم',
-                            ingredientImageUrl:
-                                'lib/assets/istockphoto-466175630-612x612.png'),
-                        Ingredient(
-                            ingredientName: 'طماطم',
-                            ingredientImageUrl:
-                                'lib/assets/istockphoto-466175630-612x612.png'),
-                      ],
-                    ),
-                  ],
-                );
-              },
+            StreamBuilder(
+              stream: lang == 'ar'
+                  ? firebase.collection('Categories-ar').snapshots()
+                  : firebase.collection('Categories').snapshots(),
+              builder: (context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          snapshot) =>
+                  snapshot.hasData
+                      ? GridView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 600,
+                            childAspectRatio: 2,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            QueryDocumentSnapshot<Map<String, dynamic>> doc =
+                                snapshot.data!.docs[index];
+                            return FutureBuilder<Category>(
+                                future: _homePageController
+                                    .categoryFromQueryDocumentSnapshot(doc),
+                                builder: (context, snapshot1) {
+                                  return snapshot1.hasData
+                                      ? CategoryBox(
+                                          category: snapshot1.data!,
+                                        )
+                                      : Container();
+                                });
+                          },
+                        )
+                      : Center(
+                          child: CircularProgressIndicator(
+                            color: KPrimaryColor,
+                          ),
+                        ),
             ),
-            GridView.builder(
-              itemCount: 50,
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 600,
-                childAspectRatio: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return RecipeBox(
-                  recipe: Recipe(
-                      recipeImageUrl:
-                          'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-                      recipeName: 'كرات لحم',
-                      recipeRate: 3.5,
-                      steps: [
-                        'step1',
-                        'step2',
-                        'step3'
-                      ],
-                      ingredients: [
-                        Ingredient(
-                            ingredientName: 'طماطم',
-                            ingredientImageUrl:
-                                'lib/assets/istockphoto-466175630-612x612.png'),
-                      ]),
-                );
-              },
+            StreamBuilder(
+              stream: lang == 'ar'
+                  ? firebase.collection('Recipes-ar').snapshots()
+                  : firebase.collection('Recipes').snapshots(),
+              builder: (context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          snapshot) =>
+                  snapshot.hasData
+                      ? GridView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 600,
+                            childAspectRatio: 2,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            QueryDocumentSnapshot<Map<String, dynamic>> doc =
+                                snapshot.data!.docs[index];
+                            return FutureBuilder<Recipe>(
+                                future: _homePageController
+                                    .recipeFromQueryDocumentSnapshot(doc),
+                                builder: (context, recipeSnapshot) {
+                                  return recipeSnapshot.hasData
+                                      ? RecipeBox(recipe: recipeSnapshot.data!)
+                                      : Container();
+                                });
+                          },
+                        )
+                      : Center(
+                          child: CircularProgressIndicator(
+                            color: KPrimaryColor,
+                          ),
+                        ),
             ),
           ],
         ),

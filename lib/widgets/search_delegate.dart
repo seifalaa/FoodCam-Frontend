@@ -1,16 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/controllers/homepage_controller.dart';
+import 'package:foodcam_frontend/models/recipe.dart';
+import 'package:foodcam_frontend/providers/lang_provider.dart';
+import 'package:foodcam_frontend/widgets/no_results_page.dart';
+import 'package:foodcam_frontend/widgets/recipe_box.dart';
+import 'package:foodcam_frontend/widgets/start_search_page.dart';
+import 'package:provider/provider.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
-  List<String> _recipes = [
-    'Apple pie',
-    'Spaghetti with meat balls',
-    'Fried chicken',
-    'Fish and chips',
-    'Sushi'
-  ];
+  final HomePageController _controller = HomePageController();
+  List<Recipe> searchResults = [];
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -18,6 +19,8 @@ class CustomSearchDelegate extends SearchDelegate {
       IconButton(
         onPressed: () {
           query = '';
+          // searchResults = [];
+          // buildResults(context);
         },
         icon: Icon(
           Icons.clear,
@@ -42,298 +45,87 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    if (query != '') {
-      List<String> _filteredRecipes = _recipes
-          .where((element) =>
-              element.toLowerCase().startsWith(query.toLowerCase()))
-          .toList();
-      return ListView.builder(
-        itemCount: _filteredRecipes.length,
-        itemBuilder: (context, index) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
-          child: Column(
-            children: [
-              Material(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(15),
-                child: InkWell(
-                  onTap: () {}, //TODO:: Navigate to recipe page here
-                  borderRadius: BorderRadius.circular(15),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: Image.asset(
-                                'lib/assets/gettyimages-154963660-612x612.jpg',
-                                fit: BoxFit.cover,
-                                width: 100,
-                                height: 100,
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 15.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _filteredRecipes[index],
-                                      overflow: TextOverflow.fade,
-                                      style: TextStyle(
-                                        color: KTextColor,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10.0),
-                                      child: Text(
-                                        'Lunch meal',
-                                        style: TextStyle(
-                                          color: Color(0x90262626),
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            for (var i = 0; i < 5; i++)
-                              Icon(
-                                Icons.star_rounded,
-                                color: Color(0xFFFFC107),
-
-                              )
-                          ],
-                        ),
-                      )
-                    ],
+    final String langCode = Provider.of<LanguageProvider>(context).langCode;
+    if (searchResults.isNotEmpty && query.isNotEmpty) {
+      return GridView.builder(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 600,
+          childAspectRatio: 2,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+        ),
+        itemCount: searchResults.length,
+        itemBuilder: (context, index) => RecipeBox(
+          recipe: searchResults[index],
+        ),
+      );
+    } else if (searchResults.isEmpty && query.isNotEmpty) {
+      return FutureBuilder(
+          future: _controller.search(query, langCode),
+          builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
+            if (snapshot.hasData) {
+              searchResults = snapshot.data!;
+              if (snapshot.data!.length != 0) {
+                return GridView.builder(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 600,
+                    childAspectRatio: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
                   ),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) => RecipeBox(
+                    recipe: snapshot.data![index],
+                  ),
+                );
+              } else {
+                return NoResultsPage();
+              }
+            } else
+              return Center(
+                child: CircularProgressIndicator(
+                  color: KPrimaryColor,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Divider(
-                  indent: 10.0,
-                  endIndent: 10.0,
-                  color: Color(0x80262626),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
+              );
+          });
     } else {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Icon(
-                  Icons.search_off_rounded,
-                  size: 50,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Text(
-                'No results found',
-                style: TextStyle(
-                  color: KTextColor,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
+      return StartSearchPage();
     }
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<String> _filteredRecipes = [];
+    final String langCode = Provider.of<LanguageProvider>(context).langCode;
     if (query != '') {
-      _filteredRecipes = _recipes
-          .where((element) =>
-              element.toLowerCase().startsWith(query.toLowerCase()))
-          .toList();
-      if (_filteredRecipes.isNotEmpty) {
-        return ListView.builder(
-          itemCount: _filteredRecipes.length,
-          itemBuilder: (context, index) => Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
-            child: Column(
-              children: [
-                Material(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(15),
-                  child: InkWell(
-                    onTap: () {}, //TODO:: Navigate to recipe page here
-                    borderRadius: BorderRadius.circular(15),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Row(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(15),
-                                child: Image.asset(
-                                  'lib/assets/gettyimages-154963660-612x612.jpg',
-                                  fit: BoxFit.cover,
-                                  width: 100,
-                                  height: 100,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 15.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        _filteredRecipes[index],
-                                        overflow: TextOverflow.fade,
-                                        style: TextStyle(
-                                          color: KTextColor,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 10.0),
-                                        child: Text(
-                                          'Lunch meal',
-                                          style: TextStyle(
-                                            color: Color(0x90262626),
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              for (var i = 0; i < 5; i++)
-                                Icon(
-                                  Icons.star_rounded,
-                                  color: Color(0xFFFFC107),
-
-                                )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+      return FutureBuilder(
+          future: _controller.search(query, langCode),
+          builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
+            if (snapshot.hasData) {
+              searchResults = snapshot.data!;
+              if (snapshot.data!.length != 0) {
+                return GridView.builder(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 600,
+                    childAspectRatio: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Divider(
-                    indent: 10.0,
-                    endIndent: 10.0,
-                    color: Color(0x80262626),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) => RecipeBox(
+                    recipe: snapshot.data![index],
                   ),
+                );
+              } else {
+                return NoResultsPage();
+              }
+            } else
+              return Center(
+                child: CircularProgressIndicator(
+                  color: KPrimaryColor,
                 ),
-              ],
-            ),
-          ),
-        );
-      } else {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Icon(
-                    Icons.search_off_rounded,
-                    size: 50,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Text(
-                  'No results found',
-                  style: TextStyle(
-                    color: KTextColor,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      }
+              );
+          });
     } else
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: KPrimaryColor,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Icon(
-                  Icons.search_rounded,
-                  color: Colors.white,
-                  size: 50,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Text(
-                'Start searching for recipes',
-                style: TextStyle(
-                  color: KTextColor,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
+      return StartSearchPage();
   }
 }

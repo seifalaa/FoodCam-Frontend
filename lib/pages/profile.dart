@@ -299,7 +299,8 @@ class Profile extends StatelessWidget {
                             context: context,
                             builder: (context) => makeDismissible(
                               child: LanguageBottomSheet(
-                                provider: Provider.of(context, listen: false),
+                                provider: Provider.of<LanguageProvider>(context,
+                                    listen: false),
                               ),
                               context: context,
                             ),

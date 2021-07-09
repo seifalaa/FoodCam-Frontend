@@ -51,5 +51,7 @@
 	"submit": "حفظ",
 	"changeLang": "تغيير اللغة",
 	"ar": "العربية",
-	"en": "English"
+	"en": "English",
+	"startSearch": "إبدأ بالبحث عن وصفات",
+	"noResults": "لم يتم العثور علي نتائج"
 }

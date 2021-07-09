@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
-import 'package:foodcam_frontend/widgets/add_box.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
 import 'package:foodcam_frontend/widgets/search_delegate.dart';
 import '../constants.dart';
@@ -14,6 +12,7 @@ class CategoryPage extends StatelessWidget {
   }) : super(key: key);
   final String categoryName;
   final List<Recipe> recipes;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +54,6 @@ class CategoryPage extends StatelessWidget {
           children: [
             for (var i = 0; i < recipes.length; i++)
               RecipeBox(recipe: recipes[i]),
-            AddBox(onTab: () {}),
           ],
         ),
       ),

@@ -3,12 +3,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/models/ingredient.dart';
 import 'package:foodcam_frontend/pages/search_results.dart';
 import 'package:foodcam_frontend/widgets/add_box.dart';
 import 'package:foodcam_frontend/widgets/add_ingredient_bottom_sheet.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/collection_box.dart';
-import 'package:foodcam_frontend/widgets/preferred_search_delegate.dart';
+import 'package:foodcam_frontend/widgets/ingredient_box.dart';
 import 'package:image_picker/image_picker.dart';
 
 class BasketPage extends StatefulWidget {
@@ -20,7 +21,16 @@ class BasketPage extends StatefulWidget {
 
 class _BasketPageState extends State<BasketPage> {
   final picker = ImagePicker();
-  List<String> _items = ['adsasd', 'adsad'];
+  List<Ingredient> _items = [
+    Ingredient(
+        ingredientName: 'test',
+        ingredientImageUrl:
+            'lib/assets/5dad7f27320ca_HERO-alergia-al-pescado.jpg'),
+    Ingredient(
+        ingredientName: 'test2',
+        ingredientImageUrl:
+            'lib/assets/5dad7f27320ca_HERO-alergia-al-pescado.jpg'),
+  ];
   late File _image;
 
   @override
@@ -113,19 +123,17 @@ class _BasketPageState extends State<BasketPage> {
               child: GridView(
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 300,
-                  childAspectRatio: 0.8,
+                  maxCrossAxisExtent: 250,
+                  childAspectRatio: 1,
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
                 ),
                 children: [
                   for (int i = 0; i < _items.length; i++)
-                    CollectionBox(
-                      imagePath:
-                          'lib/assets/5dad7f27320ca_HERO-alergia-al-pescado.jpg',
-                      category: _items[i],
-                      isRecipe: false,
-                      isIngredient: true,
+                    IngredientBox(
+                      ingredient: _items[i],
+                      index: i,
+                      onDelete: deleteItem,
                     ),
                   AddBox(onTab: addItem),
                 ],
@@ -157,5 +165,11 @@ class _BasketPageState extends State<BasketPage> {
         context: context,
       ),
     );
+  }
+
+  void deleteItem(index) {
+    setState(() {
+      _items.removeAt(index);
+    });
   }
 }

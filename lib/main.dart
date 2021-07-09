@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/pages/home.dart';
@@ -11,65 +12,81 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider<AllergyProvider>(
             create: (_) => AllergyProvider()),
-        ChangeNotifierProvider<LangUageProvider>(
-            create: (_) => LangUageProvider()),
+        ChangeNotifierProvider<LanguageProvider>(
+            create: (_) => LanguageProvider()),
       ],
       child: MyApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
-    final String lang = Provider.of<LangUageProvider>(context).langCode;
-    return MaterialApp(
-      builder: (context, navigator) {
-        return Theme(
-          data: ThemeData(
-            accentColor: KSecondaryColor,
-            primaryColor: KPrimaryColor,
-            splashColor: KSecondaryColor,
-            textSelectionTheme: TextSelectionThemeData(
-              cursorColor: KPrimaryColor,
-            ),
-            scaffoldBackgroundColor: KBgColor,
-            fontFamily: Localizations.localeOf(context).languageCode == 'ar'
-                ? GoogleFonts.cairo().fontFamily
-                : null,
-          ),
-          child: Container(
-            child: navigator,
-          ),
-        );
-      },
-      localizationsDelegates: [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('en', ''), // English, no country code
-        const Locale('ar', ''), // Arabic, no country code
-      ],
-      locale: Locale(lang),
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      routes: {
-        'login/': (context) => Login(),
-        'signup/': (context) => Signup1(),
-        'home/': (context) => Home(),
-        'profile/': (context) => Profile(),
-      },
-      initialRoute: 'home/',
-    );
+    final String lang = Provider.of<LanguageProvider>(context).langCode;
+    return FutureBuilder<FirebaseApp>(
+        future: _initialization,
+        builder: (context, snapshot) {
+          return snapshot.hasData
+              ? MaterialApp(
+                  builder: (context, navigator) {
+                    return Theme(
+                      data: ThemeData(
+                        accentColor: KSecondaryColor,
+                        primaryColor: KPrimaryColor,
+                        splashColor: KSecondaryColor,
+                        textSelectionTheme: TextSelectionThemeData(
+                          cursorColor: KPrimaryColor,
+                        ),
+                        scaffoldBackgroundColor: KBgColor,
+                        fontFamily:
+                            Localizations.localeOf(context).languageCode == 'ar'
+                                ? GoogleFonts.cairo().fontFamily
+                                : null,
+                      ),
+                      child: Container(
+                        child: navigator,
+                      ),
+                    );
+                  },
+                  localizationsDelegates: [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: [
+                    const Locale('en', ''), // English, no country code
+                    const Locale('ar', ''), // Arabic, no country code
+                  ],
+                  locale: Locale(lang),
+                  debugShowCheckedModeBanner: false,
+                  title: 'Flutter Demo',
+                  routes: {
+                    'login/': (context) => Login(),
+                    'signup/': (context) => Signup1(),
+                    'home/': (context) => Home(),
+                    'profile/': (context) => Profile(),
+                  },
+                  initialRoute: 'home/',
+                )
+              : Center(
+                  child: CircularProgressIndicator(),
+                );
+        });
   }
 }

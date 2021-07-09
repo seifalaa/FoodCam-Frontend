@@ -77,7 +77,7 @@ class _RecipeRateBottomSheetState extends State<RecipeRateBottomSheet> {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 100.0, vertical: 20),
+                    const EdgeInsets.symmetric(horizontal: 170.0, vertical: 20),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     primary: KPrimaryColor,

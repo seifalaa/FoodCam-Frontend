@@ -7,7 +7,7 @@ class Ingredient {
   final ingredientName;
   final ingredientImageUrl;
 
-  Ingredient fromMap(Map<String, dynamic> map) {
+  static Ingredient fromMap(Map<String, dynamic> map) {
     return Ingredient(
       ingredientName: map['ingredientName'],
       ingredientImageUrl: map['ingredientImageUrl'],

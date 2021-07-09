@@ -4,8 +4,7 @@ import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/collection_box.dart';
 import 'package:foodcam_frontend/widgets/preferred_search_delegate.dart';
-import 'package:foodcam_frontend/widgets/search_delegate.dart';
-import 'package:foodcam_frontend/widgets/text_form_field.dart';
+
 
 class DisPreferrredIngredients extends StatefulWidget {
   const DisPreferrredIngredients({Key? key,

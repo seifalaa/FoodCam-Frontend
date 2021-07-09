@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/pages/category_page.dart';
 
@@ -7,13 +8,9 @@ import '../constants.dart';
 class CategoryBox extends StatelessWidget {
   const CategoryBox({
     Key? key,
-    required this.imagePath,
-    required this.categoryName,
-    required this.recipes,
+    required this.category,
   }) : super(key: key);
-  final imagePath;
-  final categoryName;
-  final List<Recipe> recipes;
+  final Category category;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +23,8 @@ class CategoryBox extends StatelessWidget {
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
-                imagePath,
+              child: Image.network(
+                category.categoryImageUrl,
                 fit: BoxFit.cover,
               ),
             ),
@@ -48,7 +45,7 @@ class CategoryBox extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    categoryName,
+                    category.categoryName,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: _screenWidth <= KMobileScreenSize
@@ -60,7 +57,7 @@ class CategoryBox extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Text(
-                      handleRecipesOrRecipe(recipes.length, _lang),
+                      handleRecipesOrRecipe(category.recipes.length, _lang),
                       style: TextStyle(
                         color: Color(0xFFFFC107),
                         fontWeight: FontWeight.bold,
@@ -87,7 +84,9 @@ class CategoryBox extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => CategoryPage(
-                          categoryName: categoryName, recipes: recipes),
+                        categoryName: category.categoryName,
+                        recipes: category.recipes,
+                      ),
                     ),
                   );
                 },

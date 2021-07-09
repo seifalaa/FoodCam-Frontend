@@ -51,5 +51,7 @@
 	"submit": "Submit",
 	"changeLang": "Change Language",
 	"ar": "العربية",
-	"en": "English"
+	"en": "English",
+	"startSearch": "Start searching for recipes",
+	"noResults": "No results found"
 }
