@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
+import 'package:foodcam_frontend/providers/lang_provider.dart';
+import 'package:loading_overlay/loading_overlay.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 
@@ -25,6 +28,7 @@ class _IngredientBoxState extends State<IngredientBox> {
   @override
   Widget build(BuildContext context) {
     double _screenWidth = MediaQuery.of(context).size.width;
+    final String langCode = Provider.of<LanguageProvider>(context).langCode;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(
@@ -32,7 +36,7 @@ class _IngredientBoxState extends State<IngredientBox> {
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
+              child: Image.network(
                 widget.ingredient.ingredientImageUrl,
                 fit: BoxFit.cover,
               ),
@@ -101,8 +105,10 @@ class _IngredientBoxState extends State<IngredientBox> {
                   primary: Colors.red,
                 ),
                 child: Icon(Icons.clear),
-                onPressed: () {
-                  widget.onDelete(widget.index);
+                onPressed: () async {
+
+                  await widget.onDelete(
+                      widget.ingredient.ingredientName, langCode);
                   setState(() {
                     _isVisible = false;
                   });

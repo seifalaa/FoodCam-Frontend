@@ -3,8 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants.dart';
 
 class StartSearchPage extends StatelessWidget {
-  const StartSearchPage({Key? key}) : super(key: key);
-
+  const StartSearchPage({Key? key,required this.text}) : super(key: key);
+  final text ;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -28,7 +28,7 @@ class StartSearchPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: Text(
-              AppLocalizations.of(context)!.startSearch,
+              text,
               style: TextStyle(
                 color: KTextColor,
                 fontSize: 20,

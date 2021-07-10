@@ -1,9 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/controllers/homepage_controller.dart';
+import 'package:foodcam_frontend/models/category.dart';
+import 'package:foodcam_frontend/pages/empty_collection_page.dart';
+import 'package:foodcam_frontend/providers/lang_provider.dart';
+import 'package:foodcam_frontend/widgets/add_box.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/collection_box.dart';
-import 'package:foodcam_frontend/widgets/text_form_field.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:loading_overlay/loading_overlay.dart';
+import 'package:provider/provider.dart';
 
 class CollectionPage extends StatefulWidget {
   const CollectionPage({Key? key}) : super(key: key);
@@ -15,11 +23,15 @@ class CollectionPage extends StatefulWidget {
 class _CollectionPageState extends State<CollectionPage> {
   TextEditingController _collectionNameController = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+  final HomePageController _controller = HomePageController();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    final String langCode = Provider.of<LanguageProvider>(context).langCode;
     return Scaffold(
-       extendBody: true,
+      extendBody: true,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
@@ -31,7 +43,7 @@ class _CollectionPageState extends State<CollectionPage> {
           ),
         ),
         title: Text(
-          'Collections',
+          AppLocalizations.of(context)!.collections,
           style: TextStyle(color: KTextColor),
         ),
         elevation: 0,
@@ -48,155 +60,67 @@ class _CollectionPageState extends State<CollectionPage> {
         ),
       ),
       bottomNavigationBar: CustomButtonNavigationBar(),
-      body: GridView(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 300,
-          childAspectRatio: 1.5,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
+      body: LoadingOverlay(
+        isLoading: _isLoading,
+        progressIndicator: CircularProgressIndicator(
+          color: KPrimaryColor,
         ),
-        children: [
-          CollectionBox(
-            category: 'test',
-            imagePath: 'lib/assets/breakfast2.jpg',
-            recipeNumber: 'test',
-            isRecipe: false,
-            isIngredient: false,
-          ),
-          CollectionBox(
-            category: 'test2',
-            imagePath: 'lib/assets/breakfast2.jpg',
-            recipeNumber: 'test',
-            isRecipe: false,
-            isIngredient: false,
-          ),
-          CollectionBox(
-            category: 'test',
-            imagePath: 'lib/assets/breakfast2.jpg',
-            recipeNumber: 'test',
-            isRecipe: false,
-            isIngredient: false,
-          ),
-          CollectionBox(
-            category: 'test',
-            imagePath: 'lib/assets/breakfast2.jpg',
-            recipeNumber: 'test',
-            isRecipe: false,
-            isIngredient: false,
-          ),
-          CollectionBox(
-            category: 'test',
-            imagePath: 'lib/assets/breakfast2.jpg',
-            recipeNumber: 'test',
-            isRecipe: false,
-            isIngredient: false,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Material(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.black12,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(20),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => Dialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Material(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20.0),
-                                    topRight: Radius.circular(20.0),
-                                  ),
-                                  elevation: 1,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Center(
-                                      child: Text(
-                                        'Create Collection',
-                                        style: TextStyle(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+        color: Colors.black,
+        opacity: 0.1,
+        child: StreamBuilder(
+            stream: langCode == 'ar'
+                ? _fireStore.collection('Collections-ar').snapshots()
+                : _fireStore.collection('Collections').snapshots(),
+            builder: (context,
+                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+              return snapshot.hasData
+                  ? snapshot.data!.docs.length != 0
+                      ? GridView(
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 300,
+                            childAspectRatio: 0.8,
+                            crossAxisSpacing: 5,
+                            mainAxisSpacing: 5,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 30.0),
-                            child: Form(
-                              key: _formKey,
-                              child: Column(
-                                children: [
-                                  CustomTextFormField(
-                                    validator: (input) {
-                                      return input == ''
-                                          ? 'Collection name cannot be empty'
-                                          : null;
-                                    },
-                                    hint: 'Collection name',
-                                    controller: _collectionNameController,
-                                    isObscure: false,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 20.0),
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: KPrimaryColor,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        if (_formKey.currentState!.validate()) {
-                                          print('valid');
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Text(
-                                          'Create',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                          children: [
+                            for (int i = 0; i < snapshot.data!.docs.length; i++)
+                              FutureBuilder<Category>(
+                                future: _controller
+                                    .collectionFromQueryDocumentSnapshot(
+                                        snapshot.data!.docs[i]),
+                                builder: (context,
+                                        AsyncSnapshot<Category>
+                                            categorySnapshot) =>
+                                    snapshot.hasData
+                                        ? CollectionBox(
+                                            category: categorySnapshot.data!,
+                                            onDelete: deleteItem,
+                                          )
+                                        : Container(),
                               ),
-                            ),
-                          ),
-                        ],
+                            AddBox(onTab: () {}),
+                          ],
+                        )
+                      : EmptyCollectionPage()
+                  : Center(
+                      child: CircularProgressIndicator(
+                        color: KPrimaryColor,
                       ),
-                    ),
-                  );
-                },
-                child: Icon(
-                  Icons.add_rounded,
-                  size: 50,
-                  color: KBgColor,
-                ),
-              ),
-            ),
-          ),
-        ],
+                    );
+            }),
       ),
     );
+  }
+
+  void deleteItem(collectionName, langCode) async {
+    setState(() {
+      _isLoading = true;
+    });
+    await _controller.deleteCollection(collectionName, langCode);
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

@@ -59,45 +59,45 @@ class _CollectionsRecipesState extends State<CollectionsRecipes> {
           mainAxisSpacing: 10,
         ),
         children: [
-          CollectionBox(
-            category: 'MeatBalls',
-            imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-            isRecipe: true,
-            isIngredient: false,
-            
-          ),
-          CollectionBox(
-            category: 'MeatBalls',
-            imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-                        isRecipe: true,
-                        isIngredient: false,
-
-            
-          ),
-          CollectionBox(
-            category: 'MeatBalls',
-            imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-                        isRecipe: true,
-                        isIngredient: false,
-
-            
-          ),
-          CollectionBox(
-            category: 'MeatBalls',
-            imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-            isRecipe: true,
-            isIngredient: false,
-
-            
-          ),
-          CollectionBox(
-            category: 'MeatBalls',
-            imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-                        isRecipe: true,
-                        isIngredient: false,
-
-            
-          ),
+          // CollectionBox(
+          //   category: 'MeatBalls',
+          //   imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
+          //   isRecipe: true,
+          //   isIngredient: false,
+          //
+          // ),
+          // CollectionBox(
+          //   category: 'MeatBalls',
+          //   imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
+          //               isRecipe: true,
+          //               isIngredient: false,
+          //
+          //
+          // ),
+          // CollectionBox(
+          //   category: 'MeatBalls',
+          //   imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
+          //               isRecipe: true,
+          //               isIngredient: false,
+          //
+          //
+          // ),
+          // CollectionBox(
+          //   category: 'MeatBalls',
+          //   imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
+          //   isRecipe: true,
+          //   isIngredient: false,
+          //
+          //
+          // ),
+          // CollectionBox(
+          //   category: 'MeatBalls',
+          //   imagePath: 'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
+          //               isRecipe: true,
+          //               isIngredient: false,
+          //
+          //
+          // ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Material(

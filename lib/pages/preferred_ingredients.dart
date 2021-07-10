@@ -61,45 +61,45 @@ class _PreferrredIngredientsState extends State<PreferrredIngredients> {
           mainAxisSpacing: 10,
         ),
         children: [
-          CollectionBox(
-            category: 'Meat',
-            imagePath: 'lib/assets/meat-80049790.png',
-            isRecipe: false,
-            isIngredient: true,
-            
-          ),
-          CollectionBox(
-            category: 'Meat',
-            imagePath: 'lib/assets/meat-80049790.png',
-                        isRecipe: false,
-            isIngredient: true,
-
-            
-          ),
-          CollectionBox(
-            category: 'Meat',
-            imagePath: 'lib/assets/meat-80049790.png',
-                        isRecipe: false,
-            isIngredient: true,
-
-            
-          ),
-          CollectionBox(
-            category: 'Meat',
-            imagePath: 'lib/assets/meat-80049790.png',
-            isRecipe: false,
-            isIngredient: true,
-
-            
-          ),
-          CollectionBox(
-            category: 'Meat',
-            imagePath: 'lib/assets/meat-80049790.png',
-                        isRecipe: false,
-            isIngredient: true,
-
-            
-          ),
+          // CollectionBox(
+          //   category: 'Meat',
+          //   imagePath: 'lib/assets/meat-80049790.png',
+          //   isRecipe: false,
+          //   isIngredient: true,
+          //
+          // ),
+          // CollectionBox(
+          //   category: 'Meat',
+          //   imagePath: 'lib/assets/meat-80049790.png',
+          //               isRecipe: false,
+          //   isIngredient: true,
+          //
+          //
+          // ),
+          // CollectionBox(
+          //   category: 'Meat',
+          //   imagePath: 'lib/assets/meat-80049790.png',
+          //               isRecipe: false,
+          //   isIngredient: true,
+          //
+          //
+          // ),
+          // CollectionBox(
+          //   category: 'Meat',
+          //   imagePath: 'lib/assets/meat-80049790.png',
+          //   isRecipe: false,
+          //   isIngredient: true,
+          //
+          //
+          // ),
+          // CollectionBox(
+          //   category: 'Meat',
+          //   imagePath: 'lib/assets/meat-80049790.png',
+          //               isRecipe: false,
+          //   isIngredient: true,
+          //
+          //
+          // ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Material(

@@ -53,5 +53,9 @@
 	"ar": "العربية",
 	"en": "English",
 	"startSearch": "Start searching for recipes",
-	"noResults": "No results found"
+	"startSearchIng": "Start searching for ingredients",
+	"noResults": "No results found",
+	"results": "Search Results",
+	"startCollection": "Start by adding a collection",
+	"addCollection": "Add collection"
 }

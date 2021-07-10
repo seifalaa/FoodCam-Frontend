@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:foodcam_frontend/generated/l10n.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
-import 'package:foodcam_frontend/widgets/no_results_page.dart';
+import 'package:foodcam_frontend/pages/no_results_page.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
-import 'package:foodcam_frontend/widgets/start_search_page.dart';
+import 'package:foodcam_frontend/pages/start_search_page.dart';
 import 'package:provider/provider.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
@@ -61,7 +63,7 @@ class CustomSearchDelegate extends SearchDelegate {
       );
     } else if (searchResults.isEmpty && query.isNotEmpty) {
       return FutureBuilder(
-          future: _controller.search(query, langCode),
+          future: _controller.recipeSearch(query, langCode),
           builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
             if (snapshot.hasData) {
               searchResults = snapshot.data!;
@@ -89,7 +91,9 @@ class CustomSearchDelegate extends SearchDelegate {
               );
           });
     } else {
-      return StartSearchPage();
+      return StartSearchPage(
+        text: AppLocalizations.of(context)!.startSearch,
+      );
     }
   }
 
@@ -98,7 +102,7 @@ class CustomSearchDelegate extends SearchDelegate {
     final String langCode = Provider.of<LanguageProvider>(context).langCode;
     if (query != '') {
       return FutureBuilder(
-          future: _controller.search(query, langCode),
+          future: _controller.recipeSearch(query, langCode),
           builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
             if (snapshot.hasData) {
               searchResults = snapshot.data!;
@@ -126,6 +130,8 @@ class CustomSearchDelegate extends SearchDelegate {
               );
           });
     } else
-      return StartSearchPage();
+      return StartSearchPage(
+        text: AppLocalizations.of(context)!.startSearch,
+      );
   }
 }

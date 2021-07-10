@@ -1,15 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/controllers/homepage_controller.dart';
+import 'package:foodcam_frontend/models/ingredient.dart';
+import 'package:foodcam_frontend/providers/lang_provider.dart';
+import 'package:foodcam_frontend/pages/start_search_page.dart';
+import 'package:loading_overlay/loading_overlay.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../pages/no_results_page.dart';
 
 class PreferredSearchDelegate extends SearchDelegate {
-  List<String> _recipes = [
-    'Meat',
-    'chicken',
-    'Fish',
-    'Tomato'
-  ];
+  final HomePageController _controller = HomePageController();
+  List<Ingredient> searchResults = [];
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -41,265 +44,184 @@ class PreferredSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    if (query != '') {
-      List<String> _filteredRecipes = _recipes
-          .where((element) =>
-              element.toLowerCase().startsWith(query.toLowerCase()))
-          .toList();
-      return ListView.builder(
-        itemCount: _filteredRecipes.length,
-        itemBuilder: (context, index) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
-          child: Column(
-            children: [
-              Material(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(15),
-                child: InkWell(
-                  onTap: () {}, //TODO:: Navigate to recipe page here
-                  borderRadius: BorderRadius.circular(15),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: Image.asset(
-                                'lib/assets/meat-80049790.png',
-                                fit: BoxFit.cover,
-                                width: 100,
-                                height: 100,
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 15.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _filteredRecipes[index],
-                                      overflow: TextOverflow.fade,
-                                      style: TextStyle(
-                                        color: KTextColor,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                   
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      
-                         Padding(
-                           padding: const EdgeInsets.only(right:40.0),
-                           child: Icon( Icons.add_rounded,size: 40,),
-                         )
-                      
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Divider(
-                  indent: 10.0,
-                  endIndent: 10.0,
-                  color: Color(0x80262626),
-                ),
-              ),
-            ],
-          ),
-        ),
+    final String langCode = Provider.of<LanguageProvider>(context).langCode;
+    if (searchResults.isNotEmpty && query.isNotEmpty) {
+      return IngredientsList(
+        searchResults: searchResults,
+        controller: _controller,
+        langCode: langCode,
       );
+    } else if (searchResults.isEmpty && query.isNotEmpty) {
+      return FutureBuilder(
+          future: _controller.ingredientSearch(query, langCode),
+          builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
+            if (snapshot.hasData) {
+              searchResults = snapshot.data!;
+              if (snapshot.data!.length != 0) {
+                return IngredientsList(
+                  searchResults: snapshot.data,
+                  langCode: langCode,
+                  controller: _controller,
+                );
+              } else {
+                return NoResultsPage();
+              }
+            } else
+              return Center(
+                child: CircularProgressIndicator(
+                  color: KPrimaryColor,
+                ),
+              );
+          });
     } else {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Icon(
-                  Icons.search_off_rounded,
-                  size: 50,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Text(
-                'No results found',
-                style: TextStyle(
-                  color: KTextColor,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-          ],
-        ),
+      return StartSearchPage(
+        text: AppLocalizations.of(context)!.startSearchIng,
       );
     }
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<String> _filteredRecipes = [];
+    final String langCode = Provider.of<LanguageProvider>(context).langCode;
     if (query != '') {
-      _filteredRecipes = _recipes
-          .where((element) =>
-              element.toLowerCase().startsWith(query.toLowerCase()))
-          .toList();
-      if (_filteredRecipes.isNotEmpty) {
-        return ListView.builder(
-          itemCount: _filteredRecipes.length,
-          itemBuilder: (context, index) => Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
+      return FutureBuilder(
+          future: _controller.ingredientSearch(query, langCode),
+          builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
+            if (snapshot.hasData) {
+              searchResults = snapshot.data!;
+              if (snapshot.data!.length != 0) {
+                return IngredientsList(
+                  searchResults: snapshot.data,
+                  langCode: langCode,
+                  controller: _controller,
+                );
+              } else {
+                return NoResultsPage();
+              }
+            } else
+              return Center(
+                child: CircularProgressIndicator(
+                  color: KPrimaryColor,
+                ),
+              );
+          });
+    } else
+      return StartSearchPage(
+          text: AppLocalizations.of(context)!.startSearchIng);
+  }
+}
+
+class IngredientsList extends StatefulWidget {
+  const IngredientsList(
+      {Key? key,
+      required this.searchResults,
+      required this.controller,
+      required this.langCode})
+      : super(key: key);
+  final searchResults;
+  final controller;
+  final langCode;
+
+  @override
+  _IngredientsListState createState() => _IngredientsListState();
+}
+
+class _IngredientsListState extends State<IngredientsList> {
+  bool _isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return LoadingOverlay(
+      isLoading: _isLoading,
+      progressIndicator: CircularProgressIndicator(
+        color: KPrimaryColor,
+      ),
+      child: ListView.builder(
+        itemCount: widget.searchResults.length,
+        itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Column(
               children: [
-                Material(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(15),
-                  child: InkWell(
-                    onTap: () {}, //TODO:: Navigate to recipe page here
-                    borderRadius: BorderRadius.circular(15),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Row(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(15),
-                                child: Image.asset(
-                                'lib/assets/meat-80049790.png',
-                                  fit: BoxFit.cover,
-                                  width: 100,
-                                  height: 100,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 15.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        _filteredRecipes[index],
-                                        overflow: TextOverflow.fade,
-                                        style: TextStyle(
-                                          color: KTextColor,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                           padding: const EdgeInsets.only(right:40.0),
-                           child: Icon( Icons.add_rounded,size: 40,),
-                         )
-                      ],
-                    ),
-                  ),
+                AddIngredientListTile(
+                  searchResult: widget.searchResults[index],
+                  controller: widget.controller,
+                  langCode: widget.langCode,
+                  onClick: () async {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    await widget.controller.addIngredientInBasket(
+                      widget.searchResults[index],
+                      widget.langCode,
+                    );
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  },
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Divider(
-                    indent: 10.0,
-                    endIndent: 10.0,
-                    color: Color(0x80262626),
-                  ),
-                ),
+                Divider(),
               ],
-            ),
-          ),
-        );
-      } else {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Icon(
-                    Icons.search_off_rounded,
-                    size: 50,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Text(
-                  'No results found',
-                  style: TextStyle(
-                    color: KTextColor,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      }
-    } else
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
+            )),
+      ),
+    );
+  }
+}
+
+class AddIngredientListTile extends StatefulWidget {
+  const AddIngredientListTile({
+    Key? key,
+    required this.searchResult,
+    required this.controller,
+    required this.langCode,
+    required this.onClick,
+  }) : super(key: key);
+  final searchResult;
+  final controller;
+  final langCode;
+  final onClick;
+
+  @override
+  _AddIngredientListTileState createState() =>
+      _AddIngredientListTileState(isAdded: searchResult.addedToBasket);
+}
+
+class _AddIngredientListTileState extends State<AddIngredientListTile> {
+  bool isAdded;
+
+  _AddIngredientListTileState({required this.isAdded});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Image.network(widget.searchResult.ingredientImageUrl,
+          fit: BoxFit.cover),
+      title: Text(
+        widget.searchResult.ingredientName,
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      trailing: isAdded
+          ? Padding(
+              padding: const EdgeInsets.all(11.0),
+              child: Icon(
+                Icons.check_rounded,
                 color: KPrimaryColor,
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Icon(
-                  Icons.search_rounded,
-                  color: Colors.white,
-                  size: 50,
-                ),
+            )
+          : IconButton(
+              onPressed: () async {
+                await widget.onClick();
+                setState(() {
+                  isAdded = true;
+                });
+              },
+              icon: Icon(
+                Icons.add_rounded,
+                color: KPrimaryColor,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Text(
-                'Start searching for recipes',
-                style: TextStyle(
-                  color: KTextColor,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
+    );
   }
 }

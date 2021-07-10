@@ -181,13 +181,7 @@ class _AllergiesPageState extends State<AllergiesPage> {
                     child: Stack(
                       children: [
                         Positioned.fill(
-                          child: CollectionBox(
-                            imagePath:
-                                'lib/assets/5dad7f27320ca_HERO-alergia-al-pescado.jpg',
-                            category: _allergyProvider.allergies[i],
-                            isRecipe: false,
-                            isIngredient: true,
-                          ),
+                          child: Container()
                         ),
                         Visibility(
                           visible: _allergyProvider.allergiesLongPress[i],

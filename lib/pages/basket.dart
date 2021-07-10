@@ -1,16 +1,21 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
 import 'package:foodcam_frontend/pages/search_results.dart';
+import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/add_box.dart';
 import 'package:foodcam_frontend/widgets/add_ingredient_bottom_sheet.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
-import 'package:foodcam_frontend/widgets/collection_box.dart';
+import 'package:foodcam_frontend/pages/empty_basket_page.dart';
 import 'package:foodcam_frontend/widgets/ingredient_box.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:loading_overlay/loading_overlay.dart';
+import 'package:provider/provider.dart';
 
 class BasketPage extends StatefulWidget {
   const BasketPage({Key? key}) : super(key: key);
@@ -21,20 +26,14 @@ class BasketPage extends StatefulWidget {
 
 class _BasketPageState extends State<BasketPage> {
   final picker = ImagePicker();
-  List<Ingredient> _items = [
-    Ingredient(
-        ingredientName: 'test',
-        ingredientImageUrl:
-            'lib/assets/5dad7f27320ca_HERO-alergia-al-pescado.jpg'),
-    Ingredient(
-        ingredientName: 'test2',
-        ingredientImageUrl:
-            'lib/assets/5dad7f27320ca_HERO-alergia-al-pescado.jpg'),
-  ];
+  final HomePageController _controller = HomePageController();
+  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   late File _image;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    final String lang = Provider.of<LanguageProvider>(context).langCode;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -57,88 +56,113 @@ class _BasketPageState extends State<BasketPage> {
         elevation: 0,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: _items.isEmpty
-          ? FloatingActionButton(
-              backgroundColor: KPrimaryColor,
-              onPressed: () {
-                showModalBottomSheet(
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) => makeDismissible(
-                    child: AddIngredientBottomSheet(pickImage: pickImage),
+      floatingActionButton: StreamBuilder(
+        stream: lang == 'ar'
+            ? _fireStore.collection('Basket-ar').snapshots()
+            : _fireStore.collection('Basket').snapshots(),
+        builder: (context,
+            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data!.docs.length == 0) {
+              return FloatingActionButton(
+                backgroundColor: KPrimaryColor,
+                onPressed: () {
+                  showModalBottomSheet(
+                    backgroundColor: Colors.transparent,
+                    isScrollControlled: true,
                     context: context,
-                  ),
-                );
-              },
-              child: Icon(
-                Icons.add_rounded,
-                color: Colors.white,
-              ),
-            )
-          : FloatingActionButton(
-              backgroundColor: KPrimaryColor,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SearchResultsPage(),
-                  ),
-                );
-              },
-              child: Icon(
-                Icons.search_rounded,
-                color: Colors.white,
-              ),
-            ),
-      bottomNavigationBar: CustomButtonNavigationBar(),
-      body: _items.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Opacity(
-                    opacity: 0.3,
-                    child: Image.asset(
-                      'lib/assets/groceries.png',
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      height: MediaQuery.of(context).size.height * 0.2,
+                    builder: (context) => makeDismissible(
+                      child: AddIngredientBottomSheet(pickImage: pickImage),
+                      context: context,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Text(
-                      AppLocalizations.of(context)!.addIngToStart,
-                      style: TextStyle(
-                          color: Colors.black38,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GridView(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 250,
-                  childAspectRatio: 1,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5,
+                  );
+                },
+                child: Icon(
+                  Icons.add_rounded,
+                  color: Colors.white,
                 ),
-                children: [
-                  for (int i = 0; i < _items.length; i++)
-                    IngredientBox(
-                      ingredient: _items[i],
-                      index: i,
-                      onDelete: deleteItem,
+              );
+            } else {
+              return FloatingActionButton(
+                backgroundColor: KPrimaryColor,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SearchResultsPage(
+                        ingredientsDocs: snapshot.data!.docs,
+                      ),
                     ),
-                  AddBox(onTab: addItem),
-                ],
-              ),
-            ),
+                  );
+                },
+                child: Icon(
+                  Icons.search_rounded,
+                  color: Colors.white,
+                ),
+              );
+            }
+          } else {
+            return Container();
+          }
+        },
+      ),
+      bottomNavigationBar: CustomButtonNavigationBar(),
+      body: LoadingOverlay(
+        isLoading: _isLoading,
+        color: Colors.black,
+        opacity: 0.1,
+        progressIndicator: CircularProgressIndicator(
+          color: KPrimaryColor,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: StreamBuilder(
+              stream: lang == 'ar'
+                  ? _fireStore.collection('Basket-ar').snapshots()
+                  : _fireStore.collection('Basket').snapshots(),
+              builder: (context,
+                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!.docs.length != 0) {
+                    return GridView(
+                      shrinkWrap: true,
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 250,
+                        childAspectRatio: 1,
+                        crossAxisSpacing: 5,
+                        mainAxisSpacing: 5,
+                      ),
+                      children: [
+                        for (int i = 0; i < snapshot.data!.docs.length; i++)
+                          FutureBuilder<Ingredient>(
+                              future: _controller
+                                  .ingredientFromQueryDocumentSnapshot(
+                                      snapshot.data!.docs[i]),
+                              builder: (context, ingredientSnapshot) {
+                                return ingredientSnapshot.hasData
+                                    ? IngredientBox(
+                                        ingredient: ingredientSnapshot.data!,
+                                        index: i,
+                                        onDelete: deleteItem,
+                                      )
+                                    : Container();
+                              }),
+                        AddBox(onTab: addItem),
+                      ],
+                    );
+                  } else {
+                    return EmptyBasketPage();
+                  }
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: KPrimaryColor,
+                    ),
+                  );
+                }
+              }),
+        ),
+      ),
     );
   }
 
@@ -167,9 +191,14 @@ class _BasketPageState extends State<BasketPage> {
     );
   }
 
-  void deleteItem(index) {
+  void deleteItem(ingredientName, langCode) async {
     setState(() {
-      _items.removeAt(index);
+      _isLoading = true;
+    });
+    await _controller.deleteIngredientFromBasket(ingredientName, langCode);
+
+    setState(() {
+      _isLoading = false;
     });
   }
 }

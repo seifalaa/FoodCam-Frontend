@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/pages/basket.dart';
 import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/pages/login.dart';
 import 'package:foodcam_frontend/pages/profile.dart';
@@ -81,11 +82,14 @@ class _MyAppState extends State<MyApp> {
                     'signup/': (context) => Signup1(),
                     'home/': (context) => Home(),
                     'profile/': (context) => Profile(),
+                    'basket/': (context) => BasketPage(),
                   },
                   initialRoute: 'home/',
                 )
-              : Center(
-                  child: CircularProgressIndicator(),
+              : Container(
+                  child: Center(
+                    child: CircularProgressIndicator(color: KPrimaryColor),
+                  ),
                 );
         });
   }

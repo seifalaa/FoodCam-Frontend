@@ -53,5 +53,9 @@
 	"ar": "العربية",
 	"en": "English",
 	"startSearch": "إبدأ بالبحث عن وصفات",
-	"noResults": "لم يتم العثور علي نتائج"
+	"startSearchIng": "إبدأ بالبحث عن مُكوِنات",
+	"noResults": "لم يتم العثور علي نتائج",
+	"results": "نتائج البحث",
+	"startCollection": "إبدأ بإضافة مجموعة",
+	"addCollection": "أضِف مجموعة"
 }

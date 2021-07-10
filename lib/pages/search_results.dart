@@ -1,18 +1,30 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:foodcam_frontend/controllers/homepage_controller.dart';
+import 'package:foodcam_frontend/models/recipe.dart';
+import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:foodcam_frontend/widgets/recipe_box.dart';
+import 'package:provider/provider.dart';
 import '../constants.dart';
 
 class SearchResultsPage extends StatelessWidget {
-  const SearchResultsPage({Key? key}) : super(key: key);
+  const SearchResultsPage({
+    Key? key,
+    required this.ingredientsDocs,
+  }) : super(key: key);
+  final List<QueryDocumentSnapshot<Map<String, dynamic>>> ingredientsDocs;
 
   @override
   Widget build(BuildContext context) {
+    final HomePageController _controller = HomePageController();
+    final String lang = Provider.of<LanguageProvider>(context).langCode;
     return Scaffold(
       extendBody: true,
       appBar: AppBar(
         title: Text(
-          'Results',
+          AppLocalizations.of(context)!.results,
           style: TextStyle(
             color: KTextColor,
           ),
@@ -33,6 +45,7 @@ class SearchResultsPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: KPrimaryColor,
         onPressed: () {
+          Navigator.pushReplacementNamed(context, 'basket/');
         },
         child: Icon(
           Icons.shopping_basket_rounded,
@@ -41,80 +54,26 @@ class SearchResultsPage extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: CustomButtonNavigationBar(),
-      body: ListView.builder(
-        itemCount: 5,
-        itemBuilder: (context, index) => Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Material(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(20),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: () {},
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Material(
-                          borderRadius: BorderRadius.circular(20),
-                          elevation: 5,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Meat Balls',
-                                style: TextStyle(
-                                  color: KTextColor,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    for (int i = 0; i < 4; i++)
-                                      Icon(
-                                        Icons.star_rounded,
-                                        color: Color(0xFFFFC107),
-                                      ),
-                                    Icon(
-                                      Icons.star_rounded,
-                                      color: Colors.black12,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+      body: FutureBuilder<List<Recipe>>(
+        future: _controller.recipeSearchWithMultipleIngredients(
+            ingredientsDocs, lang),
+        builder: (context, snapshot) => snapshot.hasData
+            ? GridView.builder(
+                itemCount: snapshot.data!.length,
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 600,
+                  childAspectRatio: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemBuilder: (context, index) =>
+                    RecipeBox(recipe: snapshot.data![index]),
+              )
+            : Center(
+                child: CircularProgressIndicator(
+                  color: KPrimaryColor,
                 ),
               ),
-              Divider(),
-            ],
-          ),
-        ),
       ),
     );
   }
