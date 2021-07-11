@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:foodcam_frontend/models/category.dart';
-import 'package:foodcam_frontend/models/collection.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 
