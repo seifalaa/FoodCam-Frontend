@@ -7,6 +7,8 @@ import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/pages/basket.dart';
+import 'package:foodcam_frontend/pages/empty_preferred_page.dart';
+import 'package:foodcam_frontend/pages/empty_recentlysearch_page.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/category_box.dart';
@@ -157,13 +159,14 @@ class Home extends StatelessWidget {
             ),
             StreamBuilder(
               stream: lang == 'ar'
-                  ? firebase.collection('Recipes-ar').snapshots()
-                  : firebase.collection('Recipes').snapshots(),
+                  ? firebase.collection('RecentlySearched-ar').snapshots()
+                  : firebase.collection('RecentlySearched').snapshots(),
               builder: (context,
                       AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
                           snapshot) =>
                   snapshot.hasData
-                      ? GridView.builder(
+                      ? snapshot.data!.docs.length != 0 ?
+                      GridView.builder(
                           itemCount: snapshot.data!.docs.length,
                           gridDelegate:
                               SliverGridDelegateWithMaxCrossAxisExtent(
@@ -185,6 +188,7 @@ class Home extends StatelessWidget {
                                 });
                           },
                         )
+                        :EmptyRecentlySearch()
                       : Center(
                           child: CircularProgressIndicator(
                             color: KPrimaryColor,

@@ -109,9 +109,9 @@ class _IngredientBoxState extends State<IngredientBox> {
 
                   await widget.onDelete(
                       widget.ingredient.ingredientName, langCode);
-                  setState(() {
-                    _isVisible = false;
-                  });
+                  /*setState(() {
+                    _isVisible = false;    skant btgeb error msh 3aref leeh 
+                  });*/
                 },
               ),
             )),
