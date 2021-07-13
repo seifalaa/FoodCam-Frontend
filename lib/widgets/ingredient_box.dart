@@ -14,8 +14,9 @@ class IngredientBox extends StatefulWidget {
     required this.onDelete,
     required this.index,
   }) : super(key: key);
-  final Ingredient ingredient;
+
   final index; //TODO:to be removed later
+  final Ingredient ingredient;
   final Function onDelete;
 
   @override
@@ -106,12 +107,8 @@ class _IngredientBoxState extends State<IngredientBox> {
                 ),
                 child: Icon(Icons.clear),
                 onPressed: () async {
-
                   await widget.onDelete(
                       widget.ingredient.ingredientName, langCode);
-                  setState(() {
-                    _isVisible = false;
-                  });
                 },
               ),
             )),

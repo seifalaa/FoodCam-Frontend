@@ -52,8 +52,10 @@ class PreferredSearchDelegate extends SearchDelegate {
         langCode: langCode,
       );
     } else if (searchResults.isEmpty && query.isNotEmpty) {
-      return FutureBuilder(
-          future: _controller.ingredientSearch(query, langCode),
+      return StreamBuilder(
+          stream: Stream.fromFuture(
+            _controller.ingredientSearch(query, langCode),
+          ),
           builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
             if (snapshot.hasData) {
               searchResults = snapshot.data!;
@@ -84,8 +86,10 @@ class PreferredSearchDelegate extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     final String langCode = Provider.of<LanguageProvider>(context).langCode;
     if (query != '') {
-      return FutureBuilder(
-          future: _controller.ingredientSearch(query, langCode),
+      return StreamBuilder(
+          stream: Stream.fromFuture(
+            _controller.ingredientSearch(query, langCode),
+          ),
           builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
             if (snapshot.hasData) {
               searchResults = snapshot.data!;
