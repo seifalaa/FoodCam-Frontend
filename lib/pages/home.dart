@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
-import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/pages/basket.dart';
 import 'package:foodcam_frontend/pages/empty_preferred_page.dart';
 import 'package:foodcam_frontend/pages/empty_recentlysearch_page.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
-import 'package:foodcam_frontend/widgets/category_box.dart';
+import 'package:foodcam_frontend/widgets/categories.dart';
+import 'package:foodcam_frontend/widgets/recently_searched.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
 import 'package:foodcam_frontend/widgets/search_delegate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:foodcam_frontend/widgets/top_rated.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +25,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     final HomePageController _homePageController = HomePageController();
     final FirebaseFirestore firebase = FirebaseFirestore.instance;
-    final String lang = Provider.of<LanguageProvider>(context).langCode;
+    final String _langCode = Provider.of<LanguageProvider>(context).langCode;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -83,118 +83,13 @@ class Home extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            StreamBuilder(
-              stream: lang == 'ar'
-                  ? firebase.collection('Recipes-ar').snapshots()
-                  : firebase.collection('Recipes').snapshots(),
-              builder: (context,
-                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                          snapshot) =>
-                  snapshot.hasData
-                      ? GridView.builder(
-                          itemCount: snapshot.data!.docs.length,
-                          gridDelegate:
-                              SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 600,
-                            childAspectRatio: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                          ),
-                          itemBuilder: (BuildContext context, int index) {
-                            QueryDocumentSnapshot<Map<String, dynamic>> doc =
-                                snapshot.data!.docs[index];
-                            return FutureBuilder<Recipe>(
-                                future: _homePageController
-                                    .recipeFromQueryDocumentSnapshot(doc),
-                                builder: (context, recipeSnapshot) {
-                                  return recipeSnapshot.hasData
-                                      ? RecipeBox(recipe: recipeSnapshot.data!)
-                                      : Container();
-                                });
-                          },
-                        )
-                      : Center(
-                          child: CircularProgressIndicator(
-                            color: KPrimaryColor,
-                          ),
-                        ),
-            ),
-            StreamBuilder(
-              stream: lang == 'ar'
-                  ? firebase.collection('Categories-ar').snapshots()
-                  : firebase.collection('Categories').snapshots(),
-              builder: (context,
-                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                          snapshot) =>
-                  snapshot.hasData
-                      ? GridView.builder(
-                          itemCount: snapshot.data!.docs.length,
-                          gridDelegate:
-                              SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 600,
-                            childAspectRatio: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                          ),
-                          itemBuilder: (BuildContext context, int index) {
-                            QueryDocumentSnapshot<Map<String, dynamic>> doc =
-                                snapshot.data!.docs[index];
-                            return FutureBuilder<Category>(
-                                future: _homePageController
-                                    .categoryFromQueryDocumentSnapshot(doc),
-                                builder: (context, snapshot1) {
-                                  return snapshot1.hasData
-                                      ? CategoryBox(
-                                          category: snapshot1.data!,
-                                        )
-                                      : Container();
-                                });
-                          },
-                        )
-                      : Center(
-                          child: CircularProgressIndicator(
-                            color: KPrimaryColor,
-                          ),
-                        ),
-            ),
-            StreamBuilder(
-              stream: lang == 'ar'
-                  ? firebase.collection('RecentlySearched-ar').snapshots()
-                  : firebase.collection('RecentlySearched').snapshots(),
-              builder: (context,
-                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                          snapshot) =>
-                  snapshot.hasData
-                      ? snapshot.data!.docs.length != 0 ?
-                      GridView.builder(
-                          itemCount: snapshot.data!.docs.length,
-                          gridDelegate:
-                              SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 600,
-                            childAspectRatio: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                          ),
-                          itemBuilder: (BuildContext context, int index) {
-                            QueryDocumentSnapshot<Map<String, dynamic>> doc =
-                                snapshot.data!.docs[index];
-                            return FutureBuilder<Recipe>(
-                                future: _homePageController
-                                    .recipeFromQueryDocumentSnapshot(doc),
-                                builder: (context, recipeSnapshot) {
-                                  return recipeSnapshot.hasData
-                                      ? RecipeBox(recipe: recipeSnapshot.data!)
-                                      : Container();
-                                });
-                          },
-                        )
-                        :EmptyRecentlySearch()
-                      : Center(
-                          child: CircularProgressIndicator(
-                            color: KPrimaryColor,
-                          ),
-                        ),
-            ),
+            TopRated(
+                homePageController: _homePageController, langCode: _langCode),
+            Categories(
+                homePageController: _homePageController, langCode: _langCode),
+            RecentlySearched(
+                homePageController: _homePageController, langCode: _langCode),
+            
           ],
         ),
         floatingActionButton: FloatingActionButton(

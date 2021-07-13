@@ -6,6 +6,101 @@ import 'package:foodcam_frontend/models/recipe.dart';
 class HomePageController {
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
+  Future<List<Recipe>> getTopRated(String langCode) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = langCode == 'ar'
+        ? await fireStore.collection('Recipes-ar').get()
+        : await fireStore.collection('Recipes').get();
+    List<Recipe> recipes = [];
+    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
+      List<Ingredient> ingredients =
+          await getIngredients(doc.data()['ingredients']);
+      recipes.add(
+        Recipe(
+          ingredients: ingredients,
+          recipeImageUrl: doc.data()['recipeImageUrl'],
+          recipeName: doc.data()['recipeName'],
+          recipeRate: doc.data()['recipeRate'].toDouble(),
+          steps: doc.data()['steps'].split(','),
+        ),
+      );
+    }
+    return recipes;
+  }
+
+  Future<List<Category>> getCategories(String langCode) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = langCode == 'ar'
+        ? await fireStore.collection('Categories-ar').get()
+        : await fireStore.collection('Categories').get();
+    List<Category> categories = [];
+    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
+      List<dynamic> recipeRefs = doc.data()['recipes'];
+      List<Recipe> recipes = await getRecipes(recipeRefs);
+      categories.add(
+        Category.fromMap(
+          {
+            'categoryName': doc.data()['categoryName'],
+            'categoryImageUrl': doc.data()['categoryImageUrl'],
+            'recipes': recipes,
+          },
+        ),
+      );
+    }
+    return categories;
+  }
+
+  Future<List<Recipe>> getRecipes(List<dynamic> references) async {
+    List<Recipe> recipes = [];
+    for (DocumentReference reference in references) {
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await fireStore.doc(reference.path).get();
+      Map<String, dynamic> recipeData = snapshot.data()!;
+      List<Ingredient> ingredients =
+          await getIngredients(recipeData['ingredients']);
+
+      recipes.add(Recipe(
+          ingredients: ingredients,
+          recipeImageUrl: recipeData['recipeImageUrl'],
+          recipeName: recipeData['recipeName'],
+          recipeRate: recipeData['recipeRate'].toDouble(),
+          steps: recipeData['steps'].split(',')));
+    }
+    return recipes;
+  }
+
+  Future<List<Ingredient>> getIngredients(List<dynamic> references) async {
+    List<Ingredient> ingredients = [];
+    for (DocumentReference reference in references) {
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await fireStore.doc(reference.path).get();
+      ingredients.add(Ingredient.fromMap(snapshot.data()!));
+    }
+    return ingredients;
+  }
+
+  Future<List<Recipe>> getRecentlySearched(String langCode) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = langCode == 'ar'
+        ? await fireStore.collection('RecentlySearched-ar').get()
+        : await fireStore.collection('RecentlySearched').get();
+    List<Recipe> recipes = [];
+    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
+      DocumentSnapshot<Map<String, dynamic>> recipeSnapshot =
+          await fireStore.doc(doc.data()['recipe'].path).get();
+      Map<String, dynamic> recipeDate = recipeSnapshot.data()!;
+      List<Ingredient> ingredients =
+          await getIngredients(recipeDate['ingredients']);
+      recipes.add(
+        Recipe(
+          ingredients: ingredients,
+          recipeImageUrl: recipeDate['recipeImageUrl'],
+          recipeName: recipeDate['recipeName'],
+          recipeRate: recipeDate['recipeRate'].toDouble(),
+          steps: recipeDate['steps'].split(','),
+        ),
+      );
+    }
+    return recipes;
+  }
+
   Future<Recipe> recipeFromQueryDocumentSnapshot(
       QueryDocumentSnapshot<Map<String, dynamic>> snapshot) async {
     Map<String, dynamic> recipeData = snapshot.data();

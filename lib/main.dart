@@ -6,6 +6,7 @@ import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/pages/login.dart';
 import 'package:foodcam_frontend/pages/profile.dart';
 import 'package:foodcam_frontend/pages/signup1.dart';
+import 'package:foodcam_frontend/pages/test.dart';
 import 'package:foodcam_frontend/providers/allergy_provider.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:provider/provider.dart';
@@ -83,6 +84,7 @@ class _MyAppState extends State<MyApp> {
                     'home/': (context) => Home(),
                     'profile/': (context) => Profile(),
                     'basket/': (context) => BasketPage(),
+                    'test/': (context) => TestPage(),
                   },
                   initialRoute: 'home/',
                 )
