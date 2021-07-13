@@ -5,6 +5,8 @@ import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/pages/basket.dart';
+import 'package:foodcam_frontend/pages/empty_preferred_page.dart';
+import 'package:foodcam_frontend/pages/empty_recentlysearch_page.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/categories.dart';
@@ -87,42 +89,7 @@ class Home extends StatelessWidget {
                 homePageController: _homePageController, langCode: _langCode),
             RecentlySearched(
                 homePageController: _homePageController, langCode: _langCode),
-            // StreamBuilder(
-            //   stream: _langCode == 'ar'
-            //       ? firebase.collection('Recipes-ar').snapshots()
-            //       : firebase.collection('Recipes').snapshots(),
-            //   builder: (context,
-            //           AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-            //               snapshot) =>
-            //       snapshot.hasData
-            //           ? GridView.builder(
-            //               itemCount: snapshot.data!.docs.length,
-            //               gridDelegate:
-            //                   SliverGridDelegateWithMaxCrossAxisExtent(
-            //                 maxCrossAxisExtent: 600,
-            //                 childAspectRatio: 2,
-            //                 crossAxisSpacing: 10,
-            //                 mainAxisSpacing: 10,
-            //               ),
-            //               itemBuilder: (BuildContext context, int index) {
-            //                 QueryDocumentSnapshot<Map<String, dynamic>> doc =
-            //                     snapshot.data!.docs[index];
-            //                 return FutureBuilder<Recipe>(
-            //                     future: _homePageController
-            //                         .recipeFromQueryDocumentSnapshot(doc),
-            //                     builder: (context, recipeSnapshot) {
-            //                       return recipeSnapshot.hasData
-            //                           ? RecipeBox(recipe: recipeSnapshot.data!)
-            //                           : Container();
-            //                     });
-            //               },
-            //             )
-            //           : Center(
-            //               child: CircularProgressIndicator(
-            //                 color: KPrimaryColor,
-            //               ),
-            //             ),
-            // ),
+            
           ],
         ),
         floatingActionButton: FloatingActionButton(

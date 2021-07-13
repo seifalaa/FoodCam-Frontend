@@ -57,5 +57,8 @@
 	"noResults": "No results found",
 	"results": "Search Results",
 	"startCollection": "Start by adding a collection",
+	"startPreferred":"Start by adding preferred ingredients",
+	"startDisPreferred":"Start by adding dispreferred ingredients",
+	"noRecentlySearch":"No recently search ",
 	"addCollection": "Add collection"
 }

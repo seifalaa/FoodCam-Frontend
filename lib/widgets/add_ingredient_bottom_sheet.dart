@@ -77,7 +77,7 @@ class AddIngredientBottomSheet extends StatelessWidget {
                     onTap: () {
                       showSearch(
                         context: context,
-                        delegate: PreferredSearchDelegate(),
+                        delegate: PreferredSearchDelegate("basket"),
                       );
                     },
                   ),

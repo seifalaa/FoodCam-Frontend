@@ -1,11 +1,21 @@
 import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/controllers/homepage_controller.dart';
+import 'package:foodcam_frontend/models/ingredient.dart';
+import 'package:foodcam_frontend/pages/empty_collection_page.dart';
+import 'package:foodcam_frontend/pages/empty_preferred_page.dart';
+import 'package:foodcam_frontend/providers/lang_provider.dart';
+import 'package:foodcam_frontend/widgets/add_box.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/collection_box.dart';
+import 'package:foodcam_frontend/widgets/ingredient_box.dart';
 import 'package:foodcam_frontend/widgets/preferred_search_delegate.dart';
 import 'package:foodcam_frontend/widgets/search_delegate.dart';
 import 'package:foodcam_frontend/widgets/text_form_field.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class PreferrredIngredients extends StatefulWidget {
   const PreferrredIngredients({Key? key,
@@ -19,10 +29,12 @@ class PreferrredIngredients extends StatefulWidget {
 }
 
 class _PreferrredIngredientsState extends State<PreferrredIngredients> {
- 
+ final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+  final HomePageController _controller = HomePageController();
 
   @override
   Widget build(BuildContext context) {
+    final String langCode = Provider.of<LanguageProvider>(context).langCode;
         return Scaffold(
            extendBody: true,
           appBar: AppBar(
@@ -36,7 +48,7 @@ class _PreferrredIngredientsState extends State<PreferrredIngredients> {
               ),
             ),
             title: Text(
-              'Preferrred Ingredients' ,
+              AppLocalizations.of(context)!.prefIng ,
           style: TextStyle(color: KTextColor),
         ),
         elevation: 0,
@@ -53,7 +65,17 @@ class _PreferrredIngredientsState extends State<PreferrredIngredients> {
         ),
       ),
       bottomNavigationBar: CustomButtonNavigationBar(),
-      body: GridView(
+      body:StreamBuilder(
+        stream: langCode =='ar'?
+        _fireStore.collection('PreferredIngredients-ar').snapshots()
+        :_fireStore.collection('PreferredIngredients').snapshots(),
+
+
+        
+        builder: ( context, AsyncSnapshot<QuerySnapshot<Map<String,dynamic>>> snapshot) { 
+        return snapshot.hasData ? 
+        snapshot.data!.docs.length!=0 ?
+        GridView(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 300,
           childAspectRatio: 1.5,
@@ -61,68 +83,42 @@ class _PreferrredIngredientsState extends State<PreferrredIngredients> {
           mainAxisSpacing: 10,
         ),
         children: [
-          // CollectionBox(
-          //   category: 'Meat',
-          //   imagePath: 'lib/assets/meat-80049790.png',
-          //   isRecipe: false,
-          //   isIngredient: true,
-          //
-          // ),
-          // CollectionBox(
-          //   category: 'Meat',
-          //   imagePath: 'lib/assets/meat-80049790.png',
-          //               isRecipe: false,
-          //   isIngredient: true,
-          //
-          //
-          // ),
-          // CollectionBox(
-          //   category: 'Meat',
-          //   imagePath: 'lib/assets/meat-80049790.png',
-          //               isRecipe: false,
-          //   isIngredient: true,
-          //
-          //
-          // ),
-          // CollectionBox(
-          //   category: 'Meat',
-          //   imagePath: 'lib/assets/meat-80049790.png',
-          //   isRecipe: false,
-          //   isIngredient: true,
-          //
-          //
-          // ),
-          // CollectionBox(
-          //   category: 'Meat',
-          //   imagePath: 'lib/assets/meat-80049790.png',
-          //               isRecipe: false,
-          //   isIngredient: true,
-          //
-          //
-          // ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Material(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.black12,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(20),
-                onTap: () {
-                    showSearch(
-                  context: context,
-                  delegate: PreferredSearchDelegate(),
-                ); 
-                },
-                child: Icon(
-                  Icons.add_rounded,
-                  size: 50,
-                  color: KBgColor,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+           for (int i = 0 ;i < snapshot.data!.docs.length ;i++)
+                FutureBuilder<Ingredient>(
+                  future:_controller.ingredientFromQueryDocumentSnapshot(snapshot.data!.docs[i]) ,
+                  builder: (context, ingredientSnapshot) {
+                                return ingredientSnapshot.hasData
+                                    ? IngredientBox(
+                                        ingredient: ingredientSnapshot.data!,
+                                        index: i,
+                                        onDelete: deleteItem,
+                                      )
+                                    : Container();
+                              }),
+                        AddBox(onTab: addItem),
+
+        ],  
+  )
+              : EmptyPreferredPage()
+                  : Center(
+                      child: CircularProgressIndicator(
+                        color: KPrimaryColor,
+                      ),
+                    );
+            }),
+
+       
+  
     );
+  }
+
+  deleteItem() {
+  }
+
+  addItem() {
+     showSearch(
+                        context: context,
+                        delegate: PreferredSearchDelegate('preferred'),
+                      );
   }
 }

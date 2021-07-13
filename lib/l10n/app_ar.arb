@@ -57,5 +57,8 @@
 	"noResults": "لم يتم العثور علي نتائج",
 	"results": "نتائج البحث",
 	"startCollection": "إبدأ بإضافة مجموعة",
+	"startPreferred":"إبدأ بإضافة مُكوِنات مفضلة",
+	"startDisPreferred":"إبدأ بإضافة مُكوِنات غير مفضلة",
+	"noRecentlySearch":"لا يوجد بحث مؤخراً",
 	"addCollection": "أضِف مجموعة"
 }

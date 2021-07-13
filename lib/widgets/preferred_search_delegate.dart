@@ -12,7 +12,14 @@ import '../pages/no_results_page.dart';
 
 class PreferredSearchDelegate extends SearchDelegate {
   final HomePageController _controller = HomePageController();
+   final String page;
   List<Ingredient> searchResults = [];
+
+  PreferredSearchDelegate(this.page);
+
+  
+
+ 
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -49,8 +56,10 @@ class PreferredSearchDelegate extends SearchDelegate {
       return IngredientsList(
         searchResults: searchResults,
         controller: _controller,
+        pagename: page,
         langCode: langCode,
       );
+      
     } else if (searchResults.isEmpty && query.isNotEmpty) {
       return StreamBuilder(
           stream: Stream.fromFuture(
@@ -63,6 +72,7 @@ class PreferredSearchDelegate extends SearchDelegate {
                 return IngredientsList(
                   searchResults: snapshot.data,
                   langCode: langCode,
+                  pagename: page,
                   controller: _controller,
                 );
               } else {
@@ -97,6 +107,7 @@ class PreferredSearchDelegate extends SearchDelegate {
                 return IngredientsList(
                   searchResults: snapshot.data,
                   langCode: langCode,
+                  pagename: page,
                   controller: _controller,
                 );
               } else {
@@ -120,18 +131,24 @@ class IngredientsList extends StatefulWidget {
       {Key? key,
       required this.searchResults,
       required this.controller,
+      required this.pagename,
       required this.langCode})
       : super(key: key);
   final searchResults;
   final controller;
   final langCode;
+  final pagename;
 
   @override
-  _IngredientsListState createState() => _IngredientsListState();
+  _IngredientsListState createState() => _IngredientsListState(pagename);
 }
 
 class _IngredientsListState extends State<IngredientsList> {
   bool _isLoading = false;
+
+  final String pageName;
+
+  _IngredientsListState(  this.pageName);
 
   @override
   Widget build(BuildContext context) {
@@ -154,10 +171,25 @@ class _IngredientsListState extends State<IngredientsList> {
                     setState(() {
                       _isLoading = true;
                     });
+                    
+                    if(pageName == 'basket'){
                     await widget.controller.addIngredientInBasket(
                       widget.searchResults[index],
                       widget.langCode,
                     );
+                    }
+                    if( pageName == 'preferred'){
+                    await widget.controller.addIngredientInPreferred(
+                      widget.searchResults[index],
+                      widget.langCode,
+                    );
+                    }
+                    if(pageName =='disPreferred'){
+                    await widget.controller.addIngredientInDisPreferred(
+                      widget.searchResults[index],
+                      widget.langCode,
+                    );
+                    }
                     setState(() {
                       _isLoading = false;
                     });

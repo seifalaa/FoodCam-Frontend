@@ -206,7 +206,7 @@ class HomePageController {
             .get();
     DocumentReference<Map<String, dynamic>> ingredientReference =
         querySnapshot.docs.first.reference;
-    await ingredientReference.update({'addedToBasket': true});
+    await ingredientReference.update({'addedToBasket': false});
     langCode == 'ar'
         ? await fireStore
             .collection('Basket-ar')
@@ -215,6 +215,49 @@ class HomePageController {
             .collection('Basket')
             .add({'ingredient': ingredientReference});
   }
+  Future<void> addIngredientInPreferred(Ingredient ingredient, langCode) async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = langCode == 'ar'
+        ? await fireStore
+            .collection('Ingredients-ar')
+            .where('ingredientName', isEqualTo: ingredient.ingredientName)
+            .get()
+        : await fireStore
+            .collection('Ingredients')
+            .where('ingredientName', isEqualTo: ingredient.ingredientName)
+            .get();
+    DocumentReference<Map<String, dynamic>> ingredientReference =
+        querySnapshot.docs.first.reference;
+    await ingredientReference.update({'addedToBasket': false}); // i made it false beacause it conflict with basket
+    langCode == 'ar'
+        ? await fireStore
+            .collection('PreferredIngredients-ar')
+            .add({'ingredient': ingredientReference})
+        : await fireStore
+            .collection('PreferredIngredients')
+            .add({'ingredient': ingredientReference});
+  }
+   Future<void> addIngredientInDisPreferred(Ingredient ingredient, langCode) async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = langCode == 'ar'
+        ? await fireStore
+            .collection('Ingredients-ar')
+            .where('ingredientName', isEqualTo: ingredient.ingredientName)
+            .get()
+        : await fireStore
+            .collection('Ingredients')
+            .where('ingredientName', isEqualTo: ingredient.ingredientName)
+            .get();
+    DocumentReference<Map<String, dynamic>> ingredientReference =
+        querySnapshot.docs.first.reference;
+    await ingredientReference.update({'addedToBasket': false}); // i made it false beacause it conflict with basket
+    langCode == 'ar'
+        ? await fireStore
+            .collection('DisPreferredIngredients-ar')
+            .add({'ingredient': ingredientReference})
+        : await fireStore
+            .collection('DisPreferredIngredients')
+            .add({'ingredient': ingredientReference});
+  }
+
 
   Future<Ingredient> ingredientFromQueryDocumentSnapshot(
       QueryDocumentSnapshot<Map<String, dynamic>> snapshot) async {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
+import 'package:foodcam_frontend/pages/empty_recentlysearch_page.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
 
 import '../constants.dart';
@@ -54,7 +55,7 @@ class _RecentlySearchedState extends State<RecentlySearched> {
         stream: _streamController.stream,
         builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
           return snapshot.hasData
-              ? GridView.builder(
+              ?  snapshot.data!.length !=0  ? GridView.builder(
                   itemCount: snapshot.data!.length,
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 600,
@@ -68,6 +69,7 @@ class _RecentlySearchedState extends State<RecentlySearched> {
                     );
                   },
                 )
+                :EmptyRecentlySearch()
               : Center(
                   child: CircularProgressIndicator(
                     color: KPrimaryColor,
