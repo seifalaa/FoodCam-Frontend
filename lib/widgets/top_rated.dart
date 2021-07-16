@@ -12,6 +12,7 @@ class TopRated extends StatefulWidget {
       : super(key: key);
   final HomePageController homePageController;
   final String langCode;
+
   @override
   _TopRatedState createState() => _TopRatedState();
 }
@@ -41,6 +42,7 @@ class _TopRatedState extends State<TopRated> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
+      color: kPrimaryColor,
       onRefresh: _handleRefresh,
       child: StreamBuilder<List<Recipe>>(
         stream: _streamController.stream,

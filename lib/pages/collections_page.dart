@@ -22,13 +22,12 @@ class CollectionPage extends StatefulWidget {
 }
 
 class _CollectionPageState extends State<CollectionPage> {
-  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-  final HomePageController _controller = HomePageController();
+  final HomePageController _homePageController = HomePageController();
   bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    final String langCode = Provider.of<LanguageProvider>(context).langCode;
+    final String _langCode = Provider.of<LanguageProvider>(context).langCode;
     return Scaffold(
       extendBody: true,
       appBar: AppBar(
@@ -67,40 +66,29 @@ class _CollectionPageState extends State<CollectionPage> {
           color: kPrimaryColor,
         ),
         color: Colors.black,
-        opacity: 0.1,
+        opacity: 0.2,
         child: StreamBuilder(
-            stream: langCode == 'ar'
-                ? _fireStore.collection('Collections-ar').snapshots()
-                : _fireStore.collection('Collections').snapshots(),
-            builder: (context,
-                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-              return snapshot.hasData
-                  ? snapshot.data!.docs.isNotEmpty
-                      ? GridView(
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 300,
-                            childAspectRatio: 0.8,
-                            crossAxisSpacing: 5,
-                            mainAxisSpacing: 5,
-                          ),
-                          children: [
-                            for (int i = 0; i < snapshot.data!.docs.length; i++)
-                              FutureBuilder<Category>(
-                                future: _controller
-                                    .collectionFromQueryDocumentSnapshot(
-                                        snapshot.data!.docs[i]),
-                                builder: (context,
-                                        AsyncSnapshot<Category>
-                                            categorySnapshot) =>
-                                    snapshot.hasData
-                                        ? CollectionBox(
-                                            category: categorySnapshot.data!,
-                                            onDelete: deleteItem,
-                                          )
-                                        : Container(),
-                              ),
-                            AddBox(onTab: () {
+          stream:
+              Stream.fromFuture(_homePageController.getCollections(_langCode)),
+          builder: (context, AsyncSnapshot<List<Category>> snapshot) {
+            return snapshot.hasData
+                ? snapshot.data!.isNotEmpty
+                    ? GridView(
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 300,
+                          childAspectRatio: 0.8,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5,
+                        ),
+                        children: [
+                          for (int i = 0; i < snapshot.data!.length; i++)
+                            CollectionBox(
+                              category: snapshot.data![i],
+                              onDelete: deleteItem,
+                            ),
+                          AddBox(
+                            onTab: () {
                               showModalBottomSheet(
                                 isScrollControlled: true,
                                 elevation: 1,
@@ -110,16 +98,18 @@ class _CollectionPageState extends State<CollectionPage> {
                                     child: const AddCollectionBottomSheet(),
                                     context: context),
                               );
-                            }),
-                          ],
-                        )
-                      : const EmptyCollectionPage()
-                  : const Center(
-                      child: CircularProgressIndicator(
-                        color: kPrimaryColor,
-                      ),
-                    );
-            }),
+                            },
+                          ),
+                        ],
+                      )
+                    : const EmptyCollectionPage()
+                : const Center(
+                    child: CircularProgressIndicator(
+                      color: kPrimaryColor,
+                    ),
+                  );
+          },
+        ),
       ),
     );
   }
@@ -128,7 +118,7 @@ class _CollectionPageState extends State<CollectionPage> {
     setState(() {
       _isLoading = true;
     });
-    await _controller.deleteCollection(collectionName, langCode);
+    await _homePageController.deleteCollection(collectionName, langCode);
 
     setState(() {
       _isLoading = false;

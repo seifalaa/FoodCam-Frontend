@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
@@ -70,6 +72,20 @@ class _IngredientBoxState extends State<IngredientBox> {
                     ),
                   ),
                 ],
+              ),
+            ),
+          ),
+          Visibility(
+            visible: _isVisible,
+            child: Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaY: 1, sigmaX: 1),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ),
               ),
             ),
           ),

@@ -138,9 +138,11 @@ class _RecipeBoxState extends State<RecipeBox> {
                           ),
                         ),
                         Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children:
-                                getRate(widget.recipe.recipeRate, _screenWidth))
+                          children: getRate(
+                            widget.recipe.recipeRate,
+                            _screenWidth,
+                          ),
+                        ),
                       ],
                     ),
                   ),

@@ -37,7 +37,8 @@ class HomePageController {
     for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
         in snapshot.docs) {
       final List<dynamic> recipeRefs = doc.data()['recipes'];
-      final List<Recipe> recipes = await getRecipes(recipeRefs);
+      final List<Recipe> recipes =
+          recipeRefs.isNotEmpty ? await getRecipes(recipeRefs) : [];
       categories.add(
         Category.fromMap(
           {
@@ -105,10 +106,32 @@ class HomePageController {
     return recipes;
   }
 
+  Future<List<Category>> getCollections(String langCode) async {
+    final QuerySnapshot<Map<String, dynamic>> snapshot = langCode == 'ar'
+        ? await fireStore.collection('Collections-ar').get()
+        : await fireStore.collection('Collections').get();
+    final List<Category> collections = [];
+    for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
+        in snapshot.docs) {
+      final Map<String, dynamic> collectionData = doc.data();
+      final List<dynamic> recipeRefs = doc.data()['recipes'];
+      final List<Recipe> recipes =
+          recipeRefs.isNotEmpty ? await getRecipes(recipeRefs) : [];
+      collections.add(
+        Category.fromMap(
+          {
+            'categoryName': collectionData['categoryName'],
+            'categoryImageUrl': collectionData['categoryImageUrl'],
+            'recipes': recipes,
+          },
+        ),
+      );
+    }
+    return collections;
+  }
+
   Future<void> addCollection(Map<String, dynamic> collectionData) async {
-    //langCode == 'ar'
-    //    ? await fireStore.collection('Collections-ar').add(collectionData)
-    //    : await fireStore.collection('Collections').add(collectionData);
+    await fireStore.collection('Collections-ar').add(collectionData);
   }
 
   Future<List<Allergy>> getAllergies(String langCode) async {
@@ -396,11 +419,11 @@ class HomePageController {
         langCode == 'ar'
             ? await fireStore
                 .collection('Collections-ar')
-                .where('collectionName', isEqualTo: collectionName)
+                .where('categoryName', isEqualTo: collectionName)
                 .get()
             : await fireStore
                 .collection('Collections')
-                .where('collectionName', isEqualTo: collectionName)
+                .where('categoryName', isEqualTo: collectionName)
                 .get();
     await fireStore.doc(collectionDocument.docs.first.reference.path).delete();
   }

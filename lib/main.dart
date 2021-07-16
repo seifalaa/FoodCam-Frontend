@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/pages/basket.dart';
+import 'package:foodcam_frontend/pages/collections_page.dart';
 import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/pages/login.dart';
 import 'package:foodcam_frontend/pages/profile.dart';
@@ -85,6 +86,7 @@ class _MyAppState extends State<MyApp> {
                     'profile/': (context) => const Profile(),
                     'basket/': (context) => const BasketPage(),
                     'test/': (context) => const TestPage(),
+                    'collections': (context) => const CollectionPage(),
                   },
                   initialRoute: 'home/',
                 )

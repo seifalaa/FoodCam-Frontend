@@ -9,7 +9,7 @@ class CustomTextFormField extends StatelessWidget {
     required this.controller,
     required this.isObscure,
   }) : super(key: key);
-  final Function validator;
+  final String? Function(String?) validator;
   final String hint;
   final TextEditingController controller;
   final bool isObscure;
@@ -19,7 +19,7 @@ class CustomTextFormField extends StatelessWidget {
     return TextFormField(
       obscureText: isObscure,
       controller: controller,
-      validator: validator(),
+      validator: validator,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(100),

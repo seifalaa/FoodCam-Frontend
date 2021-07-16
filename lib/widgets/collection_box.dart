@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/pages/collections_page.dart';
@@ -42,7 +44,7 @@ class _CollectionBoxState extends State<CollectionBox> {
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
-                color: const Color(0x50000000),
+                color: const Color(0x30000000),
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
@@ -79,6 +81,20 @@ class _CollectionBoxState extends State<CollectionBox> {
                     ),
                   ),
                 ],
+              ),
+            ),
+          ),
+          Visibility(
+            visible: _isVisible,
+            child: Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaY: 1, sigmaX: 1),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ),
               ),
             ),
           ),
@@ -142,6 +158,8 @@ class _CollectionBoxState extends State<CollectionBox> {
     if (langCode == 'ar') {
       if (quantity > 1 && quantity < 11) {
         return quantity == 2 ? 'وصفتين' : '$quantity وصفات';
+      } else if (quantity == 0) {
+        return 'فارغة';
       } else {
         return 'وصفة';
       }
