@@ -1,17 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
-import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/pages/basket.dart';
-import 'package:foodcam_frontend/pages/empty_preferred_page.dart';
-import 'package:foodcam_frontend/pages/empty_recentlysearch_page.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/categories.dart';
 import 'package:foodcam_frontend/widgets/recently_searched.dart';
-import 'package:foodcam_frontend/widgets/recipe_box.dart';
 import 'package:foodcam_frontend/widgets/search_delegate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:foodcam_frontend/widgets/top_rated.dart';
@@ -24,18 +19,17 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomePageController _homePageController = HomePageController();
-    final FirebaseFirestore firebase = FirebaseFirestore.instance;
     final String _langCode = Provider.of<LanguageProvider>(context).langCode;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         extendBody: true,
         appBar: AppBar(
-          iconTheme: IconThemeData(color: KTextColor),
+          iconTheme: const IconThemeData(color: kTextColor),
           title: Text(
             AppLocalizations.of(context)!.home,
-            style: TextStyle(
-              color: KTextColor,
+            style: const TextStyle(
+              color: kTextColor,
             ),
           ),
           actions: [
@@ -46,7 +40,7 @@ class Home extends StatelessWidget {
                   delegate: CustomSearchDelegate(),
                 );
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.search,
               ),
             ),
@@ -55,15 +49,15 @@ class Home extends StatelessWidget {
           elevation: 1,
           centerTitle: true,
           bottom: TabBar(
-            labelPadding: EdgeInsets.all(10.0),
-            indicatorColor: KPrimaryColor,
+            labelPadding: const EdgeInsets.all(10.0),
+            indicatorColor: kPrimaryColor,
             labelStyle: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
               fontFamily: GoogleFonts.cairo().fontFamily,
             ),
-            labelColor: KPrimaryColor,
-            unselectedLabelColor: KTextColor,
+            labelColor: kPrimaryColor,
+            unselectedLabelColor: kTextColor,
             unselectedLabelStyle: TextStyle(
               fontSize: 17,
               fontFamily: GoogleFonts.cairo().fontFamily,
@@ -89,17 +83,20 @@ class Home extends StatelessWidget {
                 homePageController: _homePageController, langCode: _langCode),
             RecentlySearched(
                 homePageController: _homePageController, langCode: _langCode),
-            
           ],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => BasketPage()));
+              context,
+              MaterialPageRoute(
+                builder: (context) => const BasketPage(),
+              ),
+            );
           },
           elevation: 20,
-          backgroundColor: KPrimaryColor,
-          child: Icon(
+          backgroundColor: kPrimaryColor,
+          child: const Icon(
             Icons.shopping_basket_rounded,
             color: Colors.white,
           ),

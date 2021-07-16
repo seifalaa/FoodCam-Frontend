@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
-import 'package:foodcam_frontend/widgets/collection_box.dart';
 import 'package:foodcam_frontend/widgets/collections_recipes_search_delegate.dart';
 
 
@@ -11,7 +10,7 @@ class CollectionsRecipes extends StatefulWidget {
   
   required this.collectionName,
   }) : super(key: key);
-  final collectionName ;
+  final String collectionName ;
 
   @override
   _CollectionsRecipesState createState() => _CollectionsRecipesState();
@@ -28,14 +27,14 @@ class _CollectionsRecipesState extends State<CollectionsRecipes> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_back_rounded,
-                color: KTextColor,
+                color: kTextColor,
               ),
             ),
             title: Text(
               widget.collectionName ,
-          style: TextStyle(color: KTextColor),
+          style: const TextStyle(color: kTextColor),
         ),
         elevation: 0,
         centerTitle: true,
@@ -43,16 +42,16 @@ class _CollectionsRecipesState extends State<CollectionsRecipes> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: KPrimaryColor,
+        backgroundColor: kPrimaryColor,
         onPressed: () {},
-        child: Icon(
+        child: const Icon(
           Icons.shopping_basket_rounded,
           color: Colors.white,
         ),
       ),
-      bottomNavigationBar: CustomButtonNavigationBar(),
+      bottomNavigationBar: const CustomButtonNavigationBar(),
       body: GridView(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 300,
           childAspectRatio: 1.5,
           crossAxisSpacing: 10,
@@ -111,10 +110,10 @@ class _CollectionsRecipesState extends State<CollectionsRecipes> {
                   delegate: CustomCollectionsSearchDelegate(),
                 ); 
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.add_rounded,
                   size: 50,
-                  color: KBgColor,
+                  color: kBgColor,
                 ),
               ),
             ),

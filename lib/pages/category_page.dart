@@ -17,11 +17,11 @@ class CategoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: KTextColor),
+        iconTheme: const IconThemeData(color: kTextColor),
         title: Text(
           categoryName,
-          style: TextStyle(
-            color: KTextColor,
+          style: const TextStyle(
+            color: kTextColor,
           ),
         ),
         actions: [
@@ -32,7 +32,7 @@ class CategoryPage extends StatelessWidget {
                 delegate: CustomSearchDelegate(),
               );
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.search,
             ),
           ),
@@ -45,7 +45,7 @@ class CategoryPage extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: GridView(
           shrinkWrap: true,
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 300,
             childAspectRatio: 0.8,
             crossAxisSpacing: 5,

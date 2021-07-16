@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../constants.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EmptyRecentlySearch extends StatelessWidget {
   const EmptyRecentlySearch({ Key? key }) : super(key: key);
@@ -24,10 +24,10 @@ class EmptyRecentlySearch extends StatelessWidget {
             padding: const EdgeInsets.only(top: 40.0),
             child:Text(
             AppLocalizations.of(context)!.noRecentlySearch,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 25,
-              color: KTextColor,
+              color: kTextColor,
             ),
           ),
           )

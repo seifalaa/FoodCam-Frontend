@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:foodcam_frontend/generated/l10n.dart';
 import 'package:foodcam_frontend/widgets/preferred_search_delegate.dart';
 
 class EmptyPreferredPage extends StatelessWidget {
@@ -15,10 +14,10 @@ class EmptyPreferredPage extends StatelessWidget {
         children: [
           Text(
             AppLocalizations.of(context)!.startPreferred,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 25,
-              color: KTextColor,
+              color: kTextColor,
             ),
           ),
           Padding(
@@ -26,24 +25,24 @@ class EmptyPreferredPage extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 showSearch(
-                        context: context,
-                        delegate: PreferredSearchDelegate('preferred'),
-                      );
+                  context: context,
+                  delegate: PreferredSearchDelegate('preferred'),
+                );
               },
+              style: ElevatedButton.styleFrom(
+                primary: kPrimaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   AppLocalizations.of(context)!.addIng,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: KPrimaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100),
                 ),
               ),
             ),

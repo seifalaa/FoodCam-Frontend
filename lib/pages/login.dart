@@ -18,10 +18,10 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  AuthController _controller = AuthController();
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AuthController _controller = AuthController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
   @override
@@ -31,15 +31,13 @@ class _LoginState extends State<Login> {
         isLoading: _isLoading,
         color: Colors.black,
         opacity: 0.3,
-        progressIndicator: CircularProgressIndicator(
-          color: KPrimaryColor,
+        progressIndicator: const CircularProgressIndicator(
+          color: kPrimaryColor,
         ),
         child: Stack(
           children: [
-            Container(
-              child: CustomPaint(
-                painter: BG(context: context),
-              ),
+            CustomPaint(
+              painter: BG(context: context),
             ),
             Center(
               child: ListView(
@@ -66,7 +64,9 @@ class _LoginState extends State<Login> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Signup1()),
+                            MaterialPageRoute(
+                              builder: (context) => const Signup1(),
+                            ),
                           );
                         },
                         child: Text(AppLocalizations.of(context)!.signup),
@@ -82,19 +82,19 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void onLogin() async {
+  Future<void> onLogin() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
-      var response = await _controller.loginWithEmailAndPassword(
+      final response = await _controller.loginWithEmailAndPassword(
           _usernameController.text, _passwordController.text);
       setState(() {
         _isLoading = false;
       });
       if (!response) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Invalid Credentials'),
           ),
         );
@@ -102,41 +102,45 @@ class _LoginState extends State<Login> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => Home(),
+            builder: (context) => const Home(),
           ),
         );
       }
     }
   }
 
-  void onGoogleAuth() async {
+  Future<void> onGoogleAuth() async {
     setState(() {
       _isLoading = true;
     });
-    bool response = await _controller.loginWithGoogle();
+    final bool response = await _controller.loginWithGoogle();
     setState(() {
       _isLoading = false;
     });
     if (response) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Home()),
+        MaterialPageRoute(
+          builder: (context) => const Home(),
+        ),
       );
     }
   }
 
-  void onFacebookAuth() async {
+  Future<void> onFacebookAuth() async {
     setState(() {
       _isLoading = true;
     });
-    bool response = await _controller.loginWithFacebook();
+    final bool response = await _controller.loginWithFacebook();
     setState(() {
       _isLoading = false;
     });
     if (response) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Home()),
+        MaterialPageRoute(
+          builder: (context) => const Home(),
+        ),
       );
     }
   }

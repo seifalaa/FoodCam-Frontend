@@ -11,14 +11,14 @@ class LoginForm extends StatelessWidget {
     required this.formKey,
     required this.onLogin,
   }) : super(key: key);
-  final usernameController;
-  final passwordController;
-  final formKey;
-  final onLogin;
+  final TextEditingController usernameController;
+  final TextEditingController passwordController;
+  final GlobalKey<FormState> formKey;
+  final Function onLogin;
 
   @override
   Widget build(BuildContext context) {
-    double _screenWidth = MediaQuery.of(context).size.width;
+    final double _screenWidth = MediaQuery.of(context).size.width;
     return Form(
       key: formKey,
       child: Padding(
@@ -29,12 +29,12 @@ class LoginForm extends StatelessWidget {
             Text(
               AppLocalizations.of(context)!.login,
               style: TextStyle(
-                color: KTextColor,
+                color: kTextColor,
                 fontWeight: FontWeight.bold,
                 fontSize: _screenWidth * 0.09,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             CustomTextFormField(
@@ -76,7 +76,7 @@ class LoginForm extends StatelessWidget {
               padding: const EdgeInsets.only(top: 20.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: KPrimaryColor,
+                  primary: kPrimaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(100),
                   ),

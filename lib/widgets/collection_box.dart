@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/pages/collections_page.dart';
-import 'package:foodcam_frontend/pages/collections_recipes_page.dart';
-import 'package:foodcam_frontend/pages/recipe_page.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -26,8 +24,8 @@ class _CollectionBoxState extends State<CollectionBox> {
 
   @override
   Widget build(BuildContext context) {
-    double _screenWidth = MediaQuery.of(context).size.width;
-    final String _lang = Provider.of<LanguageProvider>(context).langCode;
+    final double _screenWidth = MediaQuery.of(context).size.width;
+    final String _langCode = Provider.of<LanguageProvider>(context).langCode;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(
@@ -44,7 +42,7 @@ class _CollectionBoxState extends State<CollectionBox> {
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
-                color: Color(0x50000000),
+                color: const Color(0x50000000),
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
@@ -60,7 +58,7 @@ class _CollectionBoxState extends State<CollectionBox> {
                     widget.category.categoryName,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: _screenWidth <= KMobileScreenSize
+                      fontSize: _screenWidth <= kMobileScreenSize
                           ? _screenWidth * 0.045
                           : _screenWidth * 0.0225,
                       fontWeight: FontWeight.bold,
@@ -70,11 +68,11 @@ class _CollectionBoxState extends State<CollectionBox> {
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Text(
                       handleRecipesOrRecipe(
-                          widget.category.recipes.length, _lang),
+                          widget.category.recipes.length, _langCode),
                       style: TextStyle(
-                        color: Color(0xFFFFC107),
+                        color: const Color(0xFFFFC107),
                         fontWeight: FontWeight.bold,
-                        fontSize: _screenWidth <= KMobileScreenSize
+                        fontSize: _screenWidth <= kMobileScreenSize
                             ? _screenWidth * 0.038
                             : _screenWidth * 0.0194,
                       ),
@@ -91,7 +89,7 @@ class _CollectionBoxState extends State<CollectionBox> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(20),
                 highlightColor: Colors.transparent,
-                splashColor: Color(0x50D0F1DD),
+                splashColor: const Color(0x50D0F1DD),
                 onTap: () {
                   _isVisible
                       ? setState(() {
@@ -100,7 +98,7 @@ class _CollectionBoxState extends State<CollectionBox> {
                       : Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CollectionPage(),
+                            builder: (context) => const CollectionPage(),
                           ),
                         );
                 },
@@ -124,13 +122,14 @@ class _CollectionBoxState extends State<CollectionBox> {
                   padding: EdgeInsets.zero,
                   primary: Colors.red,
                 ),
-                child: Icon(Icons.clear),
                 onPressed: () async {
-                  await widget.onDelete(widget.category.categoryName,_lang);
+                  await widget.onDelete(
+                      widget.category.categoryName, _langCode);
                   setState(() {
                     _isVisible = false;
                   });
                 },
+                child: const Icon(Icons.clear),
               ),
             )),
           )
@@ -139,17 +138,17 @@ class _CollectionBoxState extends State<CollectionBox> {
     );
   }
 
-  String handleRecipesOrRecipe(quantity, lang) {
-    if (lang == 'ar') {
+  String handleRecipesOrRecipe(int quantity, String langCode) {
+    if (langCode == 'ar') {
       if (quantity > 1 && quantity < 11) {
-        return quantity == 2 ? 'وصفتين' : quantity.toString() + ' وصفات';
-      } else
+        return quantity == 2 ? 'وصفتين' : '$quantity وصفات';
+      } else {
         return 'وصفة';
-    } else if (lang == 'en') {
-      return quantity == 1
-          ? quantity.toString() + ' recipe'
-          : quantity.toString() + ' recipes';
-    } else
+      }
+    } else if (langCode == 'en') {
+      return quantity == 1 ? '$quantity recipe' : '$quantity recipes';
+    } else {
       return '';
+    }
   }
 }

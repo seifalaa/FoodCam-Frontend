@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
-import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
@@ -15,7 +14,7 @@ class IngredientBox extends StatefulWidget {
     required this.index,
   }) : super(key: key);
 
-  final index; //TODO:to be removed later
+  final int index; //TODO:to be removed later
   final Ingredient ingredient;
   final Function onDelete;
 
@@ -28,7 +27,7 @@ class _IngredientBoxState extends State<IngredientBox> {
 
   @override
   Widget build(BuildContext context) {
-    double _screenWidth = MediaQuery.of(context).size.width;
+    final double _screenWidth = MediaQuery.of(context).size.width;
     final String langCode = Provider.of<LanguageProvider>(context).langCode;
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -46,7 +45,9 @@ class _IngredientBoxState extends State<IngredientBox> {
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
-                color: _isVisible ? Color(0x70000000) : Color(0x40000000),
+                color: _isVisible
+                    ? const Color(0x70000000)
+                    : const Color(0x40000000),
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
@@ -62,7 +63,7 @@ class _IngredientBoxState extends State<IngredientBox> {
                     widget.ingredient.ingredientName,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: _screenWidth <= KMobileScreenSize
+                      fontSize: _screenWidth <= kMobileScreenSize
                           ? _screenWidth * 0.045
                           : _screenWidth * 0.0225,
                       fontWeight: FontWeight.bold,
@@ -79,7 +80,7 @@ class _IngredientBoxState extends State<IngredientBox> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(20),
                 highlightColor: Colors.transparent,
-                splashColor: Color(0x50D0F1DD),
+                splashColor: const Color(0x50D0F1DD),
                 onTap: () {
                   setState(() {
                     _isVisible = false;
@@ -105,11 +106,11 @@ class _IngredientBoxState extends State<IngredientBox> {
                   padding: EdgeInsets.zero,
                   primary: Colors.red,
                 ),
-                child: Icon(Icons.clear),
                 onPressed: () async {
                   await widget.onDelete(
                       widget.ingredient.ingredientName, langCode);
                 },
+                child: const Icon(Icons.clear),
               ),
             )),
           )

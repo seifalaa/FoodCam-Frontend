@@ -9,47 +9,52 @@ class CustomTextFormField extends StatelessWidget {
     required this.controller,
     required this.isObscure,
   }) : super(key: key);
-  final validator;
-  final hint;
-  final controller;
-  final isObscure;
+  final Function validator;
+  final String hint;
+  final TextEditingController controller;
+  final bool isObscure;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       obscureText: isObscure,
       controller: controller,
-      validator: validator,
+      validator: validator(),
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(100),
-          borderSide: BorderSide(
-            color: KPrimaryColor,
+          borderSide: const BorderSide(
+            color: kPrimaryColor,
           ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(100),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Colors.red,
           ),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(100),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Colors.red,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(100),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Colors.blue,
           ),
         ),
         filled: true,
         fillColor: Colors.white,
         hintText: hint,
-        contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-        hintStyle: TextStyle(color: Colors.black38),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 15.0,
+        ),
+        hintStyle: const TextStyle(
+          color: Colors.black38,
+        ),
       ),
     );
   }

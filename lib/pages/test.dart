@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/category.dart';
-import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/widgets/category_box.dart';
-import 'package:foodcam_frontend/widgets/recipe_box.dart';
 
 class TestPage extends StatefulWidget {
   const TestPage({Key? key}) : super(key: key);
@@ -15,8 +13,8 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-  HomePageController _homePageController = HomePageController();
-  StreamController<List<Category>> _streamController =
+  final HomePageController _homePageController = HomePageController();
+  final StreamController<List<Category>> _streamController =
       StreamController.broadcast();
 
   @override
@@ -55,7 +53,7 @@ class _TestPageState extends State<TestPage> {
               return snapshot.hasData
                   ? GridView.builder(
                       itemCount: snapshot.data!.length,
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                         maxCrossAxisExtent: 600,
                         childAspectRatio: 2,
                         crossAxisSpacing: 10,
@@ -65,9 +63,9 @@ class _TestPageState extends State<TestPage> {
                         return CategoryBox(category: snapshot.data![index]);
                       },
                     )
-                  : Center(
+                  : const Center(
                       child: CircularProgressIndicator(
-                        color: KPrimaryColor,
+                        color: kPrimaryColor,
                       ),
                     );
             },

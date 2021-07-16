@@ -8,7 +8,9 @@ import '../constants.dart';
 import 'category_box.dart';
 
 class Categories extends StatefulWidget {
-  const Categories({ Key? key,required this.homePageController,required this.langCode }) : super(key: key);
+  const Categories(
+      {Key? key, required this.homePageController, required this.langCode})
+      : super(key: key);
 
   final HomePageController homePageController;
   final String langCode;
@@ -18,14 +20,8 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
-    StreamController<List<Category>> _streamController =
+  final StreamController<List<Category>> _streamController =
       StreamController.broadcast();
-
-  @override
-  void dispose() {
-    _streamController.close();
-    super.dispose();
-  }
 
   @override
   void initState() {
@@ -47,32 +43,31 @@ class _CategoriesState extends State<Categories> {
 
   @override
   Widget build(BuildContext context) {
-    return         RefreshIndicator(
-          onRefresh: _handleRefresh,
-          child: StreamBuilder<List<Category>>(
-            stream: _streamController.stream,
-            builder: (context, AsyncSnapshot<List<Category>> snapshot) {
-              return snapshot.hasData
-                  ? GridView.builder(
-                      itemCount: snapshot.data!.length,
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 600,
-                        childAspectRatio: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                      ),
-                      itemBuilder: (BuildContext context, int index) {
-                        return CategoryBox(category: snapshot.data![index]);
-                      },
-                    )
-                  : Center(
-                      child: CircularProgressIndicator(
-                        color: KPrimaryColor,
-                      ),
-                    );
-            },
-          ),
-
+    return RefreshIndicator(
+      onRefresh: _handleRefresh,
+      child: StreamBuilder<List<Category>>(
+        stream: _streamController.stream,
+        builder: (context, AsyncSnapshot<List<Category>> snapshot) {
+          return snapshot.hasData
+              ? GridView.builder(
+                  itemCount: snapshot.data!.length,
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 600,
+                    childAspectRatio: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return CategoryBox(category: snapshot.data![index]);
+                  },
+                )
+              : const Center(
+                  child: CircularProgressIndicator(
+                    color: kPrimaryColor,
+                  ),
+                );
+        },
+      ),
     );
   }
 }

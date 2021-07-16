@@ -1,8 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foodcam_frontend/constants.dart';
-import 'package:foodcam_frontend/generated/l10n.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/widgets/recipe_rate_buttom_sheet.dart';
 import 'package:foodcam_frontend/widgets/recipe_steps_bottom_sheet.dart';
@@ -18,7 +18,7 @@ class RecipePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String _lang = Localizations.localeOf(context).languageCode;
+    final String _lang = Localizations.localeOf(context).languageCode;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -35,8 +35,8 @@ class RecipePage extends StatelessWidget {
             ),
           );
         },
-        backgroundColor: KPrimaryColor,
-        child: Icon(
+        backgroundColor: kPrimaryColor,
+        child: const Icon(
           Icons.receipt_long_rounded,
           color: Colors.white,
         ),
@@ -77,7 +77,7 @@ class RecipePage extends StatelessWidget {
                                 backgroundColor: Colors.transparent,
                                 context: context,
                                 builder: (context) => makeDismissible(
-                                  child: RecipeRateBottomSheet(),
+                                  child: const RecipeRateBottomSheet(),
                                   context: context,
                                 ),
                               );
@@ -98,8 +98,8 @@ class RecipePage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8.0),
                     child: Text(
                       'وجبة غداء  -  30 دقيقة',
                       style: TextStyle(fontSize: 12, color: Colors.white70),
@@ -111,14 +111,14 @@ class RecipePage extends StatelessWidget {
               background: Stack(
                 children: [
                   Positioned.fill(
-                    child: Image.network(
-                      recipe.recipeImageUrl,
+                    child: Image(
+                      image: CachedNetworkImageProvider(recipe.recipeImageUrl),
                       fit: BoxFit.cover,
                     ),
                   ),
                   Positioned.fill(
                     child: Container(
-                      color: Color(0x40000000),
+                      color: const Color(0x40000000),
                     ),
                   )
                 ],
@@ -134,10 +134,10 @@ class RecipePage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Text(
                       AppLocalizations.of(context)!.nutritionInfo,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: KTextColor,
+                        color: kTextColor,
                       ),
                     ),
                   ),
@@ -153,8 +153,8 @@ class RecipePage extends StatelessWidget {
                           radius: 50.0,
                           lineWidth: 10.0,
                           percent: 0.4,
-                          center: Text('40%'),
-                          progressColor: KPrimaryColor,
+                          center: const Text('40%'),
+                          progressColor: kPrimaryColor,
                           footer: Text(
                             AppLocalizations.of(context)!.protein,
                           ),
@@ -169,8 +169,8 @@ class RecipePage extends StatelessWidget {
                           percent: 0.3,
                           animation: true,
                           animationDuration: 1200,
-                          center: Text('30%'),
-                          progressColor: KPrimaryColor,
+                          center: const Text('30%'),
+                          progressColor: kPrimaryColor,
                           footer: Text(
                             AppLocalizations.of(context)!.carb,
                           ),
@@ -185,8 +185,8 @@ class RecipePage extends StatelessWidget {
                           percent: 0.3,
                           animation: true,
                           animationDuration: 1200,
-                          center: Text('30%'),
-                          progressColor: KPrimaryColor,
+                          center: const Text('30%'),
+                          progressColor: kPrimaryColor,
                           footer: Text(
                             AppLocalizations.of(context)!.sugar,
                           ),
@@ -201,8 +201,8 @@ class RecipePage extends StatelessWidget {
                           percent: 0.3,
                           animation: true,
                           animationDuration: 1200,
-                          center: Text('30%'),
-                          progressColor: KPrimaryColor,
+                          center: const Text('30%'),
+                          progressColor: kPrimaryColor,
                           footer: Text(
                             AppLocalizations.of(context)!.cal,
                           ),
@@ -210,15 +210,15 @@ class RecipePage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Divider(),
+                  const Divider(),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Text(
                       AppLocalizations.of(context)!.ingredients,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: KTextColor,
+                        color: kTextColor,
                       ),
                     ),
                   ),
@@ -247,9 +247,9 @@ class RecipePage extends StatelessWidget {
                                     elevation: 1,
                                     child: Padding(
                                       padding: const EdgeInsets.all(5.0),
-                                      child: Image.network(
-                                        recipe
-                                            .ingredients[i].ingredientImageUrl,
+                                      child: Image(
+                                        image: CachedNetworkImageProvider(recipe
+                                            .ingredients[i].ingredientImageUrl),
                                         width: 50,
                                         height: 50,
                                       ),
@@ -261,8 +261,8 @@ class RecipePage extends StatelessWidget {
                                         : const EdgeInsets.only(left: 20.0),
                                     child: Text(
                                       recipe.ingredients[i].ingredientName,
-                                      style: TextStyle(
-                                        color: KTextColor,
+                                      style: const TextStyle(
+                                        color: kTextColor,
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -270,14 +270,14 @@ class RecipePage extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              Text('2 pce'),
+                              const Text('2 pce'),
                             ],
                           ),
                         ),
-                        Divider(),
+                        const Divider(),
                       ],
                     ),
-                  SizedBox(
+                  const SizedBox(
                     height: 50,
                   ),
                 ],
@@ -291,13 +291,13 @@ class RecipePage extends StatelessWidget {
 
   List<Widget> buildRateButton() {
     return [
-      Icon(
+      const Icon(
         Icons.star_rounded,
         color: Color(0xFFFFC107),
       ),
       Text(
         recipe.recipeRate.toString(),
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
         ),

@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:foodcam_frontend/constants.dart';
 
 class CustomCollectionsSearchDelegate extends SearchDelegate {
-  List<String> _recipes = [
+  final List<String> _recipes = [
     'Apple pie',
     'Spaghetti with meat balls',
     'Fried chicken',
@@ -19,9 +18,9 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
         onPressed: () {
           query = '';
         },
-        icon: Icon(
+        icon: const Icon(
           Icons.clear,
-          color: KTextColor,
+          color: kTextColor,
         ),
       ),
     ];
@@ -33,9 +32,9 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
       onPressed: () {
         close(context, null);
       },
-      icon: Icon(
+      icon: const Icon(
         Icons.arrow_back_rounded,
-        color: KTextColor,
+        color: kTextColor,
       ),
     );
   }
@@ -43,7 +42,7 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     if (query != '') {
-      List<String> _filteredRecipes = _recipes
+      final List<String> _filteredRecipes = _recipes
           .where((element) =>
               element.toLowerCase().startsWith(query.toLowerCase()))
           .toList();
@@ -84,14 +83,14 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
                                     Text(
                                       _filteredRecipes[index],
                                       overflow: TextOverflow.fade,
-                                      style: TextStyle(
-                                        color: KTextColor,
+                                      style: const TextStyle(
+                                        color: kTextColor,
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10.0),
+                                    const Padding(
+                                      padding: EdgeInsets.only(top: 10.0),
                                       child: Text(
                                         'Lunch meal',
                                         style: TextStyle(
@@ -107,18 +106,19 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
                           ],
                         ),
                       ),
-                      
-                         Padding(
-                           padding: const EdgeInsets.only(right:40.0),
-                           child: Icon( Icons.add_rounded,size: 40,),
-                         )
-                      
+                      const Padding(
+                        padding: EdgeInsets.only(right: 40.0),
+                        child: Icon(
+                          Icons.add_rounded,
+                          size: 40,
+                        ),
+                      )
                     ],
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+              const Padding(
+                padding: EdgeInsets.only(top: 8.0),
                 child: Divider(
                   indent: 10.0,
                   endIndent: 10.0,
@@ -139,8 +139,8 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
                 color: Colors.red,
                 borderRadius: BorderRadius.circular(100),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
+              child: const Padding(
+                padding: EdgeInsets.all(15.0),
                 child: Icon(
                   Icons.search_off_rounded,
                   size: 50,
@@ -148,12 +148,12 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 20.0),
               child: Text(
                 'No results found',
                 style: TextStyle(
-                  color: KTextColor,
+                  color: kTextColor,
                   fontSize: 20,
                 ),
               ),
@@ -195,7 +195,7 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
                                 child: Image.asset(
-                                'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
+                                  'lib/assets/meatballs-sweet-sour-tomato-sauce-basil-wooden-bowl.png',
                                   fit: BoxFit.cover,
                                   width: 100,
                                   height: 100,
@@ -212,15 +212,14 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
                                       Text(
                                         _filteredRecipes[index],
                                         overflow: TextOverflow.fade,
-                                        style: TextStyle(
-                                          color: KTextColor,
+                                        style: const TextStyle(
+                                          color: kTextColor,
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 10.0),
+                                      const Padding(
+                                        padding: EdgeInsets.only(top: 10.0),
                                         child: Text(
                                           'Lunch meal',
                                           style: TextStyle(
@@ -236,16 +235,19 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
                             ],
                           ),
                         ),
-                        Padding(
-                           padding: const EdgeInsets.only(right:40.0),
-                           child: Icon( Icons.add_rounded,size: 40,),
-                         )
+                        const Padding(
+                          padding: EdgeInsets.only(right: 40.0),
+                          child: Icon(
+                            Icons.add_rounded,
+                            size: 40,
+                          ),
+                        )
                       ],
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
+                const Padding(
+                  padding: EdgeInsets.only(top: 8.0),
                   child: Divider(
                     indent: 10.0,
                     endIndent: 10.0,
@@ -266,8 +268,8 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
                   color: Colors.red,
                   borderRadius: BorderRadius.circular(100),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
+                child: const Padding(
+                  padding: EdgeInsets.all(15.0),
                   child: Icon(
                     Icons.search_off_rounded,
                     size: 50,
@@ -275,12 +277,12 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
+              const Padding(
+                padding: EdgeInsets.only(top: 20.0),
                 child: Text(
                   'No results found',
                   style: TextStyle(
-                    color: KTextColor,
+                    color: kTextColor,
                     fontSize: 20,
                   ),
                 ),
@@ -289,7 +291,7 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
           ),
         );
       }
-    } else
+    } else {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -297,10 +299,10 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
-                color: KPrimaryColor,
+                color: kPrimaryColor,
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
+              child: const Padding(
+                padding: EdgeInsets.all(15.0),
                 child: Icon(
                   Icons.search_rounded,
                   color: Colors.white,
@@ -308,12 +310,12 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 20.0),
               child: Text(
                 'Start searching for recipes',
                 style: TextStyle(
-                  color: KTextColor,
+                  color: kTextColor,
                   fontSize: 20,
                 ),
               ),
@@ -321,5 +323,6 @@ class CustomCollectionsSearchDelegate extends SearchDelegate {
           ],
         ),
       );
+    }
   }
 }

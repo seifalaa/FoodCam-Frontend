@@ -16,8 +16,8 @@ class NoResultsPage extends StatelessWidget {
               color: Colors.red,
               borderRadius: BorderRadius.circular(100),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
+            child: const Padding(
+              padding: EdgeInsets.all(15.0),
               child: Icon(
                 Icons.search_off_rounded,
                 size: 50,
@@ -29,8 +29,8 @@ class NoResultsPage extends StatelessWidget {
             padding: const EdgeInsets.only(top: 20.0),
             child: Text(
               AppLocalizations.of(context)!.noResults,
-              style: TextStyle(
-                color: KTextColor,
+              style: const TextStyle(
+                color: kTextColor,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),

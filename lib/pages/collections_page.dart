@@ -7,6 +7,7 @@ import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/pages/empty_collection_page.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/add_box.dart';
+import 'package:foodcam_frontend/widgets/add_collection_bottom_sheet.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/collection_box.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,8 +22,6 @@ class CollectionPage extends StatefulWidget {
 }
 
 class _CollectionPageState extends State<CollectionPage> {
-  TextEditingController _collectionNameController = TextEditingController();
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   final HomePageController _controller = HomePageController();
   bool _isLoading = false;
@@ -37,14 +36,14 @@ class _CollectionPageState extends State<CollectionPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_rounded,
-            color: KTextColor,
+            color: kTextColor,
           ),
         ),
         title: Text(
           AppLocalizations.of(context)!.collections,
-          style: TextStyle(color: KTextColor),
+          style: const TextStyle(color: kTextColor),
         ),
         elevation: 0,
         centerTitle: true,
@@ -52,18 +51,20 @@ class _CollectionPageState extends State<CollectionPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: KPrimaryColor,
-        onPressed: () {},
-        child: Icon(
+        backgroundColor: kPrimaryColor,
+        onPressed: () {
+          Navigator.pushNamed(context, 'basket/');
+        },
+        child: const Icon(
           Icons.shopping_basket_rounded,
           color: Colors.white,
         ),
       ),
-      bottomNavigationBar: CustomButtonNavigationBar(),
+      bottomNavigationBar: const CustomButtonNavigationBar(),
       body: LoadingOverlay(
         isLoading: _isLoading,
-        progressIndicator: CircularProgressIndicator(
-          color: KPrimaryColor,
+        progressIndicator: const CircularProgressIndicator(
+          color: kPrimaryColor,
         ),
         color: Colors.black,
         opacity: 0.1,
@@ -74,10 +75,10 @@ class _CollectionPageState extends State<CollectionPage> {
             builder: (context,
                 AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               return snapshot.hasData
-                  ? snapshot.data!.docs.length != 0
+                  ? snapshot.data!.docs.isNotEmpty
                       ? GridView(
                           gridDelegate:
-                              SliverGridDelegateWithMaxCrossAxisExtent(
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 300,
                             childAspectRatio: 0.8,
                             crossAxisSpacing: 5,
@@ -99,13 +100,23 @@ class _CollectionPageState extends State<CollectionPage> {
                                           )
                                         : Container(),
                               ),
-                            AddBox(onTab: () {}),
+                            AddBox(onTab: () {
+                              showModalBottomSheet(
+                                isScrollControlled: true,
+                                elevation: 1,
+                                backgroundColor: Colors.transparent,
+                                context: context,
+                                builder: (context) => makeDismissible(
+                                    child: const AddCollectionBottomSheet(),
+                                    context: context),
+                              );
+                            }),
                           ],
                         )
-                      : EmptyCollectionPage()
-                  : Center(
+                      : const EmptyCollectionPage()
+                  : const Center(
                       child: CircularProgressIndicator(
-                        color: KPrimaryColor,
+                        color: kPrimaryColor,
                       ),
                     );
             }),
@@ -113,7 +124,7 @@ class _CollectionPageState extends State<CollectionPage> {
     );
   }
 
-  void deleteItem(collectionName, langCode) async {
+  Future<void> deleteItem(String collectionName, String langCode) async {
     setState(() {
       _isLoading = true;
     });

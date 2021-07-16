@@ -60,5 +60,8 @@
 	"startPreferred":"إبدأ بإضافة مُكوِنات مفضلة",
 	"startDisPreferred":"إبدأ بإضافة مُكوِنات غير مفضلة",
 	"noRecentlySearch":"لا يوجد بحث مؤخراً",
-	"addCollection": "أضِف مجموعة"
+	"addCollection": "أضِف مجموعة",
+	"collectionName": "أسم المجموعة",
+	"noAllergies": "لا توجد حساسيات",
+	"addAllergy": "أضِف حساسية"
 }

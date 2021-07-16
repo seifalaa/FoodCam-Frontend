@@ -22,7 +22,7 @@ class EmptyBasketPage extends StatelessWidget {
             padding: const EdgeInsets.only(top: 20.0),
             child: Text(
               AppLocalizations.of(context)!.addIngToStart,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.black38,
                   fontSize: 25,
                   fontWeight: FontWeight.bold),

@@ -26,10 +26,45 @@ class BasketPage extends StatefulWidget {
 
 class _BasketPageState extends State<BasketPage> {
   final picker = ImagePicker();
+
   final HomePageController _controller = HomePageController();
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   late File _image;
   bool _isLoading = false;
+
+  Future<void> pickImage() async {
+    final pickedImage = await picker.getImage(
+      source: ImageSource.camera,
+    );
+    setState(() {
+      if (pickedImage != null) {
+        _image = File(pickedImage.path);
+      }
+    });
+  }
+
+  void addItem() {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => makeDismissible(
+        child: AddIngredientBottomSheet(pickImage: pickImage),
+        context: context,
+      ),
+    );
+  }
+
+  Future<void> deleteItem(String ingredientName, String langCode) async {
+    setState(() {
+      _isLoading = true;
+    });
+    await _controller.deleteIngredientFromBasket(ingredientName, langCode);
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +73,8 @@ class _BasketPageState extends State<BasketPage> {
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.basket,
-          style: TextStyle(
-            color: KTextColor,
+          style: const TextStyle(
+            color: kTextColor,
           ),
         ),
         centerTitle: true,
@@ -47,9 +82,9 @@ class _BasketPageState extends State<BasketPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_rounded,
-            color: KTextColor,
+            color: kTextColor,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -63,9 +98,9 @@ class _BasketPageState extends State<BasketPage> {
         builder: (context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data!.docs.length == 0) {
+            if (snapshot.data!.docs.isEmpty) {
               return FloatingActionButton(
-                backgroundColor: KPrimaryColor,
+                backgroundColor: kPrimaryColor,
                 onPressed: () {
                   showModalBottomSheet(
                     backgroundColor: Colors.transparent,
@@ -77,14 +112,14 @@ class _BasketPageState extends State<BasketPage> {
                     ),
                   );
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.add_rounded,
                   color: Colors.white,
                 ),
               );
             } else {
               return FloatingActionButton(
-                backgroundColor: KPrimaryColor,
+                backgroundColor: kPrimaryColor,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -95,7 +130,7 @@ class _BasketPageState extends State<BasketPage> {
                     ),
                   );
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.search_rounded,
                   color: Colors.white,
                 ),
@@ -106,13 +141,13 @@ class _BasketPageState extends State<BasketPage> {
           }
         },
       ),
-      bottomNavigationBar: CustomButtonNavigationBar(),
+      bottomNavigationBar: const CustomButtonNavigationBar(),
       body: LoadingOverlay(
         isLoading: _isLoading,
         color: Colors.black,
         opacity: 0.1,
-        progressIndicator: CircularProgressIndicator(
-          color: KPrimaryColor,
+        progressIndicator: const CircularProgressIndicator(
+          color: kPrimaryColor,
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -123,10 +158,11 @@ class _BasketPageState extends State<BasketPage> {
               builder: (context,
                   AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                 if (snapshot.hasData) {
-                  if (snapshot.data!.docs.length != 0) {
+                  if (snapshot.data!.docs.isNotEmpty) {
                     return GridView(
                       shrinkWrap: true,
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
                         maxCrossAxisExtent: 250,
                         childAspectRatio: 1,
                         crossAxisSpacing: 5,
@@ -151,12 +187,12 @@ class _BasketPageState extends State<BasketPage> {
                       ],
                     );
                   } else {
-                    return EmptyBasketPage();
+                    return const EmptyBasketPage();
                   }
                 } else {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(
-                      color: KPrimaryColor,
+                      color: kPrimaryColor,
                     ),
                   );
                 }
@@ -164,41 +200,5 @@ class _BasketPageState extends State<BasketPage> {
         ),
       ),
     );
-  }
-
-  void pickImage() async {
-    final pickedImage = await picker.getImage(
-      source: ImageSource.camera,
-    );
-    setState(() {
-      if (pickedImage != null) {
-        _image = File(pickedImage.path);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
-
-  void addItem() {
-    showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      context: context,
-      builder: (context) => makeDismissible(
-        child: AddIngredientBottomSheet(pickImage: pickImage),
-        context: context,
-      ),
-    );
-  }
-
-  void deleteItem(ingredientName, langCode) async {
-    setState(() {
-      _isLoading = true;
-    });
-    await _controller.deleteIngredientFromBasket(ingredientName, langCode);
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 }

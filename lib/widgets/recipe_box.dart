@@ -1,124 +1,89 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/pages/recipe_page.dart';
 
-class RecipeBox extends StatelessWidget {
+class RecipeBox extends StatefulWidget {
   const RecipeBox({
     Key? key,
     required this.recipe,
   }) : super(key: key);
+
   final Recipe recipe;
 
   @override
-  Widget build(BuildContext context) {
-    double _screenWidth = MediaQuery.of(context).size.width;
-    double _screenHeight = MediaQuery.of(context).size.height;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                recipe.recipeImageUrl,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0x40000000),
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    recipe.recipeName,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: _screenWidth <= KMobileScreenSize
-                          ? _screenWidth * 0.05
-                          : _screenWidth * 0.0225,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: getRate(recipe.recipeRate, _screenWidth))
-                ],
-              ),
-            ),
-          ),
-          Positioned.fill(
-              child: Material(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(20),
-              highlightColor: Colors.transparent,
-              splashColor: Color(0x50D0F1DD),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RecipePage(
-                      recipe: recipe,
-                    ),
-                  ),
-                );
-              },
-            ),
-          )),
-        ],
-      ),
-    );
+  _RecipeBoxState createState() => _RecipeBoxState(recipe.recipeImageUrl);
+}
+
+class _RecipeBoxState extends State<RecipeBox> {
+  final String imageUrl;
+
+  _RecipeBoxState(this.imageUrl);
+
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) => loadImage());
   }
 
-  List<Widget> getRate(double rate, _screenWidth) {
-    List<Widget> stars = [];
+  Future loadImage() async {
+    setState(() {
+      isLoading = true;
+    });
+    await cacheImage(context, imageUrl);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Future cacheImage(BuildContext context, String imageUrl) async {
+    precacheImage(CachedNetworkImageProvider(imageUrl), context);
+  }
+
+  List<Widget> getRate(double rate, double _screenWidth) {
+    final List<Widget> stars = [];
     for (int i = 0; i < rate.toInt(); i++) {
-      stars.add(Icon(
-        Icons.star_rounded,
-        size: _screenWidth <= KMobileScreenSize
-            ? _screenWidth * 0.045
-            : _screenWidth * 0.0225,
-        color: Color(0xFFFFC107),
-      ));
-    }
-    bool noHalves = rate.toInt() == rate;
-    if (noHalves) {
-      for (int i = 0; i < 5 - recipe.recipeRate.toInt(); i++) {
-        stars.add(Icon(
+      stars.add(
+        Icon(
           Icons.star_rounded,
-          size: _screenWidth <= KMobileScreenSize
+          size: _screenWidth <= kMobileScreenSize
               ? _screenWidth * 0.045
               : _screenWidth * 0.0225,
-          color: Colors.white54,
-        ));
+          color: const Color(0xFFFFC107),
+        ),
+      );
+    }
+    final bool noHalves = rate.toInt() == rate;
+    if (noHalves) {
+      for (int i = 0; i < 5 - widget.recipe.recipeRate.toInt(); i++) {
+        stars.add(
+          Icon(
+            Icons.star_rounded,
+            size: _screenWidth <= kMobileScreenSize
+                ? _screenWidth * 0.045
+                : _screenWidth * 0.0225,
+            color: Colors.white54,
+          ),
+        );
       }
     } else {
-      stars.add(Icon(
-        Icons.star_half_rounded,
-        size: _screenWidth <= KMobileScreenSize
-            ? _screenWidth * 0.045
-            : _screenWidth * 0.0225,
-        color: Color(0xFFFFC107),
-      ));
-      for (int i = 0; i < 5 - recipe.recipeRate.toInt() - 1; i++) {
+      stars.add(
+        Icon(
+          Icons.star_half_rounded,
+          size: _screenWidth <= kMobileScreenSize
+              ? _screenWidth * 0.045
+              : _screenWidth * 0.0225,
+          color: const Color(0xFFFFC107),
+        ),
+      );
+      for (int i = 0; i < 5 - widget.recipe.recipeRate.toInt() - 1; i++) {
         stars.add(Icon(
           Icons.star_rounded,
-          size: _screenWidth <= KMobileScreenSize
+          size: _screenWidth <= kMobileScreenSize
               ? _screenWidth * 0.045
               : _screenWidth * 0.0225,
           color: Colors.white54,
@@ -126,5 +91,83 @@ class RecipeBox extends StatelessWidget {
       }
     }
     return stars;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final double _screenWidth = MediaQuery.of(context).size.width;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: !isLoading
+          ? Stack(
+              children: [
+                Positioned.fill(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image(
+                      image: CachedNetworkImageProvider(
+                        widget.recipe.recipeImageUrl,
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0x40000000),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.recipe.recipeName,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: _screenWidth <= kMobileScreenSize
+                                ? _screenWidth * 0.05
+                                : _screenWidth * 0.0225,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children:
+                                getRate(widget.recipe.recipeRate, _screenWidth))
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                    child: Material(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    highlightColor: Colors.transparent,
+                    splashColor: const Color(0x50D0F1DD),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RecipePage(
+                            recipe: widget.recipe,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                )),
+              ],
+            )
+          : Container(),
+    );
   }
 }

@@ -7,7 +7,7 @@ class LanguageProvider extends ChangeNotifier {
     return _langCode;
   }
 
-  void changeLang(String newLangCode) async {
+  Future<void> changeLang(String newLangCode) async {
     _langCode = newLangCode;
     notifyListeners();
   }

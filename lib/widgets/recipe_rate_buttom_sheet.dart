@@ -19,9 +19,9 @@ class _RecipeRateBottomSheetState extends State<RecipeRateBottomSheet> {
       maxChildSize: 0.35,
       minChildSize: 0.3,
       builder: (context, scrollController) => Container(
-        color: KBgColor,
+        color: kBgColor,
         child: Material(
-          color: KBgColor,
+          color: kBgColor,
           child: ListView(
             controller: scrollController,
             children: [
@@ -32,8 +32,8 @@ class _RecipeRateBottomSheetState extends State<RecipeRateBottomSheet> {
                     padding: const EdgeInsets.all(20.0),
                     child: Text(
                       AppLocalizations.of(context)!.rate,
-                      style: TextStyle(
-                        color: KTextColor,
+                      style: const TextStyle(
+                        color: kTextColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
                       ),
@@ -41,7 +41,7 @@ class _RecipeRateBottomSheetState extends State<RecipeRateBottomSheet> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Row(
@@ -54,7 +54,7 @@ class _RecipeRateBottomSheetState extends State<RecipeRateBottomSheet> {
                           _rate = i + 1;
                         });
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.star_rounded,
                         color: Color(0xFFFFC107),
                         size: 35,
@@ -67,7 +67,7 @@ class _RecipeRateBottomSheetState extends State<RecipeRateBottomSheet> {
                           _rate += i + 1;
                         });
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.star_rounded,
                         color: Colors.grey,
                         size: 35,
@@ -80,7 +80,7 @@ class _RecipeRateBottomSheetState extends State<RecipeRateBottomSheet> {
                     const EdgeInsets.symmetric(horizontal: 170.0, vertical: 20),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: KPrimaryColor,
+                    primary: kPrimaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
                     ),
@@ -90,7 +90,7 @@ class _RecipeRateBottomSheetState extends State<RecipeRateBottomSheet> {
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
                       AppLocalizations.of(context)!.submit,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),

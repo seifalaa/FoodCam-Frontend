@@ -8,7 +8,7 @@ class AddIngredientBottomSheet extends StatelessWidget {
     Key? key,
     required this.pickImage,
   }) : super(key: key);
-  final pickImage;
+  final Function pickImage;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class AddIngredientBottomSheet extends StatelessWidget {
       minChildSize: 0.3,
       initialChildSize: 0.3,
       builder: (context, scrollController) => Container(
-        color: KBgColor,
+        color: kBgColor,
         child: Material(
           child: Column(
             children: [
@@ -31,10 +31,10 @@ class AddIngredientBottomSheet extends StatelessWidget {
                           padding: const EdgeInsets.all(20.0),
                           child: Text(
                             AppLocalizations.of(context)!.addIng,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 25,
-                              color: KTextColor,
+                              color: kTextColor,
                             ),
                           ),
                         ),
@@ -48,13 +48,13 @@ class AddIngredientBottomSheet extends StatelessWidget {
                 controller: scrollController,
                 children: [
                   ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.camera_alt_outlined,
-                      color: KTextColor,
+                      color: kTextColor,
                     ),
                     title: Text(
                       AppLocalizations.of(context)!.scanIng,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                       ),
                     ),
@@ -62,15 +62,15 @@ class AddIngredientBottomSheet extends StatelessWidget {
                       pickImage();
                     },
                   ),
-                  Divider(),
+                  const Divider(),
                   ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.search_rounded,
-                      color: KTextColor,
+                      color: kTextColor,
                     ),
                     title: Text(
                       AppLocalizations.of(context)!.searchIng,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                       ),
                     ),

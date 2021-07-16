@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
@@ -18,13 +17,8 @@ class TopRated extends StatefulWidget {
 }
 
 class _TopRatedState extends State<TopRated> {
-  StreamController<List<Recipe>> _streamController =
+  final StreamController<List<Recipe>> _streamController =
       StreamController.broadcast();
-  @override
-  void dispose() {
-    _streamController.close();
-    super.dispose();
-  }
 
   @override
   void initState() {
@@ -54,7 +48,7 @@ class _TopRatedState extends State<TopRated> {
           return snapshot.hasData
               ? GridView.builder(
                   itemCount: snapshot.data!.length,
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 600,
                     childAspectRatio: 2,
                     crossAxisSpacing: 10,
@@ -66,9 +60,9 @@ class _TopRatedState extends State<TopRated> {
                     );
                   },
                 )
-              : Center(
+              : const Center(
                   child: CircularProgressIndicator(
-                    color: KPrimaryColor,
+                    color: kPrimaryColor,
                   ),
                 );
         },

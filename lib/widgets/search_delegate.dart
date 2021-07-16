@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:foodcam_frontend/generated/l10n.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/pages/no_results_page.dart';
@@ -21,12 +20,10 @@ class CustomSearchDelegate extends SearchDelegate {
       IconButton(
         onPressed: () {
           query = '';
-          // searchResults = [];
-          // buildResults(context);
         },
-        icon: Icon(
+        icon: const Icon(
           Icons.clear,
-          color: KTextColor,
+          color: kTextColor,
         ),
       ),
     ];
@@ -38,9 +35,9 @@ class CustomSearchDelegate extends SearchDelegate {
       onPressed: () {
         close(context, null);
       },
-      icon: Icon(
+      icon: const Icon(
         Icons.arrow_back_rounded,
-        color: KTextColor,
+        color: kTextColor,
       ),
     );
   }
@@ -50,7 +47,7 @@ class CustomSearchDelegate extends SearchDelegate {
     final String langCode = Provider.of<LanguageProvider>(context).langCode;
     if (searchResults.isNotEmpty && query.isNotEmpty) {
       return GridView.builder(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 600,
           childAspectRatio: 2,
           crossAxisSpacing: 10,
@@ -67,9 +64,9 @@ class CustomSearchDelegate extends SearchDelegate {
           builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
             if (snapshot.hasData) {
               searchResults = snapshot.data!;
-              if (snapshot.data!.length != 0) {
+              if (snapshot.data!.isNotEmpty) {
                 return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 600,
                     childAspectRatio: 2,
                     crossAxisSpacing: 10,
@@ -81,14 +78,15 @@ class CustomSearchDelegate extends SearchDelegate {
                   ),
                 );
               } else {
-                return NoResultsPage();
+                return const NoResultsPage();
               }
-            } else
-              return Center(
+            } else {
+              return const Center(
                 child: CircularProgressIndicator(
-                  color: KPrimaryColor,
+                  color: kPrimaryColor,
                 ),
               );
+            }
           });
     } else {
       return StartSearchPage(
@@ -102,36 +100,39 @@ class CustomSearchDelegate extends SearchDelegate {
     final String langCode = Provider.of<LanguageProvider>(context).langCode;
     if (query != '') {
       return FutureBuilder(
-          future: _controller.recipeSearch(query, langCode),
-          builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
-            if (snapshot.hasData) {
-              searchResults = snapshot.data!;
-              if (snapshot.data!.length != 0) {
-                return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 600,
-                    childAspectRatio: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) => RecipeBox(
-                    recipe: snapshot.data![index],
-                  ),
-                );
-              } else {
-                return NoResultsPage();
-              }
-            } else
-              return Center(
-                child: CircularProgressIndicator(
-                  color: KPrimaryColor,
+        future: _controller.recipeSearch(query, langCode),
+        builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
+          if (snapshot.hasData) {
+            searchResults = snapshot.data!;
+            if (snapshot.data!.isNotEmpty) {
+              return GridView.builder(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 600,
+                  childAspectRatio: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) => RecipeBox(
+                  recipe: snapshot.data![index],
                 ),
               );
-          });
-    } else
+            } else {
+              return const NoResultsPage();
+            }
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: kPrimaryColor,
+              ),
+            );
+          }
+        },
+      );
+    } else {
       return StartSearchPage(
         text: AppLocalizations.of(context)!.startSearch,
       );
+    }
   }
 }

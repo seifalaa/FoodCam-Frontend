@@ -16,7 +16,7 @@ class RecipeStepsBottomSheet extends StatelessWidget {
       minChildSize: 0.5,
       initialChildSize: 0.7,
       builder: (context, scrollController) => Container(
-        color: KBgColor,
+        color: kBgColor,
         child: ListView(
           controller: scrollController,
           children: [
@@ -27,8 +27,8 @@ class RecipeStepsBottomSheet extends StatelessWidget {
                   padding: const EdgeInsets.all(20.0),
                   child: Text(
                     AppLocalizations.of(context)!.steps,
-                    style: TextStyle(
-                      color: KTextColor,
+                    style: const TextStyle(
+                      color: kTextColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 30,
                     ),
@@ -36,7 +36,7 @@ class RecipeStepsBottomSheet extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             for (var i = 0; i < steps.length; i++)
@@ -45,15 +45,15 @@ class RecipeStepsBottomSheet extends StatelessWidget {
                 child: Column(
                   children: [
                     ListTile(
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.arrow_right_rounded,
-                        color: KPrimaryColor,
+                        color: kPrimaryColor,
                       ),
                       title: Text(
                         steps[i],
                       ),
                     ),
-                    Divider(),
+                    const Divider(),
                   ],
                 ),
               ),

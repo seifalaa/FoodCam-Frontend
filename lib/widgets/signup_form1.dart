@@ -12,9 +12,9 @@ class SignupForm1 extends StatelessWidget {
     required this.lastNameController,
     required this.formKey,
   }) : super(key: key);
-  final firstNameController;
-  final lastNameController;
-  final formKey;
+  final TextEditingController firstNameController;
+  final TextEditingController lastNameController;
+  final GlobalKey<FormState> formKey;
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +27,9 @@ class SignupForm1 extends StatelessWidget {
           children: [
             Text(
               AppLocalizations.of(context)!.welcome,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 50,
-                color: KTextColor,
+                color: kTextColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -37,7 +37,7 @@ class SignupForm1 extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(AppLocalizations.of(context)!.knowYourName),
             ),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             CustomTextFormField(
@@ -79,7 +79,7 @@ class SignupForm1 extends StatelessWidget {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: KPrimaryColor,
+                  primary: kPrimaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(100),
                   ),

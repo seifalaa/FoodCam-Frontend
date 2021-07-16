@@ -17,11 +17,11 @@ class Signup1 extends StatefulWidget {
 }
 
 class _Signup1State extends State<Signup1> {
-  TextEditingController _firstNameController = TextEditingController();
-  TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
   bool _isLoading = false;
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  AuthController _controller = AuthController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AuthController _controller = AuthController();
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +30,13 @@ class _Signup1State extends State<Signup1> {
         isLoading: _isLoading,
         color: Colors.black,
         opacity: 0.3,
-        progressIndicator: CircularProgressIndicator(
-          color: KPrimaryColor,
+        progressIndicator: const CircularProgressIndicator(
+          color: kPrimaryColor,
         ),
         child: Stack(
           children: [
-            Container(
-              child: CustomPaint(
-                painter: BG(context: context),
-              ),
+            CustomPaint(
+              painter: BG(context: context),
             ),
             Center(
               child: ListView(
@@ -77,34 +75,38 @@ class _Signup1State extends State<Signup1> {
     );
   }
 
-  void onGoogleAuth() async {
+  Future<void> onGoogleAuth() async {
     setState(() {
       _isLoading = true;
     });
-    bool response = await _controller.loginWithGoogle();
+    final bool response = await _controller.loginWithGoogle();
     setState(() {
       _isLoading = false;
     });
     if (response) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Home()),
+        MaterialPageRoute(
+          builder: (context) => const Home(),
+        ),
       );
     }
   }
 
-  void onFacebookAuth() async {
+  Future<void> onFacebookAuth() async {
     setState(() {
       _isLoading = true;
     });
-    bool response = await _controller.loginWithFacebook();
+    final bool response = await _controller.loginWithFacebook();
     setState(() {
       _isLoading = false;
     });
     if (response) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Home()),
+        MaterialPageRoute(
+          builder: (context) => const Home(),
+        ),
       );
     }
   }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:foodcam_frontend/models/allergy.dart';
 import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
@@ -7,12 +8,13 @@ class HomePageController {
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
   Future<List<Recipe>> getTopRated(String langCode) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = langCode == 'ar'
+    final QuerySnapshot<Map<String, dynamic>> snapshot = langCode == 'ar'
         ? await fireStore.collection('Recipes-ar').get()
         : await fireStore.collection('Recipes').get();
-    List<Recipe> recipes = [];
-    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
-      List<Ingredient> ingredients =
+    final List<Recipe> recipes = [];
+    for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
+        in snapshot.docs) {
+      final List<Ingredient> ingredients =
           await getIngredients(doc.data()['ingredients']);
       recipes.add(
         Recipe(
@@ -28,13 +30,14 @@ class HomePageController {
   }
 
   Future<List<Category>> getCategories(String langCode) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = langCode == 'ar'
+    final QuerySnapshot<Map<String, dynamic>> snapshot = langCode == 'ar'
         ? await fireStore.collection('Categories-ar').get()
         : await fireStore.collection('Categories').get();
-    List<Category> categories = [];
-    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
-      List<dynamic> recipeRefs = doc.data()['recipes'];
-      List<Recipe> recipes = await getRecipes(recipeRefs);
+    final List<Category> categories = [];
+    for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
+        in snapshot.docs) {
+      final List<dynamic> recipeRefs = doc.data()['recipes'];
+      final List<Recipe> recipes = await getRecipes(recipeRefs);
       categories.add(
         Category.fromMap(
           {
@@ -49,12 +52,12 @@ class HomePageController {
   }
 
   Future<List<Recipe>> getRecipes(List<dynamic> references) async {
-    List<Recipe> recipes = [];
-    for (DocumentReference reference in references) {
-      DocumentSnapshot<Map<String, dynamic>> snapshot =
+    final List<Recipe> recipes = [];
+    for (final DocumentReference reference in references) {
+      final DocumentSnapshot<Map<String, dynamic>> snapshot =
           await fireStore.doc(reference.path).get();
-      Map<String, dynamic> recipeData = snapshot.data()!;
-      List<Ingredient> ingredients =
+      final Map<String, dynamic> recipeData = snapshot.data()!;
+      final List<Ingredient> ingredients =
           await getIngredients(recipeData['ingredients']);
 
       recipes.add(Recipe(
@@ -68,9 +71,9 @@ class HomePageController {
   }
 
   Future<List<Ingredient>> getIngredients(List<dynamic> references) async {
-    List<Ingredient> ingredients = [];
-    for (DocumentReference reference in references) {
-      DocumentSnapshot<Map<String, dynamic>> snapshot =
+    final List<Ingredient> ingredients = [];
+    for (final DocumentReference reference in references) {
+      final DocumentSnapshot<Map<String, dynamic>> snapshot =
           await fireStore.doc(reference.path).get();
       ingredients.add(Ingredient.fromMap(snapshot.data()!));
     }
@@ -78,15 +81,16 @@ class HomePageController {
   }
 
   Future<List<Recipe>> getRecentlySearched(String langCode) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = langCode == 'ar'
+    final QuerySnapshot<Map<String, dynamic>> snapshot = langCode == 'ar'
         ? await fireStore.collection('RecentlySearched-ar').get()
         : await fireStore.collection('RecentlySearched').get();
-    List<Recipe> recipes = [];
-    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
-      DocumentSnapshot<Map<String, dynamic>> recipeSnapshot =
+    final List<Recipe> recipes = [];
+    for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
+        in snapshot.docs) {
+      final DocumentSnapshot<Map<String, dynamic>> recipeSnapshot =
           await fireStore.doc(doc.data()['recipe'].path).get();
-      Map<String, dynamic> recipeDate = recipeSnapshot.data()!;
-      List<Ingredient> ingredients =
+      final Map<String, dynamic> recipeDate = recipeSnapshot.data()!;
+      final List<Ingredient> ingredients =
           await getIngredients(recipeDate['ingredients']);
       recipes.add(
         Recipe(
@@ -101,15 +105,41 @@ class HomePageController {
     return recipes;
   }
 
+  Future<void> addCollection(Map<String, dynamic> collectionData) async {
+    //langCode == 'ar'
+    //    ? await fireStore.collection('Collections-ar').add(collectionData)
+    //    : await fireStore.collection('Collections').add(collectionData);
+  }
+
+  Future<List<Allergy>> getAllergies(String langCode) async {
+    final QuerySnapshot<Map<String, dynamic>> snapshot = langCode == 'ar'
+        ? await fireStore.collection('Allergies-ar').get()
+        : await fireStore.collection('Allergies').get();
+    final List<Allergy> allergies = [];
+    for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
+        in snapshot.docs) {
+      final Map<String, dynamic> allergyData = doc.data();
+      allergies.add(Allergy.fromMap(allergyData));
+    }
+    return allergies;
+  }
+
+  //Future<void> addAllergy(String allergyName,String langCode)async{
+  //  final QuerySnapshot<Map<String, dynamic>> snapshot = langCode == 'ar'
+  //      ? await fireStore.collection('Allergies-ar').where('allergyName',isEqualTo: allergyName).get()
+  //      : await fireStore.collection('Allergies').where('allergyName',isEqualTo: allergyName).get();
+  //  final QueryDocumentSnapshot doc = snapshot.docs.first;
+  //  langCode == 'ar'? await fireStore.collection('UserAllergies-')
+  //}
   Future<Recipe> recipeFromQueryDocumentSnapshot(
       QueryDocumentSnapshot<Map<String, dynamic>> snapshot) async {
-    Map<String, dynamic> recipeData = snapshot.data();
-    List<dynamic> ingredientsReference = recipeData['ingredients'];
-    List<Ingredient> ingredients = [];
-    for (var reference in ingredientsReference) {
-      DocumentSnapshot<Map<String, dynamic>> ingredientDoc =
+    final Map<String, dynamic> recipeData = snapshot.data();
+    final List<dynamic> ingredientsReference = recipeData['ingredients'];
+    final List<Ingredient> ingredients = [];
+    for (final reference in ingredientsReference) {
+      final DocumentSnapshot<Map<String, dynamic>> ingredientDoc =
           await fireStore.doc(reference.path).get();
-      Map<String, dynamic>? ingredient = ingredientDoc.data();
+      final Map<String, dynamic>? ingredient = ingredientDoc.data();
       ingredients.add(Ingredient.fromMap(ingredient!));
     }
     return Recipe(
@@ -123,14 +153,14 @@ class HomePageController {
 
   Future<Recipe> recipeFromDocumentSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) async {
-    Map<String, dynamic>? recipeData = snapshot.data();
-    List<dynamic> ingredientsReference = recipeData!['ingredients'];
-    List<Ingredient> ingredients = [];
+    final Map<String, dynamic>? recipeData = snapshot.data();
+    final List<dynamic> ingredientsReference = recipeData!['ingredients'];
+    final List<Ingredient> ingredients = [];
 
-    for (var reference in ingredientsReference) {
-      DocumentSnapshot<Map<String, dynamic>> ingredientDoc =
+    for (final reference in ingredientsReference) {
+      final DocumentSnapshot<Map<String, dynamic>> ingredientDoc =
           await fireStore.doc(reference.path).get();
-      Map<String, dynamic>? ingredient = ingredientDoc.data();
+      final Map<String, dynamic>? ingredient = ingredientDoc.data();
       ingredients.add(Ingredient.fromMap(ingredient!));
     }
     return Recipe(
@@ -144,14 +174,14 @@ class HomePageController {
 
   Future<Category> categoryFromQueryDocumentSnapshot(
       QueryDocumentSnapshot<Map<String, dynamic>> snapshot) async {
-    Map<String, dynamic> categoryData = snapshot.data();
-    List<dynamic> recipesReference = categoryData['recipes'];
-    List<Recipe> recipes = [];
+    final Map<String, dynamic> categoryData = snapshot.data();
+    final List<dynamic> recipesReference = categoryData['recipes'];
+    final List<Recipe> recipes = [];
 
-    for (var reference in recipesReference) {
-      DocumentSnapshot<Map<String, dynamic>> recipeDoc =
+    for (final reference in recipesReference) {
+      final DocumentSnapshot<Map<String, dynamic>> recipeDoc =
           await fireStore.doc(reference.path).get();
-      Recipe recipe = await recipeFromDocumentSnapshot(recipeDoc);
+      final Recipe recipe = await recipeFromDocumentSnapshot(recipeDoc);
       recipes.add(recipe);
     }
     return Category(
@@ -161,32 +191,33 @@ class HomePageController {
     );
   }
 
-  Future<List<Recipe>> recipeSearch(query, langCode) async {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = langCode == 'ar'
+  Future<List<Recipe>> recipeSearch(String query, String langCode) async {
+    final QuerySnapshot<Map<String, dynamic>> querySnapshot = langCode == 'ar'
         ? await fireStore.collection('Recipes-ar').get()
         : await fireStore.collection('Recipes').get();
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> recipesDocs =
+    final List<QueryDocumentSnapshot<Map<String, dynamic>>> recipesDocs =
         querySnapshot.docs;
-    List<Recipe> recipes = [];
-    for (var doc in recipesDocs) {
-      Recipe recipe = await recipeFromQueryDocumentSnapshot(doc);
+    final List<Recipe> recipes = [];
+    for (final doc in recipesDocs) {
+      final Recipe recipe = await recipeFromQueryDocumentSnapshot(doc);
       recipes.add(recipe);
     }
-    List<Recipe> searchResults = recipes
+    final List<Recipe> searchResults = recipes
         .where((element) => element.recipeName.startsWith(query))
         .toList();
     return searchResults;
   }
 
-  Future<List<Ingredient>> ingredientSearch(query, langCode) async {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = langCode == 'ar'
+  Future<List<Ingredient>> ingredientSearch(
+      String query, String langCode) async {
+    final QuerySnapshot<Map<String, dynamic>> querySnapshot = langCode == 'ar'
         ? await fireStore.collection('Ingredients-ar').get()
         : await fireStore.collection('Ingredients').get();
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> ingredientsDocs =
+    final List<QueryDocumentSnapshot<Map<String, dynamic>>> ingredientsDocs =
         querySnapshot.docs;
-    List<Ingredient> ingredients = [];
-    for (var doc in ingredientsDocs) {
-      Map<String, dynamic> ingredient = doc.data();
+    final List<Ingredient> ingredients = [];
+    for (final doc in ingredientsDocs) {
+      final Map<String, dynamic> ingredient = doc.data();
       ingredients.add(Ingredient.fromMap(ingredient));
     }
     return ingredients
@@ -194,8 +225,9 @@ class HomePageController {
         .toList();
   }
 
-  Future<void> addIngredientInBasket(Ingredient ingredient, langCode) async {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = langCode == 'ar'
+  Future<void> addIngredientInBasket(
+      Ingredient ingredient, String langCode) async {
+    final QuerySnapshot<Map<String, dynamic>> querySnapshot = langCode == 'ar'
         ? await fireStore
             .collection('Ingredients-ar')
             .where('ingredientName', isEqualTo: ingredient.ingredientName)
@@ -204,7 +236,7 @@ class HomePageController {
             .collection('Ingredients')
             .where('ingredientName', isEqualTo: ingredient.ingredientName)
             .get();
-    DocumentReference<Map<String, dynamic>> ingredientReference =
+    final DocumentReference<Map<String, dynamic>> ingredientReference =
         querySnapshot.docs.first.reference;
     await ingredientReference.update({'addedToBasket': false});
     langCode == 'ar'
@@ -215,8 +247,10 @@ class HomePageController {
             .collection('Basket')
             .add({'ingredient': ingredientReference});
   }
-  Future<void> addIngredientInPreferred(Ingredient ingredient, langCode) async {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = langCode == 'ar'
+
+  Future<void> addIngredientInPreferred(
+      Ingredient ingredient, String langCode) async {
+    final QuerySnapshot<Map<String, dynamic>> querySnapshot = langCode == 'ar'
         ? await fireStore
             .collection('Ingredients-ar')
             .where('ingredientName', isEqualTo: ingredient.ingredientName)
@@ -225,9 +259,11 @@ class HomePageController {
             .collection('Ingredients')
             .where('ingredientName', isEqualTo: ingredient.ingredientName)
             .get();
-    DocumentReference<Map<String, dynamic>> ingredientReference =
+    final DocumentReference<Map<String, dynamic>> ingredientReference =
         querySnapshot.docs.first.reference;
-    await ingredientReference.update({'addedToBasket': false}); // i made it false beacause it conflict with basket
+    await ingredientReference.update({
+      'addedToBasket': false
+    }); // i made it false beacause it conflict with basket
     langCode == 'ar'
         ? await fireStore
             .collection('PreferredIngredients-ar')
@@ -236,8 +272,10 @@ class HomePageController {
             .collection('PreferredIngredients')
             .add({'ingredient': ingredientReference});
   }
-   Future<void> addIngredientInDisPreferred(Ingredient ingredient, langCode) async {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = langCode == 'ar'
+
+  Future<void> addIngredientInDisPreferred(
+      Ingredient ingredient, String langCode) async {
+    final QuerySnapshot<Map<String, dynamic>> querySnapshot = langCode == 'ar'
         ? await fireStore
             .collection('Ingredients-ar')
             .where('ingredientName', isEqualTo: ingredient.ingredientName)
@@ -246,9 +284,11 @@ class HomePageController {
             .collection('Ingredients')
             .where('ingredientName', isEqualTo: ingredient.ingredientName)
             .get();
-    DocumentReference<Map<String, dynamic>> ingredientReference =
+    final DocumentReference<Map<String, dynamic>> ingredientReference =
         querySnapshot.docs.first.reference;
-    await ingredientReference.update({'addedToBasket': false}); // i made it false beacause it conflict with basket
+    await ingredientReference.update({
+      'addedToBasket': false
+    }); // i made it false beacause it conflict with basket
     langCode == 'ar'
         ? await fireStore
             .collection('DisPreferredIngredients-ar')
@@ -258,26 +298,25 @@ class HomePageController {
             .add({'ingredient': ingredientReference});
   }
 
-
   Future<Ingredient> ingredientFromQueryDocumentSnapshot(
       QueryDocumentSnapshot<Map<String, dynamic>> snapshot) async {
-    Map<String, dynamic> basketData = snapshot.data();
-    DocumentReference ingredientReference = basketData['ingredient'];
-    DocumentSnapshot<Map<String, dynamic>> ingredientDoc =
+    final Map<String, dynamic> basketData = snapshot.data();
+    final DocumentReference ingredientReference = basketData['ingredient'];
+    final DocumentSnapshot<Map<String, dynamic>> ingredientDoc =
         await fireStore.doc(ingredientReference.path).get();
-    Map<String, dynamic>? ingredientData = ingredientDoc.data();
+    final Map<String, dynamic>? ingredientData = ingredientDoc.data();
     return Ingredient.fromMap(ingredientData!);
   }
 
   Future<List<Recipe>> recipeSearchWithMultipleIngredients(
       List<QueryDocumentSnapshot<Map<String, dynamic>>> basketIngredients,
-      langCode) async {
-    List<QuerySnapshot<Map<String, dynamic>>> results = [];
-    for (var basketIngredient in basketIngredients) {
-      Map<String, dynamic> basketIngredientData = basketIngredient.data();
-      DocumentReference ingredientReference =
+      String langCode) async {
+    final List<QuerySnapshot<Map<String, dynamic>>> results = [];
+    for (final basketIngredient in basketIngredients) {
+      final Map<String, dynamic> basketIngredientData = basketIngredient.data();
+      final DocumentReference ingredientReference =
           basketIngredientData['ingredient'];
-      QuerySnapshot<Map<String, dynamic>> result = langCode == 'ar'
+      final QuerySnapshot<Map<String, dynamic>> result = langCode == 'ar'
           ? await fireStore
               .collection('Recipes-ar')
               .where('ingredients', arrayContains: ingredientReference)
@@ -288,10 +327,10 @@ class HomePageController {
               .get();
       results.add(result);
     }
-    List<Recipe> recipes = [];
-    for (var result in results) {
-      for (var doc in result.docs) {
-        Recipe recipe = await recipeFromQueryDocumentSnapshot(doc);
+    final List<Recipe> recipes = [];
+    for (final result in results) {
+      for (final doc in result.docs) {
+        final Recipe recipe = await recipeFromQueryDocumentSnapshot(doc);
         recipes.add(recipe);
       }
     }
@@ -300,20 +339,21 @@ class HomePageController {
 
   Future<void> deleteIngredientFromBasket(
       String ingredientName, String langCode) async {
-    QuerySnapshot<Map<String, dynamic>> ingredientDocument = langCode == 'ar'
-        ? await fireStore
-            .collection('Ingredients-ar')
-            .where('ingredientName', isEqualTo: ingredientName)
-            .get()
-        : await fireStore
-            .collection('Ingredients')
-            .where('ingredientName', isEqualTo: ingredientName)
-            .get();
+    final QuerySnapshot<Map<String, dynamic>> ingredientDocument =
+        langCode == 'ar'
+            ? await fireStore
+                .collection('Ingredients-ar')
+                .where('ingredientName', isEqualTo: ingredientName)
+                .get()
+            : await fireStore
+                .collection('Ingredients')
+                .where('ingredientName', isEqualTo: ingredientName)
+                .get();
 
-    DocumentReference ingredientReference =
+    final DocumentReference ingredientReference =
         ingredientDocument.docs.first.reference;
 
-    QuerySnapshot<Map<String, dynamic>> ingredientInBasketDocument =
+    final QuerySnapshot<Map<String, dynamic>> ingredientInBasketDocument =
         langCode == 'ar'
             ? await fireStore
                 .collection('Basket-ar')
@@ -324,9 +364,8 @@ class HomePageController {
                 .where('ingredient', isEqualTo: ingredientReference)
                 .get();
 
-    String ingredientInBasketPath =
+    final String ingredientInBasketPath =
         ingredientInBasketDocument.docs.first.reference.path;
-    print(ingredientInBasketPath);
     langCode == 'ar'
         ? await fireStore.doc(ingredientInBasketPath).delete()
         : await fireStore.doc(ingredientInBasketPath).delete();
@@ -334,17 +373,17 @@ class HomePageController {
 
   Future<Category> collectionFromQueryDocumentSnapshot(
       QueryDocumentSnapshot<Map<String, dynamic>> snapshot) async {
-    Map<String, dynamic> collectionDate = snapshot.data();
+    final Map<String, dynamic> collectionDate = snapshot.data();
     //print(collectionDate);
-    var recipesReferences = collectionDate['recipes'];
-    List<Recipe> recipes = [];
-    for (DocumentReference reference in recipesReferences) {
-      DocumentSnapshot<Map<String, dynamic>> recipeSnapshot =
+    final recipesReferences = collectionDate['recipes'];
+    final List<Recipe> recipes = [];
+    for (final DocumentReference reference in recipesReferences) {
+      final DocumentSnapshot<Map<String, dynamic>> recipeSnapshot =
           await fireStore.doc(reference.path).get();
-      Recipe recipe = await recipeFromDocumentSnapshot(recipeSnapshot);
+      final Recipe recipe = await recipeFromDocumentSnapshot(recipeSnapshot);
       recipes.add(recipe);
     }
-    Map<String, dynamic> collectionMap = {
+    final Map<String, dynamic> collectionMap = {
       'categoryName': collectionDate['collectionName'],
       'categoryImageUrl': collectionDate['collectionImageUrl'],
       'recipes': recipes,
@@ -353,15 +392,16 @@ class HomePageController {
   }
 
   Future<void> deleteCollection(String collectionName, String langCode) async {
-    QuerySnapshot<Map<String, dynamic>> collectionDocument = langCode == 'ar'
-        ? await fireStore
-            .collection('Collections-ar')
-            .where('collectionName', isEqualTo: collectionName)
-            .get()
-        : await fireStore
-            .collection('Collections')
-            .where('collectionName', isEqualTo: collectionName)
-            .get();
+    final QuerySnapshot<Map<String, dynamic>> collectionDocument =
+        langCode == 'ar'
+            ? await fireStore
+                .collection('Collections-ar')
+                .where('collectionName', isEqualTo: collectionName)
+                .get()
+            : await fireStore
+                .collection('Collections')
+                .where('collectionName', isEqualTo: collectionName)
+                .get();
     await fireStore.doc(collectionDocument.docs.first.reference.path).delete();
   }
 }

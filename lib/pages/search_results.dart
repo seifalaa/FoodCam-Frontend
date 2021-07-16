@@ -25,8 +25,8 @@ class SearchResultsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.results,
-          style: TextStyle(
-            color: KTextColor,
+          style: const TextStyle(
+            color: kTextColor,
           ),
         ),
         centerTitle: true,
@@ -34,33 +34,33 @@ class SearchResultsPage extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_rounded,
-            color: KTextColor,
+            color: kTextColor,
           ),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: KPrimaryColor,
+        backgroundColor: kPrimaryColor,
         onPressed: () {
           Navigator.pushReplacementNamed(context, 'basket/');
         },
-        child: Icon(
+        child: const Icon(
           Icons.shopping_basket_rounded,
           color: Colors.white,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: CustomButtonNavigationBar(),
+      bottomNavigationBar: const CustomButtonNavigationBar(),
       body: FutureBuilder<List<Recipe>>(
         future: _controller.recipeSearchWithMultipleIngredients(
             ingredientsDocs, lang),
         builder: (context, snapshot) => snapshot.hasData
             ? GridView.builder(
                 itemCount: snapshot.data!.length,
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 600,
                   childAspectRatio: 2,
                   crossAxisSpacing: 10,
@@ -69,9 +69,9 @@ class SearchResultsPage extends StatelessWidget {
                 itemBuilder: (context, index) =>
                     RecipeBox(recipe: snapshot.data![index]),
               )
-            : Center(
+            : const Center(
                 child: CircularProgressIndicator(
-                  color: KPrimaryColor,
+                  color: kPrimaryColor,
                 ),
               ),
       ),

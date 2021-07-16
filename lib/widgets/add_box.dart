@@ -8,6 +8,7 @@ class AddBox extends StatelessWidget {
     required this.onTab,
   }) : super(key: key);
   final Function onTab;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,10 +21,10 @@ class AddBox extends StatelessWidget {
           onTap: () {
             onTab();
           },
-          child: Icon(
+          child: const Icon(
             Icons.add_rounded,
             size: 50,
-            color: KBgColor,
+            color: kBgColor,
           ),
         ),
       ),

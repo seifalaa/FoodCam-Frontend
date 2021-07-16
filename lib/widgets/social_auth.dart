@@ -4,26 +4,25 @@ import '../constants.dart';
 
 class SocialAuth extends StatelessWidget {
   const SocialAuth({
-    Key? key,
     required this.onGoogleAuth,
     required this.onFacebookAuth,
   });
 
-  final onGoogleAuth;
-  final onFacebookAuth;
+  final Function onGoogleAuth;
+  final Function onFacebookAuth;
 
   @override
   Widget build(BuildContext context) {
-    double _screenWidth = MediaQuery.of(context).size.width;
-    double _screenHeight = MediaQuery.of(context).size.height;
+    final double _screenWidth = MediaQuery.of(context).size.width;
+    final double _screenHeight = MediaQuery.of(context).size.height;
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
+            const Expanded(
               child: Divider(
-                color: KTextColor,
+                color: kTextColor,
                 thickness: 2,
                 indent: 50,
                 endIndent: 5,
@@ -31,13 +30,13 @@ class SocialAuth extends StatelessWidget {
             ),
             Text(
               AppLocalizations.of(context)!.orWith,
-              style: TextStyle(
-                color: KTextColor,
+              style: const TextStyle(
+                color: kTextColor,
               ),
             ),
-            Expanded(
+            const Expanded(
               child: Divider(
-                color: KTextColor,
+                color: kTextColor,
                 thickness: 2,
                 indent: 5,
                 endIndent: 50,

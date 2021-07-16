@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class AllergyProvider extends ChangeNotifier {
-  List<String> _allergies = [];
-  List<bool>_allergiesLongPress = [];
+  final List<String> _allergies = [];
+  final List<bool> _allergiesLongPress = [];
 
   List<String> get allergies => _allergies;
 
@@ -16,7 +15,7 @@ class AllergyProvider extends ChangeNotifier {
   }
 
   void remove(String allergy) {
-    int index = _allergies.indexOf(allergy);
+    final int index = _allergies.indexOf(allergy);
     _allergies.remove(allergy);
     _allergies.removeAt(index);
     notifyListeners();
@@ -26,5 +25,4 @@ class AllergyProvider extends ChangeNotifier {
     _allergiesLongPress[index] = !_allergiesLongPress[index];
     notifyListeners();
   }
-
 }

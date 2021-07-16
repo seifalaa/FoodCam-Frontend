@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 
 class BG extends CustomPainter {
-  final context;
+  final BuildContext context;
 
   BG({required this.context});
 
   @override
   void paint(Canvas canvas, Size size) {
-    var circle1 = Paint()
-      ..color = KSecondaryColor
+    final circle1 = Paint()
+      ..color = kSecondaryColor
       ..style = PaintingStyle.fill;
-    var circle2 = Paint()
-      ..color = KPrimaryColor
+    final circle2 = Paint()
+      ..color = kPrimaryColor
       ..style = PaintingStyle.fill;
-    var circle3 = Paint()
-      ..color = KTextColor
+    final circle3 = Paint()
+      ..color = kTextColor
       ..style = PaintingStyle.fill;
     canvas.drawCircle(
-      Offset(0, 0),
+      const Offset(0, 0),
       157,
       circle1,
     );
@@ -33,7 +33,7 @@ class BG extends CustomPainter {
       circle1,
     );
     canvas.drawCircle(
-      Offset(
+      const Offset(
         0,
         157,
       ),

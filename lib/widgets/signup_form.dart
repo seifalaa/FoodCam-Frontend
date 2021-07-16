@@ -16,19 +16,19 @@ class SignupForm extends StatelessWidget {
     required this.lastName,
     required this.onSignup,
   }) : super(key: key);
-  final formKey;
-  final usernameController;
-  final passwordController;
-  final repeatPasswordController;
-  final emailController;
-  final firstName;
-  final lastName;
-  final onSignup;
+  final GlobalKey<FormState> formKey;
+  final TextEditingController usernameController;
+  final TextEditingController passwordController;
+  final TextEditingController repeatPasswordController;
+  final TextEditingController emailController;
+  final String firstName;
+  final String lastName;
+  final Function onSignup;
 
   @override
   Widget build(BuildContext context) {
-    double _screenWidth = MediaQuery.of(context).size.width;
-    var _lang = Localizations.localeOf(context).languageCode;
+    final double _screenWidth = MediaQuery.of(context).size.width;
+    final _langCode = Localizations.localeOf(context).languageCode;
     return Form(
       key: formKey,
       child: Padding(
@@ -43,7 +43,7 @@ class SignupForm extends StatelessWidget {
               AppLocalizations.of(context)!.hi + firstName,
               style: TextStyle(
                 fontSize: _screenWidth * 0.09,
-                color: KTextColor,
+                color: kTextColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -56,7 +56,7 @@ class SignupForm extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             CustomTextFormField(
@@ -117,9 +117,9 @@ class SignupForm extends StatelessWidget {
               padding: const EdgeInsets.only(top: 20.0),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: _lang == 'ar'
-                      ? getFormButtons(context, _lang).reversed.toList()
-                      : getFormButtons(context, _lang)),
+                  children: _langCode == 'ar'
+                      ? getFormButtons(context, _langCode).reversed.toList()
+                      : getFormButtons(context, _langCode)),
             ),
           ],
         ),
@@ -134,7 +134,7 @@ class SignupForm extends StatelessWidget {
           Navigator.pop(context);
         },
         style: ElevatedButton.styleFrom(
-          primary: KTextColor,
+          primary: kTextColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(100),
           ),
@@ -156,7 +156,7 @@ class SignupForm extends StatelessWidget {
             onSignup();
           },
           style: ElevatedButton.styleFrom(
-            primary: KPrimaryColor,
+            primary: kPrimaryColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100),
             ),
@@ -168,7 +168,7 @@ class SignupForm extends StatelessWidget {
             ),
             child: Text(
               AppLocalizations.of(context)!.create,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),

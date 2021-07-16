@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
@@ -11,15 +12,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../pages/no_results_page.dart';
 
 class PreferredSearchDelegate extends SearchDelegate {
-  final HomePageController _controller = HomePageController();
-   final String page;
-  List<Ingredient> searchResults = [];
-
   PreferredSearchDelegate(this.page);
 
-  
+  final String page;
+  List<Ingredient> searchResults = [];
 
- 
+  final HomePageController _controller = HomePageController();
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -28,9 +26,9 @@ class PreferredSearchDelegate extends SearchDelegate {
         onPressed: () {
           query = '';
         },
-        icon: Icon(
+        icon: const Icon(
           Icons.clear,
-          color: KTextColor,
+          color: kTextColor,
         ),
       ),
     ];
@@ -42,9 +40,9 @@ class PreferredSearchDelegate extends SearchDelegate {
       onPressed: () {
         close(context, null);
       },
-      icon: Icon(
+      icon: const Icon(
         Icons.arrow_back_rounded,
-        color: KTextColor,
+        color: kTextColor,
       ),
     );
   }
@@ -56,10 +54,9 @@ class PreferredSearchDelegate extends SearchDelegate {
       return IngredientsList(
         searchResults: searchResults,
         controller: _controller,
-        pagename: page,
+        pageName: page,
         langCode: langCode,
       );
-      
     } else if (searchResults.isEmpty && query.isNotEmpty) {
       return StreamBuilder(
           stream: Stream.fromFuture(
@@ -68,22 +65,23 @@ class PreferredSearchDelegate extends SearchDelegate {
           builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
             if (snapshot.hasData) {
               searchResults = snapshot.data!;
-              if (snapshot.data!.length != 0) {
+              if (snapshot.data!.isNotEmpty) {
                 return IngredientsList(
-                  searchResults: snapshot.data,
+                  searchResults: snapshot.data!,
                   langCode: langCode,
-                  pagename: page,
+                  pageName: page,
                   controller: _controller,
                 );
               } else {
-                return NoResultsPage();
+                return const NoResultsPage();
               }
-            } else
-              return Center(
+            } else {
+              return const Center(
                 child: CircularProgressIndicator(
-                  color: KPrimaryColor,
+                  color: kPrimaryColor,
                 ),
               );
+            }
           });
     } else {
       return StartSearchPage(
@@ -103,26 +101,28 @@ class PreferredSearchDelegate extends SearchDelegate {
           builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
             if (snapshot.hasData) {
               searchResults = snapshot.data!;
-              if (snapshot.data!.length != 0) {
+              if (snapshot.data!.isNotEmpty) {
                 return IngredientsList(
-                  searchResults: snapshot.data,
+                  searchResults: snapshot.data!,
                   langCode: langCode,
-                  pagename: page,
+                  pageName: page,
                   controller: _controller,
                 );
               } else {
-                return NoResultsPage();
+                return const NoResultsPage();
               }
-            } else
-              return Center(
+            } else {
+              return const Center(
                 child: CircularProgressIndicator(
-                  color: KPrimaryColor,
+                  color: kPrimaryColor,
                 ),
               );
+            }
           });
-    } else
+    } else {
       return StartSearchPage(
           text: AppLocalizations.of(context)!.startSearchIng);
+    }
   }
 }
 
@@ -131,73 +131,87 @@ class IngredientsList extends StatefulWidget {
       {Key? key,
       required this.searchResults,
       required this.controller,
-      required this.pagename,
+      required this.pageName,
       required this.langCode})
       : super(key: key);
-  final searchResults;
-  final controller;
-  final langCode;
-  final pagename;
+
+  final HomePageController controller;
+  final String langCode;
+  final String pageName;
+  final List<Ingredient> searchResults;
 
   @override
-  _IngredientsListState createState() => _IngredientsListState(pagename);
+  _IngredientsListState createState() => _IngredientsListState(pageName);
 }
 
 class _IngredientsListState extends State<IngredientsList> {
-  bool _isLoading = false;
+  _IngredientsListState(this.pageName);
 
   final String pageName;
-
-  _IngredientsListState(  this.pageName);
+  bool _isImageLoading = true;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return LoadingOverlay(
-      isLoading: _isLoading,
-      progressIndicator: CircularProgressIndicator(
-        color: KPrimaryColor,
+      color: Colors.black,
+      opacity: 0.1,
+      isLoading: _isLoading | _isImageLoading,
+      progressIndicator: const CircularProgressIndicator(
+        color: kPrimaryColor,
       ),
       child: ListView.builder(
         itemCount: widget.searchResults.length,
         itemBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Column(
-              children: [
-                AddIngredientListTile(
-                  searchResult: widget.searchResults[index],
-                  controller: widget.controller,
-                  langCode: widget.langCode,
-                  onClick: () async {
-                    setState(() {
-                      _isLoading = true;
-                    });
-                    
-                    if(pageName == 'basket'){
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Column(
+            children: [
+              AddIngredientListTile(
+                searchResult: widget.searchResults[index],
+                controller: widget.controller,
+                langCode: widget.langCode,
+                onClick: () async {
+                  setState(() {
+                    _isLoading = true;
+                  });
+
+                  if (pageName == 'basket') {
                     await widget.controller.addIngredientInBasket(
                       widget.searchResults[index],
                       widget.langCode,
                     );
-                    }
-                    if( pageName == 'preferred'){
+                  }
+                  if (pageName == 'preferred') {
                     await widget.controller.addIngredientInPreferred(
                       widget.searchResults[index],
                       widget.langCode,
                     );
-                    }
-                    if(pageName =='disPreferred'){
+                  }
+                  if (pageName == 'disPreferred') {
                     await widget.controller.addIngredientInDisPreferred(
                       widget.searchResults[index],
                       widget.langCode,
                     );
-                    }
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  },
-                ),
-                Divider(),
-              ],
-            )),
+                  }
+                  setState(() {
+                    _isLoading = false;
+                  });
+                },
+                imageLoading: () {
+                  setState(() {
+                    _isImageLoading = true;
+                  });
+                },
+                imageNotLoading: () {
+                  setState(() {
+                    _isImageLoading = false;
+                  });
+                },
+              ),
+              const Divider(),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -210,11 +224,16 @@ class AddIngredientListTile extends StatefulWidget {
     required this.controller,
     required this.langCode,
     required this.onClick,
+    required this.imageLoading,
+    required this.imageNotLoading,
   }) : super(key: key);
-  final searchResult;
-  final controller;
-  final langCode;
-  final onClick;
+
+  final HomePageController controller;
+  final String langCode;
+  final Function onClick;
+  final Ingredient searchResult;
+  final Function imageLoading;
+  final Function imageNotLoading;
 
   @override
   _AddIngredientListTileState createState() =>
@@ -222,28 +241,46 @@ class AddIngredientListTile extends StatefulWidget {
 }
 
 class _AddIngredientListTileState extends State<AddIngredientListTile> {
+  _AddIngredientListTileState({required this.isAdded});
+
   bool isAdded;
 
-  _AddIngredientListTileState({required this.isAdded});
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) => loadImage());
+  }
+
+  Future loadImage() async {
+    widget.imageLoading();
+    await cacheImage(context, widget.searchResult.ingredientImageUrl);
+    widget.imageNotLoading();
+  }
+
+  Future cacheImage(BuildContext context, String imageUrl) async {
+    precacheImage(CachedNetworkImageProvider(imageUrl), context);
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Image.network(widget.searchResult.ingredientImageUrl,
+      leading: Image(
+          image: CachedNetworkImageProvider(
+              widget.searchResult.ingredientImageUrl),
           fit: BoxFit.cover),
       title: Text(
         widget.searchResult.ingredientName,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
       ),
       trailing: isAdded
-          ? Padding(
-              padding: const EdgeInsets.all(11.0),
+          ? const Padding(
+              padding: EdgeInsets.all(11.0),
               child: Icon(
                 Icons.check_rounded,
-                color: KPrimaryColor,
+                color: kPrimaryColor,
               ),
             )
           : IconButton(
@@ -253,9 +290,9 @@ class _AddIngredientListTileState extends State<AddIngredientListTile> {
                   isAdded = true;
                 });
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.add_rounded,
-                color: KPrimaryColor,
+                color: kPrimaryColor,
               ),
             ),
     );

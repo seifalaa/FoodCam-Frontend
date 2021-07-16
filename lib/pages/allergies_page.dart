@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/providers/allergy_provider.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
-import 'package:foodcam_frontend/widgets/collection_box.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 
@@ -14,16 +15,14 @@ class AllergiesPage extends StatefulWidget {
 }
 
 class _AllergiesPageState extends State<AllergiesPage> {
-  AllergyProvider _allergyProvider = AllergyProvider();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Allergies',
-          style: TextStyle(
-            color: KTextColor,
+          AppLocalizations.of(context)!.allergies,
+          style: const TextStyle(
+            color: kTextColor,
           ),
         ),
         centerTitle: true,
@@ -31,25 +30,25 @@ class _AllergiesPageState extends State<AllergiesPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_rounded,
-            color: KTextColor,
+            color: kTextColor,
           ),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      bottomNavigationBar: CustomButtonNavigationBar(),
+      bottomNavigationBar: const CustomButtonNavigationBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: KPrimaryColor,
+        backgroundColor: kPrimaryColor,
         onPressed: () {},
-        child: Icon(
+        child: const Icon(
           Icons.shopping_basket_rounded,
           color: Colors.white,
         ),
       ),
-      body: _allergyProvider.allergies.isEmpty
+      body: Provider.of<AllergyProvider>(context).allergies.isEmpty
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -57,11 +56,11 @@ class _AllergiesPageState extends State<AllergiesPage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      'You have no allergies',
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.noAllergies,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 25,
-                        color: KTextColor,
+                        color: kTextColor,
                       ),
                     ),
                   ),
@@ -69,7 +68,7 @@ class _AllergiesPageState extends State<AllergiesPage> {
                     padding: const EdgeInsets.only(top: 10.0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: KPrimaryColor,
+                        primary: kPrimaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(100),
                         ),
@@ -85,23 +84,22 @@ class _AllergiesPageState extends State<AllergiesPage> {
                               minChildSize: 0.6,
                               maxChildSize: 0.7,
                               builder: (context, scrollController) => Container(
-                                color: KBgColor,
+                                color: kBgColor,
                                 child: Material(
                                   child: Column(
                                     children: [
                                       Row(
-                                        children: [
+                                        children: const [
                                           Expanded(
                                             child: Material(
                                               elevation: 1,
                                               child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(20.0),
+                                                padding: EdgeInsets.all(20.0),
                                                 child: Center(
                                                   child: Text(
                                                     'Add Allergy',
                                                     style: TextStyle(
-                                                      color: KTextColor,
+                                                      color: kTextColor,
                                                       fontSize: 25,
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -124,21 +122,24 @@ class _AllergiesPageState extends State<AllergiesPage> {
                                               trailing: IconButton(
                                                 onPressed: () {
                                                   setState(() {
-                                                    _allergyProvider
+                                                    Provider.of<AllergyProvider>(
+                                                            context)
                                                         .add('Allergy $index');
                                                   });
                                                 },
                                                 icon: Icon(
-                                                  _allergyProvider.allergies
+                                                  Provider.of<AllergyProvider>(
+                                                              context)
+                                                          .allergies
                                                           .contains(
                                                               'Allergy $index')
                                                       ? Icons.done_rounded
                                                       : Icons.add_rounded,
-                                                  color: KPrimaryColor,
+                                                  color: kPrimaryColor,
                                                 ),
                                               ),
                                             ),
-                                            Divider(),
+                                            const Divider(),
                                           ],
                                         ),
                                       ),
@@ -154,8 +155,8 @@ class _AllergiesPageState extends State<AllergiesPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Text(
-                          'Add',
-                          style: TextStyle(
+                          AppLocalizations.of(context)!.addAllergy,
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -168,23 +169,24 @@ class _AllergiesPageState extends State<AllergiesPage> {
             )
           : GridView(
               shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 300,
                 childAspectRatio: 1,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
               children: [
-                for (int i = 0; i < _allergyProvider.allergies.length; i++)
+                for (int i = 0;
+                    i < Provider.of<AllergyProvider>(context).allergies.length;
+                    i++)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Stack(
                       children: [
-                        Positioned.fill(
-                          child: Container()
-                        ),
+                        Positioned.fill(child: Container()),
                         Visibility(
-                          visible: _allergyProvider.allergiesLongPress[i],
+                          visible: Provider.of<AllergyProvider>(context)
+                              .allergiesLongPress[i],
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Positioned.fill(
@@ -203,8 +205,8 @@ class _AllergiesPageState extends State<AllergiesPage> {
                                       ),
                                     ),
                                     onPressed: () {},
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(10.0),
                                       child: Text(
                                         'Delete',
                                         style: TextStyle(
@@ -239,7 +241,7 @@ class _AllergiesPageState extends State<AllergiesPage> {
                               minChildSize: 0.6,
                               maxChildSize: 0.7,
                               builder: (context, scrollController) => Container(
-                                color: KBgColor,
+                                color: kBgColor,
                                 child: Material(
                                   child: Column(
                                     children: [
@@ -253,9 +255,11 @@ class _AllergiesPageState extends State<AllergiesPage> {
                                                     const EdgeInsets.all(20.0),
                                                 child: Center(
                                                   child: Text(
-                                                    'Add Allergy',
-                                                    style: TextStyle(
-                                                      color: KTextColor,
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .addAllergy,
+                                                    style: const TextStyle(
+                                                      color: kTextColor,
                                                       fontSize: 25,
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -278,21 +282,24 @@ class _AllergiesPageState extends State<AllergiesPage> {
                                               trailing: IconButton(
                                                 onPressed: () {
                                                   setState(() {
-                                                    _allergyProvider
+                                                    Provider.of<AllergyProvider>(
+                                                            context)
                                                         .add('Allergy $index');
                                                   });
                                                 },
                                                 icon: Icon(
-                                                  _allergyProvider.allergies
+                                                  Provider.of<AllergyProvider>(
+                                                              context)
+                                                          .allergies
                                                           .contains(
                                                               'Allergy $index')
                                                       ? Icons.done_rounded
                                                       : Icons.add_rounded,
-                                                  color: KPrimaryColor,
+                                                  color: kPrimaryColor,
                                                 ),
                                               ),
                                             ),
-                                            Divider(),
+                                            const Divider(),
                                           ],
                                         ),
                                       ),
@@ -305,10 +312,10 @@ class _AllergiesPageState extends State<AllergiesPage> {
                           ),
                         );
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.add_rounded,
                         size: 50,
-                        color: KBgColor,
+                        color: kBgColor,
                       ),
                     ),
                   ),

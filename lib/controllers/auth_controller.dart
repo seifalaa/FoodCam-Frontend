@@ -1,19 +1,21 @@
-import 'package:foodcam_frontend/constants.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
-import 'package:google_sign_in/google_sign_in.dart';
+
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:foodcam_frontend/constants.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 
 class AuthController {
-  Future<bool> loginWithEmailAndPassword(username, password) async {
-    var url = Uri.parse('http://10.0.2.2:8000/auth/token/');
-    var response = await http.post(
+  Future<bool> loginWithEmailAndPassword(
+      String username, String password) async {
+    final url = Uri.parse('http://10.0.2.2:8000/auth/token/');
+    final response = await http.post(
       url,
       body: convert.jsonEncode(<String, String>{
         'username': username,
         'password': password,
-        'client_id': KClientId,
-        'client_secret': KClientSecret,
+        'client_id': kClientId,
+        'client_secret': kClientSecret,
         'grant_type': 'password',
       }),
       headers: {
@@ -31,14 +33,13 @@ class AuthController {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser!.authentication;
-    print(googleAuth.accessToken);
 
-    var url = Uri.parse('http://10.0.2.2:8000/auth/convert-token');
-    var response = await http.post(
+    final url = Uri.parse('http://10.0.2.2:8000/auth/convert-token');
+    final response = await http.post(
       url,
       body: convert.jsonEncode(<String, dynamic>{
-        'client_id': KClientId,
-        'client_secret': KClientSecret,
+        'client_id': kClientId,
+        'client_secret': kClientSecret,
         'grant_type': 'convert_token',
         'backend': 'google-oauth2',
         'token': googleAuth.accessToken,
@@ -56,12 +57,12 @@ class AuthController {
 
   Future<bool> loginWithFacebook() async {
     final LoginResult result = await FacebookAuth.instance.login();
-    var url = Uri.parse('http://10.0.2.2:8000/auth/convert-token');
-    var response = await http.post(
+    final url = Uri.parse('http://10.0.2.2:8000/auth/convert-token');
+    final response = await http.post(
       url,
       body: convert.jsonEncode(<String, dynamic>{
-        'client_id': KClientId,
-        'client_secret': KClientSecret,
+        'client_id': kClientId,
+        'client_secret': kClientSecret,
         'grant_type': 'convert_token',
         'backend': 'facebook',
         'token': result.accessToken!.token,
@@ -77,10 +78,10 @@ class AuthController {
     }
   }
 
-  Future<bool> register(
-      username, email, password, password2, firstName, lastName) async {
-    var url = Uri.parse('http://10.0.2.2:8000/register/');
-    var response = await http.post(url,
+  Future<bool> register(String username, String email, String password,
+      String password2, String firstName, String lastName) async {
+    final url = Uri.parse('http://10.0.2.2:8000/register/');
+    final response = await http.post(url,
         body: convert.jsonEncode(<String, dynamic>{
           'username': username,
           'email': email,

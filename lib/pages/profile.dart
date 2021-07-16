@@ -17,29 +17,31 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String _lang = Localizations.localeOf(context).languageCode;
+    final String _lang = Localizations.localeOf(context).languageCode;
     return Scaffold(
       extendBody: true,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => BasketPage()),
+            MaterialPageRoute(
+              builder: (context) => const BasketPage(),
+            ),
           );
         },
-        backgroundColor: KPrimaryColor,
-        child: Icon(
+        backgroundColor: kPrimaryColor,
+        child: const Icon(
           Icons.shopping_basket_rounded,
           color: Colors.white,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: CustomButtonNavigationBar(),
+      bottomNavigationBar: const CustomButtonNavigationBar(),
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)!.profile,
-          style: TextStyle(
-            color: KTextColor,
+          style: const TextStyle(
+            color: kTextColor,
           ),
         ),
         centerTitle: true,
@@ -47,9 +49,9 @@ class Profile extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_rounded,
-            color: KTextColor,
+            color: kTextColor,
           ),
         ),
         backgroundColor: Colors.white,
@@ -71,7 +73,7 @@ class Profile extends StatelessWidget {
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Color(0x70000000),
                               blurRadius: 4,
@@ -80,7 +82,7 @@ class Profile extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: CircleAvatar(
+                        child: const CircleAvatar(
                           radius: 40,
                           backgroundColor: Colors.white,
                           backgroundImage: AssetImage(
@@ -94,11 +96,11 @@ class Profile extends StatelessWidget {
                             : const EdgeInsets.only(left: 20.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: const [
                             Text(
                               'Saeed Mohamed',
                               style: TextStyle(
-                                color: KTextColor,
+                                color: kTextColor,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -106,7 +108,7 @@ class Profile extends StatelessWidget {
                             Text(
                               '@s3dolla',
                               style: TextStyle(
-                                color: KPrimaryColor,
+                                color: kPrimaryColor,
                               ),
                             ),
                           ],
@@ -116,7 +118,7 @@ class Profile extends StatelessWidget {
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: KPrimaryColor,
+                      primary: kPrimaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(100),
                       ),
@@ -124,7 +126,7 @@ class Profile extends StatelessWidget {
                     onPressed: () {},
                     child: Text(
                       AppLocalizations.of(context)!.editProfile,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -151,22 +153,22 @@ class Profile extends StatelessWidget {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         tileColor: Colors.white,
-                        leading: Icon(
+                        leading: const Icon(
                           Icons.grid_3x3_rounded,
-                          color: KPrimaryColor,
+                          color: kPrimaryColor,
                         ),
                         title: Text(
                           AppLocalizations.of(context)!.collections,
                         ),
-                        trailing: Icon(
+                        trailing: const Icon(
                           Icons.arrow_forward_rounded,
-                          color: KPrimaryColor,
+                          color: kPrimaryColor,
                         ),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CollectionPage(),
+                              builder: (context) => const CollectionPage(),
                             ),
                           );
                         },
@@ -184,22 +186,22 @@ class Profile extends StatelessWidget {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         tileColor: Colors.white,
-                        leading: Icon(
+                        leading: const Icon(
                           Icons.sentiment_satisfied_rounded,
-                          color: KPrimaryColor,
+                          color: kPrimaryColor,
                         ),
                         title: Text(
                           AppLocalizations.of(context)!.prefIng,
                         ),
-                        trailing: Icon(
+                        trailing: const Icon(
                           Icons.arrow_forward_rounded,
-                          color: KPrimaryColor,
+                          color: kPrimaryColor,
                         ),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => PreferrredIngredients(),
+                              builder: (context) => const PreferredIngredients(),
                             ),
                           );
                         },
@@ -217,20 +219,21 @@ class Profile extends StatelessWidget {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         tileColor: Colors.white,
-                        leading: Icon(
+                        leading: const Icon(
                           Icons.sentiment_dissatisfied_rounded,
-                          color: KPrimaryColor,
+                          color: kPrimaryColor,
                         ),
                         title: Text(AppLocalizations.of(context)!.disIng),
-                        trailing: Icon(
+                        trailing: const Icon(
                           Icons.arrow_forward_rounded,
-                          color: KPrimaryColor,
+                          color: kPrimaryColor,
                         ),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DisPreferrredIngredients(),
+                              builder: (context) =>
+                                  const DisPreferredIngredients(),
                             ),
                           );
                         },
@@ -248,22 +251,22 @@ class Profile extends StatelessWidget {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         tileColor: Colors.white,
-                        leading: Icon(
+                        leading: const Icon(
                           Icons.no_food_outlined,
-                          color: KPrimaryColor,
+                          color: kPrimaryColor,
                         ),
                         title: Text(
                           AppLocalizations.of(context)!.allergies,
                         ),
-                        trailing: Icon(
+                        trailing: const Icon(
                           Icons.arrow_forward_rounded,
-                          color: KPrimaryColor,
+                          color: kPrimaryColor,
                         ),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AllergiesPage(),
+                              builder: (context) => const AllergiesPage(),
                             ),
                           );
                         },
@@ -281,16 +284,16 @@ class Profile extends StatelessWidget {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         tileColor: Colors.white,
-                        leading: Icon(
+                        leading: const Icon(
                           Icons.language_rounded,
-                          color: KPrimaryColor,
+                          color: kPrimaryColor,
                         ),
                         title: Text(
                           AppLocalizations.of(context)!.lang,
                         ),
-                        trailing: Icon(
+                        trailing: const Icon(
                           Icons.arrow_forward_rounded,
-                          color: KPrimaryColor,
+                          color: kPrimaryColor,
                         ),
                         onTap: () {
                           showModalBottomSheet(
@@ -320,16 +323,16 @@ class Profile extends StatelessWidget {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         tileColor: Colors.white,
-                        leading: Icon(
+                        leading: const Icon(
                           Icons.logout_rounded,
-                          color: KPrimaryColor,
+                          color: kPrimaryColor,
                         ),
                         title: Text(
                           AppLocalizations.of(context)!.logout,
                         ),
-                        trailing: Icon(
+                        trailing: const Icon(
                           Icons.arrow_forward_rounded,
-                          color: KPrimaryColor,
+                          color: kPrimaryColor,
                         ),
                         onTap: () {},
                       ),

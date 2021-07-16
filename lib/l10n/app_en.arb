@@ -60,5 +60,8 @@
 	"startPreferred":"Start by adding preferred ingredients",
 	"startDisPreferred":"Start by adding dispreferred ingredients",
 	"noRecentlySearch":"No recently search ",
-	"addCollection": "Add collection"
+	"addCollection": "Add collection",
+	"collectionName": "Collection Name",
+	"noAllergies": "You have no allergies",
+	"addAllergy": "Add Allergy"
 }

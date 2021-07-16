@@ -16,19 +16,14 @@ class RecentlySearched extends StatefulWidget {
   }) : super(key: key);
   final HomePageController homePageController;
   final String langCode;
+
   @override
   _RecentlySearchedState createState() => _RecentlySearchedState();
 }
 
 class _RecentlySearchedState extends State<RecentlySearched> {
-    StreamController<List<Recipe>> _streamController =
+  final StreamController<List<Recipe>> _streamController =
       StreamController.broadcast();
-
-  @override
-  void dispose() {
-    _streamController.close();
-    super.dispose();
-  }
 
   @override
   void initState() {
@@ -47,6 +42,7 @@ class _RecentlySearchedState extends State<RecentlySearched> {
         .getRecentlySearched(widget.langCode)
         .then((value) => _streamController.add(value));
   }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -55,28 +51,30 @@ class _RecentlySearchedState extends State<RecentlySearched> {
         stream: _streamController.stream,
         builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
           return snapshot.hasData
-              ?  snapshot.data!.length !=0  ? GridView.builder(
-                  itemCount: snapshot.data!.length,
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 600,
-                    childAspectRatio: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    return RecipeBox(
-                      recipe: snapshot.data![index],
-                    );
-                  },
-                )
-                :EmptyRecentlySearch()
-              : Center(
+              ? snapshot.data!.isNotEmpty
+                  ? GridView.builder(
+                      itemCount: snapshot.data!.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 600,
+                        childAspectRatio: 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        return RecipeBox(
+                          recipe: snapshot.data![index],
+                        );
+                      },
+                    )
+                  : const EmptyRecentlySearch()
+              : const Center(
                   child: CircularProgressIndicator(
-                    color: KPrimaryColor,
+                    color: kPrimaryColor,
                   ),
                 );
         },
       ),
-    );;
+    );
   }
 }

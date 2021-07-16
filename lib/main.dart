@@ -14,7 +14,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MultiProvider(
@@ -48,13 +48,13 @@ class _MyAppState extends State<MyApp> {
                   builder: (context, navigator) {
                     return Theme(
                       data: ThemeData(
-                        accentColor: KSecondaryColor,
-                        primaryColor: KPrimaryColor,
-                        splashColor: KSecondaryColor,
-                        textSelectionTheme: TextSelectionThemeData(
-                          cursorColor: KPrimaryColor,
+                        accentColor: kSecondaryColor,
+                        primaryColor: kPrimaryColor,
+                        splashColor: kSecondaryColor,
+                        textSelectionTheme: const TextSelectionThemeData(
+                          cursorColor: kPrimaryColor,
                         ),
-                        scaffoldBackgroundColor: KBgColor,
+                        scaffoldBackgroundColor: kBgColor,
                         fontFamily:
                             Localizations.localeOf(context).languageCode == 'ar'
                                 ? GoogleFonts.cairo().fontFamily
@@ -65,33 +65,31 @@ class _MyAppState extends State<MyApp> {
                       ),
                     );
                   },
-                  localizationsDelegates: [
+                  localizationsDelegates: const [
                     AppLocalizations.delegate,
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,
                     GlobalCupertinoLocalizations.delegate,
                   ],
-                  supportedLocales: [
-                    const Locale('en', ''), // English, no country code
-                    const Locale('ar', ''), // Arabic, no country code
+                  supportedLocales: const [
+                    Locale('en', ''), // English, no country code
+                    Locale('ar', ''), // Arabic, no country code
                   ],
                   locale: Locale(lang),
                   debugShowCheckedModeBanner: false,
                   title: 'Flutter Demo',
                   routes: {
-                    'login/': (context) => Login(),
-                    'signup/': (context) => Signup1(),
-                    'home/': (context) => Home(),
-                    'profile/': (context) => Profile(),
-                    'basket/': (context) => BasketPage(),
-                    'test/': (context) => TestPage(),
+                    'login/': (context) => const Login(),
+                    'signup/': (context) => const Signup1(),
+                    'home/': (context) => const Home(),
+                    'profile/': (context) => const Profile(),
+                    'basket/': (context) => const BasketPage(),
+                    'test/': (context) => const TestPage(),
                   },
                   initialRoute: 'home/',
                 )
-              : Container(
-                  child: Center(
-                    child: CircularProgressIndicator(color: KPrimaryColor),
-                  ),
+              : const Center(
+                  child: CircularProgressIndicator(color: kPrimaryColor),
                 );
         });
   }

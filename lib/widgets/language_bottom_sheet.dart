@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
+
 class LanguageBottomSheet extends StatelessWidget {
   const LanguageBottomSheet({Key? key, required this.provider})
       : super(key: key);
@@ -14,9 +15,9 @@ class LanguageBottomSheet extends StatelessWidget {
       maxChildSize: 0.35,
       minChildSize: 0.3,
       builder: (context, scrollController) => Container(
-        color: KBgColor,
+        color: kBgColor,
         child: Material(
-          color: KBgColor,
+          color: kBgColor,
           child: ListView(
             controller: scrollController,
             children: [
@@ -27,8 +28,8 @@ class LanguageBottomSheet extends StatelessWidget {
                     padding: const EdgeInsets.all(20.0),
                     child: Text(
                       AppLocalizations.of(context)!.changeLang,
-                      style: TextStyle(
-                        color: KTextColor,
+                      style: const TextStyle(
+                        color: kTextColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
                       ),
@@ -44,7 +45,7 @@ class LanguageBottomSheet extends StatelessWidget {
                 },
                 title: Text(
                   AppLocalizations.of(context)!.ar,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -54,13 +55,13 @@ class LanguageBottomSheet extends StatelessWidget {
                   height: 50,
                 ),
                 trailing: provider.langCode == 'ar'
-                    ? Icon(
+                    ? const Icon(
                         Icons.check_outlined,
-                        color: KPrimaryColor,
+                        color: kPrimaryColor,
                       )
                     : null,
               ),
-              Divider(),
+              const Divider(),
               ListTile(
                 onTap: () {
                   if (provider.langCode != 'en') {
@@ -69,7 +70,7 @@ class LanguageBottomSheet extends StatelessWidget {
                 },
                 title: Text(
                   AppLocalizations.of(context)!.en,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -79,9 +80,9 @@ class LanguageBottomSheet extends StatelessWidget {
                   height: 50,
                 ),
                 trailing: provider.langCode == 'en'
-                    ? Icon(
+                    ? const Icon(
                         Icons.check_outlined,
-                        color: KPrimaryColor,
+                        color: kPrimaryColor,
                       )
                     : null,
               ),
