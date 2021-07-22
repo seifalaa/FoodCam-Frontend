@@ -1,8 +1,7 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/models/category.dart';
-import 'package:foodcam_frontend/pages/collections_page.dart';
+import 'package:foodcam_frontend/pages/collections_recipes_page.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +26,7 @@ class _CollectionBoxState extends State<CollectionBox> {
   @override
   Widget build(BuildContext context) {
     final double _screenWidth = MediaQuery.of(context).size.width;
-    final String _langCode = Provider.of<LanguageProvider>(context).langCode;
+    final String _langCode = Provider.of<LanguageProvider>(context).getLangCode;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(
@@ -114,7 +113,10 @@ class _CollectionBoxState extends State<CollectionBox> {
                       : Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const CollectionPage(),
+                            builder: (context) => CollectionsRecipes(
+                              recipes: widget.category.recipes,
+                              collectionName: widget.category.categoryName,
+                            ),
                           ),
                         );
                 },

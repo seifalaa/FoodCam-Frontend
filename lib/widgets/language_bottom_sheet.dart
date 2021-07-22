@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LanguageBottomSheet extends StatelessWidget {
   const LanguageBottomSheet({Key? key, required this.provider})
@@ -39,8 +40,9 @@ class LanguageBottomSheet extends StatelessWidget {
               ),
               ListTile(
                 onTap: () async {
-                  if (provider.langCode != 'ar') {
+                  if (provider.getLangCode != 'ar') {
                     provider.changeLang('ar');
+                    await changeLang('ar');
                   }
                 },
                 title: Text(
@@ -54,7 +56,7 @@ class LanguageBottomSheet extends StatelessWidget {
                   'lib/assets/saudi-arabia.png',
                   height: 50,
                 ),
-                trailing: provider.langCode == 'ar'
+                trailing: provider.getLangCode == 'ar'
                     ? const Icon(
                         Icons.check_outlined,
                         color: kPrimaryColor,
@@ -63,9 +65,10 @@ class LanguageBottomSheet extends StatelessWidget {
               ),
               const Divider(),
               ListTile(
-                onTap: () {
-                  if (provider.langCode != 'en') {
+                onTap: () async {
+                  if (provider.getLangCode != 'en') {
                     provider.changeLang('en');
+                    await changeLang('en');
                   }
                 },
                 title: Text(
@@ -79,7 +82,7 @@ class LanguageBottomSheet extends StatelessWidget {
                   'lib/assets/united-states.png',
                   height: 50,
                 ),
-                trailing: provider.langCode == 'en'
+                trailing: provider.getLangCode == 'en'
                     ? const Icon(
                         Icons.check_outlined,
                         color: kPrimaryColor,
@@ -91,5 +94,11 @@ class LanguageBottomSheet extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> changeLang(String langCode) async {
+    final SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    _sharedPreferences.setString('langCode', langCode);
   }
 }

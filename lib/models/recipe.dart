@@ -15,7 +15,7 @@ class Recipe {
   final List<String> steps;
   final List<Ingredient> ingredients;
 
-  Recipe fromMap(Map<String, dynamic> map) {
+  static Recipe fromMap(Map<String, dynamic> map) {
     return Recipe(
       recipeName: map['recipeName'],
       recipeRate: map['recipeRate'],

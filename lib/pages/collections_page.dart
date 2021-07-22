@@ -27,7 +27,7 @@ class _CollectionPageState extends State<CollectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    final String _langCode = Provider.of<LanguageProvider>(context).langCode;
+    final String _langCode =Localizations.localeOf(context).languageCode;
     return Scaffold(
       extendBody: true,
       appBar: AppBar(

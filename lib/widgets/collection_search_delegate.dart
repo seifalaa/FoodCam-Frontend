@@ -1,23 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
-import 'package:foodcam_frontend/models/ingredient.dart';
-import 'package:foodcam_frontend/providers/lang_provider.dart';
+import 'package:foodcam_frontend/models/recipe.dart';
+import 'package:foodcam_frontend/pages/no_results_page.dart';
 import 'package:foodcam_frontend/pages/start_search_page.dart';
+import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../pages/no_results_page.dart';
+import '../constants.dart';
 
-class PreferredSearchDelegate extends SearchDelegate {
-  PreferredSearchDelegate(this.page);
-
-  final String page;
-  List<Ingredient> searchResults = [];
-
+class CollectionRecipeSearchDelegate extends SearchDelegate {
   final HomePageController _homePageController = HomePageController();
+
+  List<Recipe> searchResults = [];
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -49,27 +45,25 @@ class PreferredSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    final String langCode = Localizations.localeOf(context).languageCode;
+    final String _langCode = Localizations.localeOf(context).languageCode;
     if (searchResults.isNotEmpty && query.isNotEmpty) {
       return IngredientsList(
         searchResults: searchResults,
         controller: _homePageController,
-        pageName: page,
-        langCode: langCode,
+        langCode: _langCode,
       );
     } else if (searchResults.isEmpty && query.isNotEmpty) {
       return StreamBuilder(
           stream: Stream.fromFuture(
-            _homePageController.ingredientSearch(query, langCode),
+            _homePageController.recipeSearch(query, _langCode),
           ),
-          builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
+          builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
             if (snapshot.hasData) {
               searchResults = snapshot.data!;
               if (snapshot.data!.isNotEmpty) {
                 return IngredientsList(
                   searchResults: snapshot.data!,
-                  langCode: langCode,
-                  pageName: page,
+                  langCode: _langCode,
                   controller: _homePageController,
                 );
               } else {
@@ -85,7 +79,7 @@ class PreferredSearchDelegate extends SearchDelegate {
           });
     } else {
       return StartSearchPage(
-        text: AppLocalizations.of(context)!.startSearchIng,
+        text: AppLocalizations.of(context)!.startSearch,
       );
     }
   }
@@ -96,16 +90,15 @@ class PreferredSearchDelegate extends SearchDelegate {
     if (query != '') {
       return StreamBuilder(
           stream: Stream.fromFuture(
-            _homePageController.ingredientSearch(query, langCode),
+            _homePageController.recipeSearch(query, langCode),
           ),
-          builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
+          builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
             if (snapshot.hasData) {
               searchResults = snapshot.data!;
               if (snapshot.data!.isNotEmpty) {
                 return IngredientsList(
                   searchResults: snapshot.data!,
                   langCode: langCode,
-                  pageName: page,
                   controller: _homePageController,
                 );
               } else {
@@ -121,7 +114,8 @@ class PreferredSearchDelegate extends SearchDelegate {
           });
     } else {
       return StartSearchPage(
-          text: AppLocalizations.of(context)!.startSearchIng);
+        text: AppLocalizations.of(context)!.startSearch,
+      );
     }
   }
 }
@@ -131,23 +125,18 @@ class IngredientsList extends StatefulWidget {
       {Key? key,
       required this.searchResults,
       required this.controller,
-      required this.pageName,
       required this.langCode})
       : super(key: key);
 
   final HomePageController controller;
   final String langCode;
-  final String pageName;
-  final List<Ingredient> searchResults;
+  final List<Recipe> searchResults;
 
   @override
-  _IngredientsListState createState() => _IngredientsListState(pageName);
+  _IngredientsListState createState() => _IngredientsListState();
 }
 
 class _IngredientsListState extends State<IngredientsList> {
-  _IngredientsListState(this.pageName);
-
-  final String pageName;
   bool _isImageLoading = true;
   bool _isLoading = false;
 
@@ -175,24 +164,8 @@ class _IngredientsListState extends State<IngredientsList> {
                     _isLoading = true;
                   });
 
-                  if (pageName == 'basket') {
-                    await widget.controller.addIngredientInBasket(
-                      widget.searchResults[index],
-                      widget.langCode,
-                    );
-                  }
-                  if (pageName == 'preferred') {
-                    await widget.controller.addIngredientInPreferred(
-                      widget.searchResults[index],
-                      widget.langCode,
-                    );
-                  }
-                  if (pageName == 'disPreferred') {
-                    await widget.controller.addIngredientInDisPreferred(
-                      widget.searchResults[index],
-                      widget.langCode,
-                    );
-                  }
+                  //TODO:add recipe here
+
                   setState(() {
                     _isLoading = false;
                   });
@@ -231,13 +204,13 @@ class AddIngredientListTile extends StatefulWidget {
   final HomePageController controller;
   final String langCode;
   final Function onClick;
-  final Ingredient searchResult;
+  final Recipe searchResult;
   final Function imageLoading;
   final Function imageNotLoading;
 
   @override
   _AddIngredientListTileState createState() =>
-      _AddIngredientListTileState(isAdded: searchResult.addedToBasket);
+      _AddIngredientListTileState(isAdded: false);
 }
 
 class _AddIngredientListTileState extends State<AddIngredientListTile> {
@@ -253,7 +226,10 @@ class _AddIngredientListTileState extends State<AddIngredientListTile> {
 
   Future loadImage() async {
     widget.imageLoading();
-    await cacheImage(context, widget.searchResult.ingredientImageUrl);
+    await cacheImage(
+      context,
+      widget.searchResult.recipeImageUrl,
+    );
     widget.imageNotLoading();
   }
 
@@ -264,12 +240,18 @@ class _AddIngredientListTileState extends State<AddIngredientListTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Image(
-          image: CachedNetworkImageProvider(
-              widget.searchResult.ingredientImageUrl),
-          fit: BoxFit.cover),
+
+      leading: ClipRRect(
+        borderRadius:BorderRadius.circular(10),
+        child: Image(
+
+            image: CachedNetworkImageProvider(
+              widget.searchResult.recipeImageUrl,
+            ),
+            fit: BoxFit.cover),
+      ),
       title: Text(
-        widget.searchResult.ingredientName,
+        widget.searchResult.recipeName,
         style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,

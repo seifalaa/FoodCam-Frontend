@@ -14,6 +14,7 @@ class _RecipeRateBottomSheetState extends State<RecipeRateBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final double _screenWidth = MediaQuery.of(context).size.width;
     return DraggableScrollableSheet(
       initialChildSize: 0.35,
       maxChildSize: 0.35,
@@ -76,8 +77,10 @@ class _RecipeRateBottomSheetState extends State<RecipeRateBottomSheet> {
                 ],
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 170.0, vertical: 20),
+                padding: EdgeInsets.symmetric(
+                  horizontal: _screenWidth * 0.4,
+                  vertical: 20,
+                ),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     primary: kPrimaryColor,

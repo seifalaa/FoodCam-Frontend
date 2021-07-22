@@ -1,14 +1,17 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/auth_controller.dart';
-import 'package:foodcam_frontend/pages/home.dart';
 import 'package:foodcam_frontend/pages/signup1.dart';
-import 'package:foodcam_frontend/widgets/bg.dart';
 import 'package:foodcam_frontend/widgets/login_form.dart';
 import 'package:foodcam_frontend/widgets/social_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -19,32 +22,53 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final AuthController _controller = AuthController();
-  final TextEditingController _usernameController = TextEditingController();
+  final AuthController _authController = AuthController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+  final FlutterSecureStorage _flutterSecureStorage =
+      const FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: LoadingOverlay(
-        isLoading: _isLoading,
-        color: Colors.black,
-        opacity: 0.3,
-        progressIndicator: const CircularProgressIndicator(
-          color: kPrimaryColor,
-        ),
-        child: Stack(
-          children: [
-            CustomPaint(
-              painter: BG(context: context),
+    return LoadingOverlay(
+      isLoading: _isLoading,
+      color: Colors.black.withOpacity(0.3),
+      progressIndicator: const CircularProgressIndicator(
+        color: kPrimaryColor,
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 1,
+          centerTitle: true,
+          title: Text(
+            AppLocalizations.of(context)!.login,
+            style: const TextStyle(
+              color: kTextColor,
             ),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              color: kTextColor,
+            ),
+          ),
+        ),
+        body: Stack(
+          children: [
+            //CustomPaint(
+            //  painter: BG(context: context),
+            //),
             Center(
               child: ListView(
                 shrinkWrap: true,
                 children: [
                   LoginForm(
-                    usernameController: _usernameController,
+                    emailController: _emailController,
                     passwordController: _passwordController,
                     formKey: _formKey,
                     onLogin: onLogin,
@@ -87,24 +111,57 @@ class _LoginState extends State<Login> {
       setState(() {
         _isLoading = true;
       });
-      final response = await _controller.loginWithEmailAndPassword(
-          _usernameController.text, _passwordController.text);
-      setState(() {
-        _isLoading = false;
-      });
-      if (!response) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Invalid Credentials'),
-          ),
+      final SharedPreferences _sharedPreferences =
+          await SharedPreferences.getInstance();
+      final Response response = await _authController.loginWithEmailAndPassword(
+          _emailController.text, _passwordController.text);
+
+      final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+      if (response.statusCode == 200) {
+        await _flutterSecureStorage.write(
+            key: 'access_token', value: _responseJson['access_token']);
+        await _flutterSecureStorage.write(
+            key: 'refresh_token', value: _responseJson['refresh_token']);
+        await _sharedPreferences.setString(
+          'userName',
+          _responseJson['user']['username'],
+        );
+        await _sharedPreferences.setString(
+          'firstName',
+          _responseJson['user']['first_name'],
+        );
+        await _sharedPreferences.setString(
+          'lastName',
+          _responseJson['user']['last_name'],
+        );
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          'home/',
+          (route) => false,
         );
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Home(),
-          ),
-        );
+        setState(() {
+          _isLoading = false;
+        });
+        if (_responseJson['non_field_errors'] != '') {
+          final String _langCode = Localizations.localeOf(context).languageCode;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.red,
+              content: Text(
+                AppLocalizations.of(context)!.invalidCreds,
+                style: TextStyle(
+                  fontFamily:
+                      _langCode == 'ar' ? GoogleFonts.cairo().fontFamily : null,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          );
+        }
       }
     }
   }
@@ -113,16 +170,34 @@ class _LoginState extends State<Login> {
     setState(() {
       _isLoading = true;
     });
-    final bool response = await _controller.loginWithGoogle();
-    setState(() {
-      _isLoading = false;
-    });
-    if (response) {
-      Navigator.pushReplacement(
+    final Response response = await _authController.loginWithGoogle();
+    final SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+    if (response.statusCode == 200) {
+      await _flutterSecureStorage.write(
+          key: 'access_token', value: _responseJson['access_token']);
+      await _flutterSecureStorage.write(
+          key: 'refresh_token', value: _responseJson['refresh_token']);
+      await _sharedPreferences.setString(
+        'userName',
+        _responseJson['user']['username'],
+      );
+      await _sharedPreferences.setString(
+        'firstName',
+        _responseJson['user']['first_name'],
+      );
+      await _sharedPreferences.setString(
+        'lastName',
+        _responseJson['user']['last_name'],
+      );
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.pushNamedAndRemoveUntil(
         context,
-        MaterialPageRoute(
-          builder: (context) => const Home(),
-        ),
+        'home/',
+        (route) => false,
       );
     }
   }
@@ -131,16 +206,34 @@ class _LoginState extends State<Login> {
     setState(() {
       _isLoading = true;
     });
-    final bool response = await _controller.loginWithFacebook();
-    setState(() {
-      _isLoading = false;
-    });
-    if (response) {
-      Navigator.pushReplacement(
+    final Response response = await _authController.loginWithFacebook();
+    final SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+    if (response.statusCode == 200) {
+      await _flutterSecureStorage.write(
+          key: 'access_token', value: _responseJson['access_token']);
+      await _flutterSecureStorage.write(
+          key: 'refresh_token', value: _responseJson['refresh_token']);
+      await _sharedPreferences.setString(
+        'userName',
+        _responseJson['user']['username'],
+      );
+      await _sharedPreferences.setString(
+        'firstName',
+        _responseJson['user']['first_name'],
+      );
+      await _sharedPreferences.setString(
+        'lastName',
+        _responseJson['user']['last_name'],
+      );
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.pushNamedAndRemoveUntil(
         context,
-        MaterialPageRoute(
-          builder: (context) => const Home(),
-        ),
+        'home/',
+        (route) => false,
       );
     }
   }

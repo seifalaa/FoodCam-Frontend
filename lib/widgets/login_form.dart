@@ -6,12 +6,12 @@ import '../constants.dart';
 class LoginForm extends StatelessWidget {
   const LoginForm({
     Key? key,
-    required this.usernameController,
+    required this.emailController,
     required this.passwordController,
     required this.formKey,
     required this.onLogin,
   }) : super(key: key);
-  final TextEditingController usernameController;
+  final TextEditingController emailController;
   final TextEditingController passwordController;
   final GlobalKey<FormState> formKey;
   final Function onLogin;
@@ -26,25 +26,20 @@ class LoginForm extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              AppLocalizations.of(context)!.login,
-              style: TextStyle(
-                color: kTextColor,
-                fontWeight: FontWeight.bold,
-                fontSize: _screenWidth * 0.09,
-              ),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
             CustomTextFormField(
               validator: (input) {
-                return input == ''
-                    ? AppLocalizations.of(context)!.usernameError
-                    : null;
+                if (input == '') {
+                  return AppLocalizations.of(context)!.emailError;
+                } else if (!RegExp(
+                        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
+                    .hasMatch(input!)) {
+                  return AppLocalizations.of(context)!.invalidEmail;
+                } else {
+                  return null;
+                }
               },
-              hint: AppLocalizations.of(context)!.username,
-              controller: usernameController,
+              hint: AppLocalizations.of(context)!.email,
+              controller: emailController,
               isObscure: false,
             ),
             Padding(
@@ -53,27 +48,33 @@ class LoginForm extends StatelessWidget {
                 controller: passwordController,
                 hint: AppLocalizations.of(context)!.password,
                 validator: (input) {
-                  return input == ''
-                      ? AppLocalizations.of(context)!.passwordError
-                      : null;
+                  if (input == '') {
+                    return AppLocalizations.of(context)!.passwordError;
+                  } else if (input!.length < 8) {
+                    return AppLocalizations.of(context)!.passwordShort;
+                  } else {
+                    return null;
+                  }
                 },
                 isObscure: true,
               ),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 8.0),
+            //   child: Align(
+            //     alignment: Localizations.localeOf(context).languageCode == 'en'
+            //         ? Alignment.centerRight
+            //         : Alignment.centerLeft,
+            //     child: TextButton(
+            //       onPressed: () {},
+            //       child: Text(
+            //         AppLocalizations.of(context)!.forgetPassword,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Align(
-                alignment: Localizations.localeOf(context).languageCode == 'en'
-                    ? Alignment.centerRight
-                    : Alignment.centerLeft,
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(AppLocalizations.of(context)!.forgetPassword),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
+              padding: const EdgeInsets.only(top: 30.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   primary: kPrimaryColor,
@@ -81,8 +82,10 @@ class LoginForm extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                 ),
-                onPressed: () {
-                  onLogin();
+                onPressed: () async {
+                  if (formKey.currentState!.validate()) {
+                    await onLogin();
+                  }
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(

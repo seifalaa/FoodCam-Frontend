@@ -18,7 +18,10 @@ class BG extends CustomPainter {
       ..color = kTextColor
       ..style = PaintingStyle.fill;
     canvas.drawCircle(
-      const Offset(0, 0),
+      Offset(
+        0,
+        0 - AppBar().preferredSize.height,
+      ),
       157,
       circle1,
     );
@@ -27,15 +30,15 @@ class BG extends CustomPainter {
         Localizations.localeOf(context).languageCode == 'ar'
             ? -MediaQuery.of(context).size.width
             : MediaQuery.of(context).size.width,
-        MediaQuery.of(context).size.height,
+        MediaQuery.of(context).size.height - AppBar().preferredSize.height,
       ),
       157,
       circle1,
     );
     canvas.drawCircle(
-      const Offset(
+      Offset(
         0,
-        157,
+        157 - AppBar().preferredSize.height,
       ),
       33,
       circle3,
@@ -43,7 +46,7 @@ class BG extends CustomPainter {
     canvas.drawCircle(
       Offset(
         Localizations.localeOf(context).languageCode == 'ar' ? -157 : 157,
-        0,
+        0 - AppBar().preferredSize.height,
       ),
       42.5,
       circle2,
@@ -53,7 +56,8 @@ class BG extends CustomPainter {
         Localizations.localeOf(context).languageCode == 'ar'
             ? -MediaQuery.of(context).size.width + 157
             : MediaQuery.of(context).size.width - 157,
-        MediaQuery.of(context).size.height,
+        MediaQuery.of(context).size.height -
+            AppBar().preferredSize.height - 42.5,
       ),
       42.5,
       circle2,
@@ -63,7 +67,9 @@ class BG extends CustomPainter {
         Localizations.localeOf(context).languageCode == 'ar'
             ? -MediaQuery.of(context).size.width
             : MediaQuery.of(context).size.width,
-        MediaQuery.of(context).size.height - 157,
+        MediaQuery.of(context).size.height -
+            157 -
+            AppBar().preferredSize.height,
       ),
       33,
       circle3,

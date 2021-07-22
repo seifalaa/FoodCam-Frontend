@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class CustomTextFormField extends StatefulWidget {
   const CustomTextFormField({
     Key? key,
     required this.validator,
@@ -15,12 +15,40 @@ class CustomTextFormField extends StatelessWidget {
   final bool isObscure;
 
   @override
+  _CustomTextFormFieldState createState() => _CustomTextFormFieldState();
+}
+
+class _CustomTextFormFieldState extends State<CustomTextFormField> {
+  bool obsecureClicked = false;
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      obscureText: isObscure,
-      controller: controller,
-      validator: validator,
+      obscureText: widget.isObscure & !obsecureClicked,
+      controller: widget.controller,
+      validator: widget.validator,
       decoration: InputDecoration(
+        errorMaxLines: 2,
+        suffixIcon: widget.isObscure
+            ? Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10.0,
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    !obsecureClicked
+                        ? Icons.visibility_off_rounded
+                        : Icons.visibility_rounded,
+                  ),
+                  onPressed: () {
+                    setState(
+                      () {
+                        obsecureClicked = !obsecureClicked;
+                      },
+                    );
+                  },
+                ),
+              )
+            : null,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(100),
           borderSide: const BorderSide(
@@ -47,7 +75,7 @@ class CustomTextFormField extends StatelessWidget {
         ),
         filled: true,
         fillColor: Colors.white,
-        hintText: hint,
+        hintText: widget.hint,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 20.0,
           vertical: 15.0,

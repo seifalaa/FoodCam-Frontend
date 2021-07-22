@@ -18,7 +18,7 @@ class AddCollectionBottomSheet extends StatelessWidget {
     return DraggableScrollableSheet(
       maxChildSize: 0.9,
       minChildSize: 0.3,
-      initialChildSize: 0.4,
+      initialChildSize: 0.8,
       builder: (context, scrollController) => Container(
         color: kBgColor,
         child: ListView(
@@ -49,14 +49,50 @@ class AddCollectionBottomSheet extends StatelessWidget {
                 key: _formKey,
                 child: Column(
                   children: [
-                    CustomTextFormField(
-                      validator: (input) {
-                        return input == '' ? 'cannot be empty' : null;
-                      },
-                      hint: AppLocalizations.of(context)!.collectionName,
-                      controller: _collectionNameController,
-                      isObscure: false,
+                  TextFormField(
+                  obscureText: false,
+                  controller: _collectionNameController,
+                  validator: (input) {
+                    return input == '' ? AppLocalizations.of(context)!.collectionError : null;
+                  },
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide:  BorderSide(
+                        color: Colors.grey.shade500,
+                      ),
                     ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: const BorderSide(
+                        color: Colors.red,
+                      ),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: const BorderSide(
+                        color: Colors.red,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: const BorderSide(
+                        color: Colors.blue,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: AppLocalizations.of(context)!.collectionName,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 15.0,
+                    ),
+                    hintStyle: const TextStyle(
+                      color: Colors.black38,
+                    ),
+                  ),
+                )
+                    ,
                     Padding(
                       padding: const EdgeInsets.only(top: 20.0),
                       child: ElevatedButton(
@@ -67,22 +103,23 @@ class AddCollectionBottomSheet extends StatelessWidget {
                           ),
                         ),
                         onPressed: () async {
-                          _formKey.currentState!.validate();
-                          final rand = Random();
-                          final int index =
-                              rand.nextInt(kCollectionImageUrls.length);
-                          final Map<String, dynamic> collectionData = {
-                            "categoryName": _collectionNameController.text,
-                            "categoryImageUrl": kCollectionImageUrls[index],
-                            "recipes": [],
-                          };
-                          await _homePageController
-                              .addCollection(collectionData);
-                          Navigator.pop(context);
-                          Navigator.pushReplacementNamed(
-                            context,
-                            'collections/',
-                          );
+                          if (_formKey.currentState!.validate()) {
+                            final rand = Random();
+                            final int index =
+                            rand.nextInt(kCollectionImageUrls.length);
+                            final Map<String, dynamic> collectionData = {
+                              "categoryName": _collectionNameController.text,
+                              "categoryImageUrl": kCollectionImageUrls[index],
+                              "recipes": [],
+                            };
+                            await _homePageController
+                                .addCollection(collectionData);
+                            Navigator.pop(context);
+                            Navigator.pushReplacementNamed(
+                              context,
+                              'collections/',
+                            );
+                          }
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),

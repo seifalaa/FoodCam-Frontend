@@ -1,37 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../constants.dart';
-
 class EmptyRecentlySearch extends StatelessWidget {
-  const EmptyRecentlySearch({ Key? key }) : super(key: key);
+  const EmptyRecentlySearch({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-   return Center(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-           Opacity(
-            opacity: 0.3,
-            child: Image.asset(
-              'lib/assets/nosearch.png',
-              width: MediaQuery.of(context).size.width * 0.7,
-              height: MediaQuery.of(context).size.height * 0.2,
-            ),
+          Icon(
+            Icons.search_off_rounded,
+            color: Colors.grey,
+            size: MediaQuery.of(context).size.width * 0.2,
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 40.0),
-            child:Text(
+          Text(
             AppLocalizations.of(context)!.noRecentlySearch,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 25,
-              color: kTextColor,
+              color: Colors.grey,
             ),
-          ),
           )
-          
         ],
       ),
     );

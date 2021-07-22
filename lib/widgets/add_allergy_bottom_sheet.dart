@@ -3,16 +3,24 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/allergy.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import '../constants.dart';
 
-class AddAllergyBottomSheet extends StatelessWidget {
+class AddAllergyBottomSheet extends StatefulWidget {
   const AddAllergyBottomSheet({Key? key}) : super(key: key);
+
+  @override
+  _AddAllergyBottomSheetState createState() => _AddAllergyBottomSheetState();
+}
+
+class _AddAllergyBottomSheetState extends State<AddAllergyBottomSheet> {
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     final HomePageController _homePageController = HomePageController();
-    final String _langCode = Provider.of<LanguageProvider>(context).langCode;
+    final String _langCode = Provider.of<LanguageProvider>(context).getLangCode;
     return makeDismissible(
       child: DraggableScrollableSheet(
         initialChildSize: 0.6,
@@ -42,44 +50,69 @@ class AddAllergyBottomSheet extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              StreamBuilder(
-                stream: Stream.fromFuture(
-                  _homePageController.getAllergies(_langCode),
+              Visibility(
+                visible: _isLoading,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: kPrimaryColor,
+                  ),
                 ),
-                builder: (context, AsyncSnapshot<List<Allergy>> snapshot) =>
-                    snapshot.hasData
-                        ? Column(
-                            children: snapshot.data!
-                                .map(
-                                  (e) => Column(
-                                    children: [
-                                      ListTile(
-                                        title: Text(
-                                          e.allergyName,
-                                          style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
+              ),
+              Opacity(
+                opacity: !_isLoading ? 1.0 : 0.0,
+                child: StreamBuilder(
+                  stream: Stream.fromFuture(
+                    _homePageController.getAllergies(_langCode),
+                  ),
+                  builder: (context, AsyncSnapshot<List<Allergy>> snapshot) =>
+                      snapshot.hasData
+                          ? Column(
+                              children: snapshot.data!
+                                  .map(
+                                    (e) => Column(
+                                      children: [
+                                        ListTile(
+                                          title: Text(
+                                            e.allergyName,
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          trailing: IconButton(
+                                            icon: const Icon(
+                                              Icons.add_rounded,
+                                              color: kPrimaryColor,
+                                            ),
+                                            onPressed: () async {
+                                              setState(() {
+                                                _isLoading = true;
+                                              });
+                                              await _homePageController
+                                                  .addAllergy(
+                                                _langCode,
+                                                e.allergyName,
+                                              );
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                context,
+                                                'allergies/',
+                                                ModalRoute.withName('profile/'),
+                                              );
+                                            },
                                           ),
                                         ),
-                                        trailing: IconButton(
-                                          icon: const Icon(
-                                            Icons.add_rounded,
-                                            color: kPrimaryColor,
-                                          ),
-                                          onPressed: () {},
-                                        ),
-                                      ),
-                                      const Divider(),
-                                    ],
-                                  ),
-                                )
-                                .toList(),
-                          )
-                        : const Center(
-                            child: CircularProgressIndicator(
-                              color: kPrimaryColor,
+                                        const Divider(),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(
+                                color: kPrimaryColor,
+                              ),
                             ),
-                          ),
+                ),
               ),
             ],
           ),

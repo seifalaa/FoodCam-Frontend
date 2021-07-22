@@ -22,7 +22,7 @@ class CustomSearchDelegate extends SearchDelegate {
           query = '';
         },
         icon: const Icon(
-          Icons.clear,
+          Icons.clear_rounded,
           color: kTextColor,
         ),
       ),
@@ -44,7 +44,7 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    final String langCode = Provider.of<LanguageProvider>(context).langCode;
+    final String langCode = Localizations.localeOf(context).languageCode;
     if (searchResults.isNotEmpty && query.isNotEmpty) {
       return GridView.builder(
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -97,7 +97,7 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final String langCode = Provider.of<LanguageProvider>(context).langCode;
+    final String langCode = Provider.of<LanguageProvider>(context).getLangCode;
     if (query != '') {
       return FutureBuilder(
         future: _controller.recipeSearch(query, langCode),

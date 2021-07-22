@@ -11,6 +11,7 @@ import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/ingredient_box.dart';
 import 'package:foodcam_frontend/widgets/preferred_search_delegate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 
 class PreferredIngredients extends StatefulWidget {
@@ -23,10 +24,9 @@ class PreferredIngredients extends StatefulWidget {
 }
 
 class _PreferredIngredientsState extends State<PreferredIngredients> {
-  final HomePageController _controller = HomePageController();
+  final HomePageController _homePageController = HomePageController();
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-
-  Future<void> deleteItem() async {}
+  bool _isLoading = false;
 
   void addItem() {
     showSearch(
@@ -37,7 +37,7 @@ class _PreferredIngredientsState extends State<PreferredIngredients> {
 
   @override
   Widget build(BuildContext context) {
-    final String langCode = Provider.of<LanguageProvider>(context).langCode;
+    final String _langCode = Localizations.localeOf(context).languageCode;
     return Scaffold(
       extendBody: true,
       appBar: AppBar(
@@ -61,54 +61,75 @@ class _PreferredIngredientsState extends State<PreferredIngredients> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: kPrimaryColor,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, 'basket/');
+        },
         child: const Icon(
           Icons.shopping_basket_rounded,
           color: Colors.white,
         ),
       ),
       bottomNavigationBar: const CustomButtonNavigationBar(),
-      body: StreamBuilder(
-          stream: langCode == 'ar'
-              ? _fireStore.collection('PreferredIngredients-ar').snapshots()
-              : _fireStore.collection('PreferredIngredients').snapshots(),
-          builder: (context,
-              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-            return snapshot.hasData
-                ? snapshot.data!.docs.isNotEmpty
-                    ? GridView(
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 250,
-                          childAspectRatio: 1,
-                          crossAxisSpacing: 5,
-                          mainAxisSpacing: 5,
-                        ),
-                        children: [
-                          for (int i = 0; i < snapshot.data!.docs.length; i++)
-                            FutureBuilder<Ingredient>(
-                                future: _controller
-                                    .ingredientFromQueryDocumentSnapshot(
-                                        snapshot.data!.docs[i]),
-                                builder: (context, ingredientSnapshot) {
-                                  return ingredientSnapshot.hasData
-                                      ? IngredientBox(
-                                          ingredient: ingredientSnapshot.data!,
-                                          index: i,
-                                          onDelete: deleteItem,
-                                        )
-                                      : Container();
-                                }),
-                          AddBox(onTab: addItem),
-                        ],
-                      )
-                    : const EmptyPreferredPage()
-                : const Center(
-                    child: CircularProgressIndicator(
-                      color: kPrimaryColor,
-                    ),
-                  );
-          }),
+      body: LoadingOverlay(
+        isLoading: _isLoading,
+        color: Colors.black.withOpacity(0.1),
+        progressIndicator: const CircularProgressIndicator(
+          color: kPrimaryColor,
+        ),
+        child: StreamBuilder(
+            stream: _langCode == 'ar'
+                ? _fireStore.collection('PreferredIngredients-ar').snapshots()
+                : _fireStore.collection('PreferredIngredients').snapshots(),
+            builder: (context,
+                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+              return snapshot.hasData
+                  ? snapshot.data!.docs.isNotEmpty
+                      ? GridView(
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 250,
+                            //childAspectRatio: 1,
+                            crossAxisSpacing: 5,
+                            mainAxisSpacing: 5,
+                          ),
+                          children: [
+                            for (int i = 0; i < snapshot.data!.docs.length; i++)
+                              FutureBuilder<Ingredient>(
+                                  future: _homePageController
+                                      .ingredientFromQueryDocumentSnapshot(
+                                          snapshot.data!.docs[i]),
+                                  builder: (context, ingredientSnapshot) {
+                                    return ingredientSnapshot.hasData
+                                        ? IngredientBox(
+                                            ingredient:
+                                                ingredientSnapshot.data!,
+                                            index: i,
+                                            onDelete: deleteItem,
+                                          )
+                                        : Container();
+                                  }),
+                            AddBox(onTab: addItem),
+                          ],
+                        )
+                      : const EmptyPreferredPage()
+                  : const Center(
+                      child: CircularProgressIndicator(
+                        color: kPrimaryColor,
+                      ),
+                    );
+            }),
+      ),
     );
+  }
+
+  Future<void> deleteItem(String ingredientName,String langCode) async {
+    setState(() {
+      _isLoading = true;
+    });
+    await _homePageController.deletePreferredIngredient(
+        langCode, ingredientName);
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

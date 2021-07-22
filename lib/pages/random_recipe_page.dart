@@ -1,30 +1,29 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
 import 'package:provider/provider.dart';
+
 import '../constants.dart';
 
-class SearchResultsPage extends StatelessWidget {
-  const SearchResultsPage({
+class RandomRecipePage extends StatelessWidget {
+  const RandomRecipePage({
     Key? key,
-    required this.ingredientsDocs,
+    required this.categoryName,
   }) : super(key: key);
-  final List<QueryDocumentSnapshot<Map<String, dynamic>>> ingredientsDocs;
+  final String categoryName;
 
   @override
   Widget build(BuildContext context) {
-    final HomePageController _controller = HomePageController();
-    final String lang = Localizations.localeOf(context).languageCode;
+    final HomePageController _homepageController = HomePageController();
+    final String _langCode = Localizations.localeOf(context).languageCode;
     return Scaffold(
-      extendBody: true,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.results,
+          AppLocalizations.of(context)!.randomRecipe,
           style: const TextStyle(
             color: kTextColor,
           ),
@@ -42,6 +41,7 @@ class SearchResultsPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: kPrimaryColor,
         onPressed: () {
@@ -52,22 +52,22 @@ class SearchResultsPage extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: const CustomButtonNavigationBar(),
-      body: FutureBuilder<List<Recipe>>(
-        future: _controller.recipeSearchWithMultipleIngredients(
-            ingredientsDocs, lang),
-        builder: (context, snapshot) => snapshot.hasData
-            ? GridView.builder(
-                itemCount: snapshot.data!.length,
+      body: StreamBuilder(
+        stream: Stream.fromFuture(
+          _homepageController.getRandomRecipe(_langCode, categoryName),
+        ),
+        builder: (context, AsyncSnapshot<Recipe> snapshot) => snapshot.hasData
+            ? GridView(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 600,
                   childAspectRatio: 2,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
-                itemBuilder: (context, index) =>
-                    RecipeBox(recipe: snapshot.data![index]),
+                children: [
+                  RecipeBox(recipe: snapshot.data!),
+                ],
               )
             : const Center(
                 child: CircularProgressIndicator(

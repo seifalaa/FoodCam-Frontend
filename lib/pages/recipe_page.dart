@@ -44,14 +44,12 @@ class RecipePage extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            pinned: false,
             snap: true,
             floating: true,
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
               title: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -86,7 +84,6 @@ class RecipePage extends StatelessWidget {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 2.0),
                               child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: _lang == 'ar'
                                     ? buildRateButton().reversed.toList()

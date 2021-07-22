@@ -10,6 +10,7 @@ import 'package:foodcam_frontend/widgets/add_box.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/ingredient_box.dart';
 import 'package:foodcam_frontend/widgets/preferred_search_delegate.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -26,8 +27,8 @@ class DisPreferredIngredients extends StatefulWidget {
 class _DisPreferredIngredientsState extends State<DisPreferredIngredients> {
   final HomePageController _controller = HomePageController();
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-
-  Future<void> deleteItem() async {}
+  final HomePageController _homePageController = HomePageController();
+  bool _isLoading = false;
 
   void addItem() {
     showSearch(
@@ -38,7 +39,7 @@ class _DisPreferredIngredientsState extends State<DisPreferredIngredients> {
 
   @override
   Widget build(BuildContext context) {
-    final String langCode = Provider.of<LanguageProvider>(context).langCode;
+    final String langCode = Localizations.localeOf(context).languageCode;
     return Scaffold(
       extendBody: true,
       appBar: AppBar(
@@ -62,54 +63,78 @@ class _DisPreferredIngredientsState extends State<DisPreferredIngredients> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: kPrimaryColor,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, 'basket/');
+        },
         child: const Icon(
           Icons.shopping_basket_rounded,
           color: Colors.white,
         ),
       ),
       bottomNavigationBar: const CustomButtonNavigationBar(),
-      body: StreamBuilder(
-          stream: langCode == 'ar'
-              ? _fireStore.collection('DisPreferredIngredients-ar').snapshots()
-              : _fireStore.collection('DisPreferredIngredients').snapshots(),
-          builder: (context,
-              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-            return snapshot.hasData
-                ? snapshot.data!.docs.isNotEmpty
-                    ? GridView(
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 250,
-                          childAspectRatio: 1,
-                          crossAxisSpacing: 5,
-                          mainAxisSpacing: 5,
-                        ),
-                        children: [
-                          for (int i = 0; i < snapshot.data!.docs.length; i++)
-                            FutureBuilder<Ingredient>(
-                                future: _controller
-                                    .ingredientFromQueryDocumentSnapshot(
-                                        snapshot.data!.docs[i]),
-                                builder: (context, ingredientSnapshot) {
-                                  return ingredientSnapshot.hasData
-                                      ? IngredientBox(
-                                          ingredient: ingredientSnapshot.data!,
-                                          index: i,
-                                          onDelete: deleteItem,
-                                        )
-                                      : Container();
-                                }),
-                          AddBox(onTab: addItem),
-                        ],
-                      )
-                    : const EmptyDisPreferredPage()
-                : const Center(
-                    child: CircularProgressIndicator(
-                      color: kPrimaryColor,
-                    ),
-                  );
-          }),
+      body: LoadingOverlay(
+        isLoading: _isLoading,
+        color: Colors.black.withOpacity(0.2),
+        progressIndicator: const CircularProgressIndicator(
+          color: kPrimaryColor,
+        ),
+        child: StreamBuilder(
+            stream: langCode == 'ar'
+                ? _fireStore
+                    .collection('DisPreferredIngredients-ar')
+                    .snapshots()
+                : _fireStore.collection('DisPreferredIngredients').snapshots(),
+            builder: (context,
+                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+              return snapshot.hasData
+                  ? snapshot.data!.docs.isNotEmpty
+                      ? GridView(
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 250,
+                            crossAxisSpacing: 5,
+                            mainAxisSpacing: 5,
+                          ),
+                          children: [
+                            for (int i = 0; i < snapshot.data!.docs.length; i++)
+                              FutureBuilder<Ingredient>(
+                                  future: _controller
+                                      .ingredientFromQueryDocumentSnapshot(
+                                          snapshot.data!.docs[i]),
+                                  builder: (context, ingredientSnapshot) {
+                                    return ingredientSnapshot.hasData
+                                        ? IngredientBox(
+                                            ingredient:
+                                                ingredientSnapshot.data!,
+                                            index: i,
+                                            onDelete: deleteItem,
+                                          )
+                                        : Container();
+                                  }),
+                            AddBox(onTab: addItem),
+                          ],
+                        )
+                      : const EmptyDisPreferredPage()
+                  : const Center(
+                      child: CircularProgressIndicator(
+                        color: kPrimaryColor,
+                      ),
+                    );
+            }),
+      ),
     );
+  }
+
+  Future<void> deleteItem(String ingredientName, String langCode) async {
+    setState(() {
+      _isLoading = true;
+    });
+    await _homePageController.deleteDisPreferredIngredient(
+      langCode,
+      ingredientName,
+    );
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

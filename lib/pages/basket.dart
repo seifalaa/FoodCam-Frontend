@@ -68,7 +68,7 @@ class _BasketPageState extends State<BasketPage> {
 
   @override
   Widget build(BuildContext context) {
-    final String lang = Provider.of<LanguageProvider>(context).langCode;
+    final String lang = Localizations.localeOf(context).languageCode;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -164,7 +164,6 @@ class _BasketPageState extends State<BasketPage> {
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
                         maxCrossAxisExtent: 250,
-                        childAspectRatio: 1,
                         crossAxisSpacing: 5,
                         mainAxisSpacing: 5,
                       ),

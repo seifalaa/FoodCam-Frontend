@@ -23,7 +23,7 @@ class SignupForm1 extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          //mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               AppLocalizations.of(context)!.welcome,
@@ -88,8 +88,8 @@ class SignupForm1 extends StatelessWidget {
                     padding: const EdgeInsets.all(15.0),
                     child: Icon(
                       Localizations.localeOf(context).languageCode == 'ar'
-                          ? Icons.arrow_back_rounded
-                          : Icons.arrow_forward_rounded,
+                          ? Icons.arrow_forward_rounded
+                          : Icons.arrow_back_rounded,
                       color: Colors.white,
                     )),
               ),

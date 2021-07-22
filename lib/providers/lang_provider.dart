@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 
 class LanguageProvider extends ChangeNotifier {
-  String _langCode = 'ar';
+  String langCode = 'ar';
 
-  String get langCode {
-    return _langCode;
+  String get getLangCode {
+    return langCode;
   }
 
   Future<void> changeLang(String newLangCode) async {
-    _langCode = newLangCode;
+    langCode = newLangCode;
     notifyListeners();
   }
 }

@@ -1,36 +1,33 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:foodcam_frontend/models/ingredient.dart';
+import 'package:foodcam_frontend/models/allergy.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
 
-class IngredientBox extends StatefulWidget {
-  const IngredientBox({
+class AllergyBox extends StatefulWidget {
+  const AllergyBox({
     Key? key,
-    required this.ingredient,
+    required this.allergy,
     required this.onDelete,
-    required this.index,
   }) : super(key: key);
-
-  final int index; //TODO:to be removed later
-  final Ingredient ingredient;
+  final Allergy allergy;
   final Function onDelete;
 
   @override
-  _IngredientBoxState createState() => _IngredientBoxState();
+  _AllergyBoxState createState() => _AllergyBoxState();
 }
 
-class _IngredientBoxState extends State<IngredientBox> {
+class _AllergyBoxState extends State<AllergyBox> {
   bool _isVisible = false;
 
   @override
   Widget build(BuildContext context) {
     final double _screenWidth = MediaQuery.of(context).size.width;
-    final String langCode = Provider.of<LanguageProvider>(context).getLangCode;
+    final String _langCode = Provider.of<LanguageProvider>(context).getLangCode;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(
@@ -38,8 +35,9 @@ class _IngredientBoxState extends State<IngredientBox> {
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                widget.ingredient.ingredientImageUrl,
+              child: Image(
+                image:
+                    CachedNetworkImageProvider(widget.allergy.allergyImageUrl),
                 fit: BoxFit.cover,
               ),
             ),
@@ -47,9 +45,7 @@ class _IngredientBoxState extends State<IngredientBox> {
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
-                color: _isVisible
-                    ? const Color(0x70000000)
-                    : const Color(0x40000000),
+                color: const Color(0x40000000),
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
@@ -62,7 +58,7 @@ class _IngredientBoxState extends State<IngredientBox> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.ingredient.ingredientName,
+                    widget.allergy.allergyName,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: _screenWidth <= kMobileScreenSize
@@ -124,13 +120,16 @@ class _IngredientBoxState extends State<IngredientBox> {
                 ),
                 onPressed: () async {
                   await widget.onDelete(
-                    widget.ingredient.ingredientName,
-                    langCode,
+                    widget.allergy.allergyName,
+                    _langCode,
                   );
+                  setState(() {
+                    _isVisible = false;
+                  });
                 },
-                child: const Icon(Icons.clear),
+                child: const Icon(Icons.clear,),
               ),
-            )),
+            ),),
           )
         ],
       ),

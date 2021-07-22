@@ -6,6 +6,7 @@ import 'package:foodcam_frontend/pages/basket.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/categories.dart';
+import 'package:foodcam_frontend/widgets/random_recipe_bootom_sheet.dart';
 import 'package:foodcam_frontend/widgets/recently_searched.dart';
 import 'package:foodcam_frontend/widgets/search_delegate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,7 +20,8 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomePageController _homePageController = HomePageController();
-    final String _langCode = Provider.of<LanguageProvider>(context).langCode;
+    final String _langCode = Localizations.localeOf(context).languageCode;
+    final double _screenWidth = MediaQuery.of(context).size.width;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -29,6 +31,23 @@ class Home extends StatelessWidget {
           title: Text(
             AppLocalizations.of(context)!.home,
             style: const TextStyle(
+              color: kTextColor,
+            ),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                context: context,
+                builder: (context) => makeDismissible(
+                  child: const RandomRecipeBottomSheet(),
+                  context: context,
+                ),
+              );
+            },
+            icon: const Icon(
+              Icons.shuffle_rounded,
               color: kTextColor,
             ),
           ),
@@ -52,14 +71,14 @@ class Home extends StatelessWidget {
             labelPadding: const EdgeInsets.all(10.0),
             indicatorColor: kPrimaryColor,
             labelStyle: TextStyle(
-              fontSize: 17,
+              fontSize: _screenWidth * 0.040,
               fontWeight: FontWeight.bold,
               fontFamily: GoogleFonts.cairo().fontFamily,
             ),
             labelColor: kPrimaryColor,
             unselectedLabelColor: kTextColor,
             unselectedLabelStyle: TextStyle(
-              fontSize: 17,
+              fontSize: _screenWidth * 0.040,
               fontFamily: GoogleFonts.cairo().fontFamily,
             ),
             tabs: [
