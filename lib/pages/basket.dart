@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
+import 'package:foodcam_frontend/models/user.dart';
 import 'package:foodcam_frontend/pages/search_results.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/add_box.dart';
@@ -13,9 +14,11 @@ import 'package:foodcam_frontend/widgets/add_ingredient_bottom_sheet.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/pages/empty_basket_page.dart';
 import 'package:foodcam_frontend/widgets/ingredient_box.dart';
+import 'package:foodcam_frontend/widgets/unloggedin_user_basket.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BasketPage extends StatefulWidget {
   const BasketPage({Key? key}) : super(key: key);
@@ -142,62 +145,79 @@ class _BasketPageState extends State<BasketPage> {
         },
       ),
       bottomNavigationBar: const CustomButtonNavigationBar(),
-      body: LoadingOverlay(
+
+      body:   LoadingOverlay(
         isLoading: _isLoading,
         color: Colors.black,
         opacity: 0.1,
         progressIndicator: const CircularProgressIndicator(
           color: kPrimaryColor,
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: StreamBuilder(
-              stream: lang == 'ar'
-                  ? _fireStore.collection('Basket-ar').snapshots()
-                  : _fireStore.collection('Basket').snapshots(),
-              builder: (context,
-                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data!.docs.isNotEmpty) {
-                    return GridView(
-                      shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 250,
-                        crossAxisSpacing: 5,
-                        mainAxisSpacing: 5,
-                      ),
-                      children: [
-                        for (int i = 0; i < snapshot.data!.docs.length; i++)
-                          FutureBuilder<Ingredient>(
-                              future: _controller
-                                  .ingredientFromQueryDocumentSnapshot(
-                                      snapshot.data!.docs[i]),
-                              builder: (context, ingredientSnapshot) {
-                                return ingredientSnapshot.hasData
-                                    ? IngredientBox(
-                                        ingredient: ingredientSnapshot.data!,
-                                        index: i,
-                                        onDelete: deleteItem,
-                                      )
-                                    : Container();
-                              }),
-                        AddBox(onTab: addItem),
-                      ],
-                    );
+        child: FutureBuilder<User?>(
+          future: getUserInfo(),
+          builder: (context , AsyncSnapshot<User?> snapshot)=> snapshot.connectionState != ConnectionState.waiting ? snapshot.data == null ? const UnLoggedInUserBasket()
+           :  Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: StreamBuilder(
+                stream: lang == 'ar'
+                    ? _fireStore.collection('Basket-ar').snapshots()
+                    : _fireStore.collection('Basket').snapshots(),
+                builder: (context,
+                    AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data!.docs.isNotEmpty) {
+                      return GridView(
+                        shrinkWrap: true,
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 250,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5,
+                        ),
+                        children: [
+                          for (int i = 0; i < snapshot.data!.docs.length; i++)
+                            FutureBuilder<Ingredient>(
+                                future: _controller
+                                    .ingredientFromQueryDocumentSnapshot(
+                                        snapshot.data!.docs[i]),
+                                builder: (context, ingredientSnapshot) {
+                                  return ingredientSnapshot.hasData
+                                      ? IngredientBox(
+                                          ingredient: ingredientSnapshot.data!,
+                                          index: i,
+                                          onDelete: deleteItem,
+                                        )
+                                      : Container();
+                                }),
+                          AddBox(onTab: addItem),
+                        ],
+                      );
+                    } else {
+                      return const EmptyBasketPage();
+                    }
                   } else {
-                    return const EmptyBasketPage();
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: kPrimaryColor,
+                      ),
+                    );
                   }
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: kPrimaryColor,
-                    ),
-                  );
-                }
-              }),
+                }),
+          ) : const Center(child: CircularProgressIndicator(color: kPrimaryColor,),)
+
         ),
       ),
     );
+  }
+
+  Future<User?> getUserInfo() async {
+    final SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+    final String? userName = _sharedPreferences.getString('userName');
+    final String? firstName = _sharedPreferences.getString('firstName');
+    final String? lastName = _sharedPreferences.getString('lastName');
+    return userName != null && firstName != null && lastName != null
+        ? User(firstName: firstName, lastName: lastName, userName: userName)
+        : null;
   }
 }

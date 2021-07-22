@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> {
             ],
             locale: Locale(Provider.of<LanguageProvider>(context).langCode),
             debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
+            title: 'Food Cam',
             routes: {
               'login/': (context) => const Login(),
               'signup/': (context) => const Signup1(),

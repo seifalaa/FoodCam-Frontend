@@ -72,6 +72,7 @@
 	"invalidEmail": "Invalid email",
 	"passwordShort": "Password must contain at least 8 characters",
 	"loginToShowProfile": "Login to view your profile",
+	"loginToShowBasket": "Login to view your basket",
 	"invalidPassword": "Password must contain at least 8 ubbercase, lowercase characters, numbers,special charachters",
 	"userExists": "This user already exists",
 	"usernameExist": "User with this username already exists",
