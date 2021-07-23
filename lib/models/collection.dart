@@ -22,18 +22,19 @@ class Collection {
     final List<Recipe> recipes = [];
 
     return Collection(
-        id: map['id'],
-        userId: map['user'],
-        collectionName: map['collection_name'],
-        recipeCount: map['recipes'],
-        collectionImageUrl: url);
+      id: map['id'],
+      userId: map['user'],
+      collectionName: map['collection_name'],
+      recipeCount: map['recipes'],
+      collectionImageUrl: map['collection_image'],
+    );
   }
 
-  // static Map<String, dynamic> toMap(Collection collection) {
-  //   return {
-  //     'collectionName': collection.collectionName,
-  //     'recipes': collection.recipes,
-  //     'collectionImageUrl': collection.collectionImageUrl
-  //   };
-  // }
+// static Map<String, dynamic> toMap(Collection collection) {
+//   return {
+//     'collectionName': collection.collectionName,
+//     'recipes': collection.recipes,
+//     'collectionImageUrl': collection.collectionImageUrl
+//   };
+// }
 }

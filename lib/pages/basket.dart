@@ -16,7 +16,8 @@ import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/pages/empty_basket_page.dart';
 import 'package:foodcam_frontend/widgets/ingredient_box.dart';
 import 'package:foodcam_frontend/widgets/unloggedin_user_basket.dart';
-import 'package:image_picker/image_picker.dart';
+
+//import 'package:image_picker/image_picker.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -100,7 +101,6 @@ class _BasketPageState extends State<BasketPage> {
         stream: Stream.fromFuture(
             _backendController.getBasketIngredients(_langCode)),
         builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
-
           if (snapshot.hasData) {
             if (snapshot.data!.isEmpty) {
               return FloatingActionButton(
