@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
@@ -18,7 +19,7 @@ class RandomRecipePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomePageController _homepageController = HomePageController();
+    final BackEndController _backendController = BackEndController();
     final String _langCode = Localizations.localeOf(context).languageCode;
     return Scaffold(
       appBar: AppBar(
@@ -53,29 +54,29 @@ class RandomRecipePage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: const CustomButtonNavigationBar(),
-      // body: StreamBuilder(
-      //   stream: Stream.fromFuture(
-      //     _homepageController.getRandomRecipe(_langCode, categoryName),
-      //   ),
-      //   builder: (context, AsyncSnapshot<Recipe> snapshot) => snapshot.hasData
-      //       ? GridView(
-      //           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-      //             maxCrossAxisExtent: 600,
-      //             childAspectRatio: 2,
-      //             crossAxisSpacing: 10,
-      //             mainAxisSpacing: 10,
-      //           ),
-      //           children: [
-      //             RecipeBox(recipe: snapshot.data!),
-      //           ],
-      //         )
-      //       : const Center(
-      //           child: CircularProgressIndicator(
-      //             color: kPrimaryColor,
-      //           ),
-      //         ),
-      // ),
-      body: Container(),
+      body: StreamBuilder(
+        stream: Stream.fromFuture(
+          _backendController.getRandomRecipe(_langCode, categoryName),
+        ),
+        builder: (context, AsyncSnapshot<Recipe> snapshot) => snapshot.hasData
+            ? GridView(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 600,
+                  childAspectRatio: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                children: [
+                  RecipeBox(recipe: snapshot.data!),
+                ],
+              )
+            : const Center(
+                child: CircularProgressIndicator(
+                  color: kPrimaryColor,
+                ),
+              ),
+      ),
+      //body: Container(),
     );
   }
 }

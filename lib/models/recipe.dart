@@ -30,6 +30,7 @@ class Recipe {
   final List<Ingredient> ingredients;
 
   factory Recipe.fromMap(Map<String, dynamic> map) {
+
     final NutritionInfo nutritionInfo =
         NutritionInfo.fromMap(map['recipe']['nutrition_info']);
     final List<Ingredient> ingredients = [];

@@ -49,49 +49,49 @@ class RandomRecipeBottomSheet extends StatelessWidget {
                 ),
 
 
-                // StreamBuilder(
-                //   stream: Stream.fromFuture(
-                //     _homePageController.getCategoryNames(_langCode),
-                //   ),
-                //   builder: (context, AsyncSnapshot<List<String>> snapshot) =>
-                //       snapshot.hasData
-                //           ? Column(
-                //               children: snapshot.data!
-                //                   .map(
-                //                     (e) => Column(
-                //                       children: [
-                //                         ListTile(
-                //                           onTap: () {
-                //                             Navigator.pushReplacement(
-                //                               context,
-                //                               MaterialPageRoute(
-                //                                 builder: (context) =>
-                //                                     RandomRecipePage(
-                //                                   categoryName: e,
-                //                                 ),
-                //                               ),
-                //                             );
-                //                           },
-                //                           title: Text(
-                //                             e,
-                //                             style: const TextStyle(
-                //                               fontWeight: FontWeight.bold,
-                //                               fontSize: 20,
-                //                             ),
-                //                           ),
-                //                         ),
-                //                         const Divider(),
-                //                       ],
-                //                     ),
-                //                   )
-                //                   .toList(),
-                //             )
-                //           : const Center(
-                //               child: CircularProgressIndicator(
-                //                 color: kPrimaryColor,
-                //               ),
-                //             ),
-                // ),
+                StreamBuilder(
+                  stream: Stream.fromFuture(
+                    _backendController.getCategoriesNames(_langCode),
+                  ),
+                  builder: (context, AsyncSnapshot<List<String>> snapshot) =>
+                      snapshot.hasData
+                          ? Column(
+                              children: snapshot.data!
+                                  .map(
+                                    (e) => Column(
+                                      children: [
+                                        ListTile(
+                                          onTap: () {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RandomRecipePage(
+                                                  categoryName: e,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          title: Text(
+                                            e,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ),
+                                        const Divider(),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(
+                                color: kPrimaryColor,
+                              ),
+                            ),
+                ),
                 //Container(),
               ],
             ),

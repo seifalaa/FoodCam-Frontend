@@ -52,7 +52,55 @@ class BackEndController {
     }
     return recipes;
   }
+  Future<List<String>> getCategoriesNames(String langCode)async{
 
+    final url = Uri.parse(
+        "http://192.168.1.5:8000/GetCategoriesName/?lang_code=$langCode");
+    final http.Response response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+    final List<String> names = [];
+    for (final item in _responseJson) {
+      names.add(item['category_name']);
+    }
+    return names;
+
+
+
+  }
+
+  Future<Recipe> getRandomRecipe(String langCode,String categoryName)async{
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+    await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+    await flutterSecureStorage.read(key: 'refresh_token');
+
+
+    final url = Uri.parse(
+        "http://192.168.1.5:8000/GeneratorButton/?lang_code=$langCode&category=$categoryName");
+    final http.Response response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+
+      },
+    );
+    final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+    print(_responseJson);
+
+    final Recipe recipe ;
+      recipe=Recipe.fromMap(_responseJson[0]);
+
+
+    return recipe;
+
+  }
   // Future<Recipe> generateRandomRecipe(String categoryName,String langcode){
 
   // }
