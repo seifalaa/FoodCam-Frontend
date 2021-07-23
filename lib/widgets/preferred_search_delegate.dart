@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
@@ -15,9 +16,11 @@ class PreferredSearchDelegate extends SearchDelegate {
   PreferredSearchDelegate(this.page);
 
   final String page;
-  List<Ingredient> searchResults = [];
+  List<Map<String,dynamic>> searchResults = [];
 
-  final HomePageController _homePageController = HomePageController();
+  //final HomePageController _homePageController = HomePageController();
+  final BackEndController _backendController = BackEndController();
+
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -27,7 +30,7 @@ class PreferredSearchDelegate extends SearchDelegate {
           query = '';
         },
         icon: const Icon(
-          Icons.clear,
+          Icons.clear_rounded,
           color: kTextColor,
         ),
       ),
@@ -53,37 +56,37 @@ class PreferredSearchDelegate extends SearchDelegate {
     if (searchResults.isNotEmpty && query.isNotEmpty) {
       return IngredientsList(
         searchResults: searchResults,
-        controller: _homePageController,
+        controller: _backendController,
         pageName: page,
         langCode: langCode,
       );
     } else if (searchResults.isEmpty && query.isNotEmpty) {
-      return Container();
-      // return StreamBuilder(
-      //     stream: Stream.fromFuture(
-      //       _homePageController.ingredientSearch(query, langCode),
-      //     ),
-      //     builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
-      //       if (snapshot.hasData) {
-      //         searchResults = snapshot.data!;
-      //         if (snapshot.data!.isNotEmpty) {
-      //           return IngredientsList(
-      //             searchResults: snapshot.data!,
-      //             langCode: langCode,
-      //             pageName: page,
-      //             controller: _homePageController,
-      //           );
-      //         } else {
-      //           return const NoResultsPage();
-      //         }
-      //       } else {
-      //         return const Center(
-      //           child: CircularProgressIndicator(
-      //             color: kPrimaryColor,
-      //           ),
-      //         );
-      //       }
-      //     });
+      //return Container();
+      return StreamBuilder(
+          stream: Stream.fromFuture(
+            _backendController.ingredientBasketSearch(query),
+          ),
+          builder: (context, AsyncSnapshot<List<Map<String,dynamic>>> snapshot) {
+            if (snapshot.hasData) {
+              searchResults = snapshot.data!;
+              if (snapshot.data!.isNotEmpty) {
+                return IngredientsList(
+                  searchResults: snapshot.data!,
+                  langCode: langCode,
+                  pageName: page,
+                  controller: _backendController,
+                );
+              } else {
+                return const NoResultsPage();
+              }
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: kPrimaryColor,
+                ),
+              );
+            }
+          });
     } else {
       return StartSearchPage(
         text: AppLocalizations.of(context)!.startSearchIng,
@@ -95,32 +98,33 @@ class PreferredSearchDelegate extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     final String langCode = Provider.of<LanguageProvider>(context).getLangCode;
     if (query != '') {
-      return Container();
-      // return StreamBuilder(
-      //     stream: Stream.fromFuture(
-      //       _homePageController.ingredientSearch(query, langCode),
-      //     ),
-      //     builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
-      //       if (snapshot.hasData) {
-      //         searchResults = snapshot.data!;
-      //         if (snapshot.data!.isNotEmpty) {
-      //           return IngredientsList(
-      //             searchResults: snapshot.data!,
-      //             langCode: langCode,
-      //             pageName: page,
-      //             controller: _homePageController,
-      //           );
-      //         } else {
-      //           return const NoResultsPage();
-      //         }
-      //       } else {
-      //         return const Center(
-      //           child: CircularProgressIndicator(
-      //             color: kPrimaryColor,
-      //           ),
-      //         );
-      //       }
-      //     });
+      //return Container();
+      return StreamBuilder(
+          stream: Stream.fromFuture(
+            _backendController.ingredientBasketSearch(query),
+          ),
+          builder: (context, AsyncSnapshot<List<Map<String,dynamic>>> snapshot) {
+
+            if (snapshot.hasData) {
+              searchResults = snapshot.data!;
+              if (snapshot.data!.isNotEmpty) {
+                return IngredientsList(
+                  searchResults: snapshot.data!,
+                  langCode: langCode,
+                  pageName: page,
+                  controller: _backendController,
+                );
+              } else {
+                return const NoResultsPage();
+              }
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: kPrimaryColor,
+                ),
+              );
+            }
+          });
     } else {
       return StartSearchPage(
           text: AppLocalizations.of(context)!.startSearchIng);
@@ -137,10 +141,10 @@ class IngredientsList extends StatefulWidget {
       required this.langCode})
       : super(key: key);
 
-  final HomePageController controller;
+  final BackEndController controller;
   final String langCode;
   final String pageName;
-  final List<Ingredient> searchResults;
+  final List<Map<String,dynamic>> searchResults;
 
   @override
   _IngredientsListState createState() => _IngredientsListState(pageName);
@@ -150,7 +154,7 @@ class _IngredientsListState extends State<IngredientsList> {
   _IngredientsListState(this.pageName);
 
   final String pageName;
-  bool _isImageLoading = true;
+
   bool _isLoading = false;
 
   @override
@@ -158,7 +162,7 @@ class _IngredientsListState extends State<IngredientsList> {
     return LoadingOverlay(
       color: Colors.black,
       opacity: 0.1,
-      isLoading: _isLoading | _isImageLoading,
+      isLoading: _isLoading ,
       progressIndicator: const CircularProgressIndicator(
         color: kPrimaryColor,
       ),
@@ -178,10 +182,13 @@ class _IngredientsListState extends State<IngredientsList> {
                   });
 
                   if (pageName == 'basket') {
-                    // await widget.controller.addIngredientInBasket(
-                    //   widget.searchResults[index],
-                    //   widget.langCode,
-                    // );
+                    await widget.controller.addIngredientInBasket(
+                      widget.searchResults[index]['ingredient'].id,
+
+                    );
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, 'basket/', ModalRoute.withName('home/'));
+
                   }
                   if (pageName == 'preferred') {
                     // await widget.controller.addIngredientInPreferred(
@@ -199,16 +206,7 @@ class _IngredientsListState extends State<IngredientsList> {
                     _isLoading = false;
                   });
                 },
-                imageLoading: () {
-                  setState(() {
-                    _isImageLoading = true;
-                  });
-                },
-                imageNotLoading: () {
-                  setState(() {
-                    _isImageLoading = false;
-                  });
-                },
+
               ),
               const Divider(),
             ],
@@ -226,20 +224,18 @@ class AddIngredientListTile extends StatefulWidget {
     required this.controller,
     required this.langCode,
     required this.onClick,
-    required this.imageLoading,
-    required this.imageNotLoading,
+
   }) : super(key: key);
 
-  final HomePageController controller;
+  final BackEndController controller;
   final String langCode;
   final Function onClick;
-  final Ingredient searchResult;
-  final Function imageLoading;
-  final Function imageNotLoading;
+  final Map<String,dynamic> searchResult;
+
 
   @override
   _AddIngredientListTileState createState() =>
-      _AddIngredientListTileState(isAdded: false);
+      _AddIngredientListTileState(isAdded: searchResult['isAdded']);
 }
 
 class _AddIngredientListTileState extends State<AddIngredientListTile> {
@@ -247,31 +243,19 @@ class _AddIngredientListTileState extends State<AddIngredientListTile> {
 
   bool isAdded;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) => loadImage());
-  }
-
-  Future loadImage() async {
-    widget.imageLoading();
-    await cacheImage(context, widget.searchResult.ingredientImageUrl);
-    widget.imageNotLoading();
-  }
-
-  Future cacheImage(BuildContext context, String imageUrl) async {
-    precacheImage(CachedNetworkImageProvider(imageUrl), context);
-  }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Image(
-          image: CachedNetworkImageProvider(
-              widget.searchResult.ingredientImageUrl),
-          fit: BoxFit.cover),
+      leading: Image.network(
+
+             // widget.searchResult.ingredientImageUrl
+         // https://lh3.googleusercontent.com/UTW1wxp9bfxz1bhJDKEMSwUE6WLSoc_YMEAW_4WJrtOnDiuNgXihNMP0wOu3dFkgem7mYr_Y7dXDdaq-9SIg-Rfvcfzx7B3X7d0h3AVt-XPm1XCB-I1-T44FkfjaSagvxYOMtOXQw9TnPnvPHcW0JhlEP63dE8JsGfBZ6L0np48I-plEqynftj7n94j2fea41xfMkFZzfI3uCmNnMUXM7fLBfUNrDS7rhbbw7SaSPWE0Z6H-c9nFUgysoC934zdnvCaGwavkVQEev0FMUfxEGfXOF07hA9N2LoMB_5pJR0lPgPBxKEB07VGBstOPsfOH5vVm6bj1-8pPO_PN5whOs4NRQI0iGjLtzCjqzQMABVSBg2iss6ryPKaD9bJ9A5Yi1pl5CoRY45nL9F8EAaBXB2XdWbbtfCN1JJDrS5gYcHhVo5acPTWw5ZgWWui65EOKBjGBA0HBUEAxFt6mLM7UU2hXb__rF1Rfx5Ged9Bq3olqQwZ-TfnZen46APSye9-w7yhxcbcezjHTxtz6-zeUbu27PA-4ASSHQNHmGs3f3jEQqMJusq4lyIR8b1b-dvyL6oOmYso-wtSOQA0P9JT3P7yP0zx4nJb0DuxAiqxw5lvn8me9YyXGsDl9ODeVxgKkqKo_x22YtL_SDfZqpD-SfeLutCSqLx8gxdaAJKRbVLASSBUVsOauIG4aCG4MKOIO9aNH4yaazwtMntL5_Xc2EkmZ=w630-h300-no?authuser=0
+          'https://lh3.googleusercontent.com/YyQQ9BJBBfbavol1bRbjTTG4mVHjaj6-XgXAjuRQunhtVKIRc5yXJKITfSsHNWkeLwFm6vTmm7SFjeHUB9nnq1d-myD-m_iJBxffX3Cgvo5WoLyyVWQZeq5Nw8hZ2_zgqUJrzKGh-B0I_etDQxR-Wy_KfnuyYg68fX_vleXKHtdgItrq3uBQcDN1tSaJJRC4_AED0aeNcL_8LTIMKqy0DObqIpJxhKhe8UP0npLm0BVthty9At78oCkhUh8cBN4ZG7N0jA9n4_HOvmhOvHSlZ4Zqorp7g1Y8SQbg7iPjsP1U_97r1wgabdK_wPfWT5LQI_vC_yNt76iJf-wTnjzDQanjND1_8y8ys4rqNJYhMZDnMdB6xRjn24lIST8IsLoJvyD6qwzae5aNuTE19K1pBqFxkZfVW-n0cv199vD4CdR1hRVVr8Be8Otc9wHvEueu2Tu2et8qPewQzMh3c5mh1NCS1-4cpraM2soHUZ80TzbrrWwsj6FuGlYkvnoL9TtPI1CoFd3IsAKOEAWVUGttBgBjp5emyFg1BVKS7T9QemDA0i3pnMaODjemAQzliw5oNluYH5tcEnzTGwTlorWrsMOidpzxgAOdYsa24SJe2Y6cm7VFD470QiXAU0mraTizHffnP8rOLbO9Uo3Gjhe3W_OIgxZOEJt96sQx2jE8paRYLQ3L6DMzONRJ4UKh3i9ljcWNlAkDhtRrLRnV8A1nkVE1=w630-h300-no?authuser=0'
+      ),
+
       title: Text(
-        widget.searchResult.ingredientName,
+        widget.searchResult['ingredient'].ingredientName,
         style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,

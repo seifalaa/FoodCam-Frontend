@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthController {
   Future<http.Response> loginWithEmailAndPassword(
       String email, String password) async {
-    final url = Uri.parse('http://192.168.1.5:8000/login/');
+    final url = Uri.parse('http://192.168.1.5:8000/dj-rest-auth/login/');
     final response = await http.post(
       url,
       body: convert.jsonEncode(<String, String>{
@@ -23,7 +23,7 @@ class AuthController {
   }
 
   Future<void> logout() async {
-    final url = Uri.parse('http://192.168.1.5:8000/logout/');
+    final url = Uri.parse('http://192.168.1.5:8000//dj-rest-auth/logout/');
     await http.post(
       url,
       headers: {

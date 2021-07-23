@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
 import 'package:foodcam_frontend/models/user.dart';
@@ -29,9 +30,10 @@ class BasketPage extends StatefulWidget {
 
 class _BasketPageState extends State<BasketPage> {
   final picker = ImagePicker();
+  final BackEndController _backendController = BackEndController();
 
-  final HomePageController _controller = HomePageController();
-  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+  //final HomePageController _controller = HomePageController();
+  // final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   late File _image;
   bool _isLoading = false;
 
@@ -58,11 +60,11 @@ class _BasketPageState extends State<BasketPage> {
     );
   }
 
-  Future<void> deleteItem(String ingredientName, String langCode) async {
+  Future<void> deleteItem(int ingredientId) async {
     setState(() {
       _isLoading = true;
     });
-    //await _controller.deleteIngredientFromBasket(ingredientName, langCode);
+    await _backendController.deleteIngredientFromBasket(ingredientId);
 
     setState(() {
       _isLoading = false;
@@ -71,7 +73,7 @@ class _BasketPageState extends State<BasketPage> {
 
   @override
   Widget build(BuildContext context) {
-    final String lang = Localizations.localeOf(context).languageCode;
+    final String _langCode = Localizations.localeOf(context).languageCode;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -95,13 +97,12 @@ class _BasketPageState extends State<BasketPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: StreamBuilder(
-        stream: lang == 'ar'
-            ? _fireStore.collection('Basket-ar').snapshots()
-            : _fireStore.collection('Basket').snapshots(),
-        builder: (context,
-            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+        stream: Stream.fromFuture(
+            _backendController.getBasketIngredients(_langCode)),
+        builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
+
           if (snapshot.hasData) {
-            if (snapshot.data!.docs.isEmpty) {
+            if (snapshot.data!.isEmpty) {
               return FloatingActionButton(
                 backgroundColor: kPrimaryColor,
                 onPressed: () {
@@ -128,7 +129,7 @@ class _BasketPageState extends State<BasketPage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => SearchResultsPage(
-                        ingredientsDocs: snapshot.data!.docs,
+                        ingredientsDocs: snapshot.data!,
                       ),
                     ),
                   );
@@ -145,8 +146,7 @@ class _BasketPageState extends State<BasketPage> {
         },
       ),
       bottomNavigationBar: const CustomButtonNavigationBar(),
-
-      body:   LoadingOverlay(
+      body: LoadingOverlay(
         isLoading: _isLoading,
         color: Colors.black,
         opacity: 0.1,
@@ -154,66 +154,66 @@ class _BasketPageState extends State<BasketPage> {
           color: kPrimaryColor,
         ),
         child: FutureBuilder<User?>(
-          future: getUserInfo(),
-          builder: (context , AsyncSnapshot<User?> snapshot)=> snapshot.connectionState != ConnectionState.waiting ? snapshot.data == null ? const UnLoggedInUserBasket()
-           :  Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: StreamBuilder(
-                stream: lang == 'ar'
-                    ? _fireStore.collection('Basket-ar').snapshots()
-                    : _fireStore.collection('Basket').snapshots(),
-                builder: (context,
-                    AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data!.docs.isNotEmpty) {
-                      return GridView(
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 250,
-                          crossAxisSpacing: 5,
-                          mainAxisSpacing: 5,
-                        ),
-                        children: [
-                          for (int i = 0; i < snapshot.data!.docs.length; i++)
-                          Container(),
-                            // FutureBuilder<Ingredient>(
-                            //     future: _controller
-                            //         .ingredientFromQueryDocumentSnapshot(
-                            //             snapshot.data!.docs[i]),
-                            //     builder: (context, ingredientSnapshot) {
-                            //       return ingredientSnapshot.hasData
-                            //           ? IngredientBox(
-                            //               ingredient: ingredientSnapshot.data!,
-                            //               index: i,
-                            //               onDelete: deleteItem,
-                            //             )
-                            //           : Container();
-                            //     }),
-                          AddBox(onTab: addItem),
-                        ],
-                      );
-                    } else {
-                      return const EmptyBasketPage();
-                    }
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: kPrimaryColor,
-                      ),
-                    );
-                  }
-                }),
-          ) : const Center(child: CircularProgressIndicator(color: kPrimaryColor,),)
+            future: getUserInfo(),
+            builder: (context, AsyncSnapshot<User?> snapshot) =>
+                snapshot.connectionState != ConnectionState.waiting
+                    ? snapshot.data == null
+                        ? const UnLoggedInUserBasket()
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: StreamBuilder(
+                                stream: Stream.fromFuture(_backendController
+                                    .getBasketIngredients(_langCode)),
+                                builder: (context,
+                                    AsyncSnapshot<List<Ingredient>> snapshot) {
+                                  if (snapshot.hasData) {
+                                    if (snapshot.data!.isNotEmpty) {
+                                      return GridView(
+                                        shrinkWrap: true,
+                                        gridDelegate:
+                                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                                          maxCrossAxisExtent: 250,
+                                          crossAxisSpacing: 5,
+                                          mainAxisSpacing: 5,
+                                        ),
+                                        children: [
+                                          for (int i = 0;
+                                              i < snapshot.data!.length;
+                                              i++)
+                                            //Container(),
 
-        ),
+                                            IngredientBox(
+                                              ingredient: snapshot.data![i],
+                                              index: i,
+                                              onDelete: deleteItem,
+                                            ),
+                                          AddBox(onTab: addItem),
+                                        ],
+                                      );
+                                    } else {
+                                      return const EmptyBasketPage();
+                                    }
+                                  } else {
+                                    return const Center(
+                                      child: CircularProgressIndicator(
+                                        color: kPrimaryColor,
+                                      ),
+                                    );
+                                  }
+                                }),
+                          )
+                    : const Center(
+                        child: CircularProgressIndicator(
+                          color: kPrimaryColor,
+                        ),
+                      )),
       ),
     );
   }
 
   Future<User?> getUserInfo() async {
     final SharedPreferences _sharedPreferences =
-    await SharedPreferences.getInstance();
+        await SharedPreferences.getInstance();
     final String? userName = _sharedPreferences.getString('userName');
     final String? firstName = _sharedPreferences.getString('firstName');
     final String? lastName = _sharedPreferences.getString('lastName');

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
+import 'package:foodcam_frontend/models/ingredient.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
@@ -14,12 +16,17 @@ class SearchResultsPage extends StatelessWidget {
     Key? key,
     required this.ingredientsDocs,
   }) : super(key: key);
-  final List<QueryDocumentSnapshot<Map<String, dynamic>>> ingredientsDocs;
+  final List<Ingredient> ingredientsDocs;
 
   @override
   Widget build(BuildContext context) {
-    final HomePageController _controller = HomePageController();
+    final BackEndController _backendController = BackEndController();
     final String lang = Localizations.localeOf(context).languageCode;
+    final List<String> ingredientsName=[];
+    for(final item in ingredientsDocs){
+
+      ingredientsName.add(item.ingredientName);
+    }
     return Scaffold(
       extendBody: true,
       appBar: AppBar(
@@ -54,28 +61,28 @@ class SearchResultsPage extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: const CustomButtonNavigationBar(),
-      // body: FutureBuilder<List<Recipe>>(
-      //   future: _controller.recipeSearchWithMultipleIngredients(
-      //       ingredientsDocs, lang),
-      //   builder: (context, snapshot) => snapshot.hasData
-      //       ? GridView.builder(
-      //           itemCount: snapshot.data!.length,
-      //           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-      //             maxCrossAxisExtent: 600,
-      //             childAspectRatio: 2,
-      //             crossAxisSpacing: 10,
-      //             mainAxisSpacing: 10,
-      //           ),
-      //           itemBuilder: (context, index) =>
-      //               RecipeBox(recipe: snapshot.data![index]),
-      //         )
-      //       : const Center(
-      //           child: CircularProgressIndicator(
-      //             color: kPrimaryColor,
-      //           ),
-      //         ),
-      // ),
-      body: Container(),
+      body: FutureBuilder<List<Recipe>>(
+        future: _backendController.searchByMultipleIngredients(
+             lang,ingredientsName),
+        builder: (context, snapshot) => snapshot.hasData
+            ? GridView.builder(
+                itemCount: snapshot.data!.length,
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 600,
+                  childAspectRatio: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemBuilder: (context, index) =>
+                    RecipeBox(recipe: snapshot.data![index]),
+              )
+            : const Center(
+                child: CircularProgressIndicator(
+                  color: kPrimaryColor,
+                ),
+              ),
+      ),
+      //body: Container(),
     );
   }
 }

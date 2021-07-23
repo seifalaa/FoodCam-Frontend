@@ -15,10 +15,10 @@ class Collection {
       required this.recipes});
 
   factory Collection.fromMap(Map<String, dynamic> map) {
-    String url = map['collection_image']
-        .replaceAll(RegExp("https://drive.google.com/file/d/"), "");
-    url =
-        'https://drive.google.com/uc?id=${url.substring(0, url.indexOf('/'))}';
+    // String url = map['collection_image']
+    //     .replaceAll(RegExp("https://drive.google.com/file/d/"), "");
+    // url =
+    //     'https://drive.google.com/uc?id=${url.substring(0, url.indexOf('/'))}';
     final List<Recipe> recipes = [];
     for (final recipe in map['recipes']) {
       recipes.add(Recipe.fromMap(recipe));
@@ -28,7 +28,7 @@ class Collection {
         userId: map['user'],
         collectionName: map['collection_name'],
         recipes: recipes,
-        collectionImageUrl: url);
+        collectionImageUrl:map['collection_image']);
   }
 
   // static Map<String, dynamic> toMap(Collection collection) {

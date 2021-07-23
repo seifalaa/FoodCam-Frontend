@@ -37,14 +37,16 @@ class Recipe {
         ['ingredients']) {
       ingredients.add(Ingredient.fromMap(ingredient));
     }
-    String result = map['recipe']['image']
-        .replaceAll(RegExp("https://drive.google.com/file/d/"), "");
-    result =
-        'https://drive.google.com/uc?id=${result.substring(0, result.indexOf('/'))}';
+    // String result = map['recipe']['image']
+    //     .replaceAll(RegExp("https://drive.google.com/file/d/"), "");
+    // result =
+    //     'https://drive.google.com/uc?id=${result.substring(0, result.indexOf('/'))}';
+    // print("sadad");
+    //print(result);
     return Recipe(
       recipeName: map['recipe_name'],
       recipeRate: map['recipe']['rate'],
-      recipeImageUrl: result,
+      recipeImageUrl:map['recipe']['image'],
       steps: map['recipe_description'].split('\$'),
       ingredients: ingredients,
       country: map['country'],

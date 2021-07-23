@@ -31,15 +31,15 @@ class _CategoriesState extends State<Categories> {
   }
 
   Future<void> _initializeStreamController() async {
-    // await widget.homePageController
-    //     .getCategories(widget.langCode)
-    //     .then((value) => _streamController.add(value));
+    await widget.backendController
+        .getAllCategories(widget.langCode)
+        .then((value) => _streamController.add(value));
   }
 
   Future<void> _handleRefresh() async {
-    // await widget.homePageController
-    //     .getCategories(widget.langCode)
-    //     .then((value) => _streamController.add(value));
+    await widget.backendController
+        .getAllCategories(widget.langCode)
+        .then((value) => _streamController.add(value));
   }
 
   @override
