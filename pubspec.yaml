@@ -36,7 +36,7 @@ dependencies:
   google_fonts: ^2.1.0
   google_sign_in: ^5.0.4
   http: ^0.13.3
-  image_picker: ^0.8.0+3
+  #image_picker: ^0.8.0+3
   intl: ^0.17.0
   lint: ^1.5.3
   loading_overlay: ^0.3.0

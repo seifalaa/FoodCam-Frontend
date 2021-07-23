@@ -32,7 +32,7 @@ class _TopRatedState extends State<TopRated> {
     await widget.backendController
         .getTopRated(widget.langCode)
         .then((value) => _streamController.add(value));
-   }
+  }
 
   Future<void> _handleRefresh() async {
     await widget.backendController

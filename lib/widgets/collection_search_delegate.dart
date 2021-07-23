@@ -1,7 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:foodcam_frontend/controllers/homepage_controller.dart';
-import 'package:foodcam_frontend/models/recipe.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
+import 'package:foodcam_frontend/models/collection.dart';
 import 'package:foodcam_frontend/pages/no_results_page.dart';
 import 'package:foodcam_frontend/pages/start_search_page.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
@@ -11,9 +10,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants.dart';
 
 class CollectionRecipeSearchDelegate extends SearchDelegate {
-  final HomePageController _homePageController = HomePageController();
+  final BackEndController _backEndController = BackEndController();
+  final Collection collection;
+  List<Map<String, dynamic>> searchResults = [];
 
-  List<Recipe> searchResults = [];
+  CollectionRecipeSearchDelegate({required this.collection});
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -47,37 +48,42 @@ class CollectionRecipeSearchDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     final String _langCode = Localizations.localeOf(context).languageCode;
     if (searchResults.isNotEmpty && query.isNotEmpty) {
-      return IngredientsList(
+      return RecipesList(
         searchResults: searchResults,
-        controller: _homePageController,
+        controller: _backEndController,
         langCode: _langCode,
+        collection: collection,
       );
     } else if (searchResults.isEmpty && query.isNotEmpty) {
-      return Container();
-      // return StreamBuilder(
-      //     stream: Stream.fromFuture(
-      //       _homePageController.recipeSearch(query, _langCode),
-      //     ),
-      //     builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
-      //       if (snapshot.hasData) {
-      //         searchResults = snapshot.data!;
-      //         if (snapshot.data!.isNotEmpty) {
-      //           return IngredientsList(
-      //             searchResults: snapshot.data!,
-      //             langCode: _langCode,
-      //             controller: _homePageController,
-      //           );
-      //         } else {
-      //           return const NoResultsPage();
-      //         }
-      //       } else {
-      //         return const Center(
-      //           child: CircularProgressIndicator(
-      //             color: kPrimaryColor,
-      //           ),
-      //         );
-      //       }
-      //     });
+      return StreamBuilder(
+          stream: Stream.fromFuture(
+            _backEndController.getRecipesIntoCollection(
+              query,
+              collection.collectionName,
+            ),
+          ),
+          builder:
+              (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+            if (snapshot.hasData) {
+              searchResults = snapshot.data!;
+              if (snapshot.data!.isNotEmpty) {
+                return RecipesList(
+                  searchResults: snapshot.data!,
+                  langCode: _langCode,
+                  controller: _backEndController,
+                  collection: collection,
+                );
+              } else {
+                return const NoResultsPage();
+              }
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: kPrimaryColor,
+                ),
+              );
+            }
+          });
     } else {
       return StartSearchPage(
         text: AppLocalizations.of(context)!.startSearch,
@@ -87,33 +93,37 @@ class CollectionRecipeSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final String langCode = Provider.of<LanguageProvider>(context).getLangCode;
+    final String _langCode = Provider.of<LanguageProvider>(context).getLangCode;
     if (query != '') {
-      return Container();
-      // return StreamBuilder(
-      //     stream: Stream.fromFuture(
-      //       _homePageController.recipeSearch(query, langCode),
-      //     ),
-      //     builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
-      //       if (snapshot.hasData) {
-      //         searchResults = snapshot.data!;
-      //         if (snapshot.data!.isNotEmpty) {
-      //           return IngredientsList(
-      //             searchResults: snapshot.data!,
-      //             langCode: langCode,
-      //             controller: _homePageController,
-      //           );
-      //         } else {
-      //           return const NoResultsPage();
-      //         }
-      //       } else {
-      //         return const Center(
-      //           child: CircularProgressIndicator(
-      //             color: kPrimaryColor,
-      //           ),
-      //         );
-      //       }
-      //     });
+      return StreamBuilder(
+          stream: Stream.fromFuture(
+            _backEndController.getRecipesIntoCollection(
+              query,
+              collection.collectionName,
+            ),
+          ),
+          builder:
+              (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+            if (snapshot.hasData) {
+              searchResults = snapshot.data!;
+              if (snapshot.data!.isNotEmpty) {
+                return RecipesList(
+                  searchResults: snapshot.data!,
+                  langCode: _langCode,
+                  controller: _backEndController,
+                  collection: collection,
+                );
+              } else {
+                return const NoResultsPage();
+              }
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: kPrimaryColor,
+                ),
+              );
+            }
+          });
     } else {
       return StartSearchPage(
         text: AppLocalizations.of(context)!.startSearch,
@@ -122,24 +132,25 @@ class CollectionRecipeSearchDelegate extends SearchDelegate {
   }
 }
 
-class IngredientsList extends StatefulWidget {
-  const IngredientsList(
-      {Key? key,
-      required this.searchResults,
-      required this.controller,
-      required this.langCode})
-      : super(key: key);
+class RecipesList extends StatefulWidget {
+  const RecipesList({
+    Key? key,
+    required this.searchResults,
+    required this.collection,
+    required this.controller,
+    required this.langCode,
+  }) : super(key: key);
 
-  final HomePageController controller;
+  final BackEndController controller;
   final String langCode;
-  final List<Recipe> searchResults;
+  final List<Map<String, dynamic>> searchResults;
+  final Collection collection;
 
   @override
-  _IngredientsListState createState() => _IngredientsListState();
+  _RecipesListState createState() => _RecipesListState();
 }
 
-class _IngredientsListState extends State<IngredientsList> {
-  bool _isImageLoading = true;
+class _RecipesListState extends State<RecipesList> {
   bool _isLoading = false;
 
   @override
@@ -147,7 +158,7 @@ class _IngredientsListState extends State<IngredientsList> {
     return LoadingOverlay(
       color: Colors.black,
       opacity: 0.1,
-      isLoading: _isLoading | _isImageLoading,
+      isLoading: _isLoading,
       progressIndicator: const CircularProgressIndicator(
         color: kPrimaryColor,
       ),
@@ -157,7 +168,7 @@ class _IngredientsListState extends State<IngredientsList> {
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Column(
             children: [
-              AddIngredientListTile(
+              AddRecipeListTile(
                 searchResult: widget.searchResults[index],
                 controller: widget.controller,
                 langCode: widget.langCode,
@@ -167,20 +178,16 @@ class _IngredientsListState extends State<IngredientsList> {
                   });
 
                   //TODO:add recipe here
+                  //print(widget.searchResults[index]);
+                  await widget.controller.addRecipeInCollection(
+                      widget.searchResults[index]['recipe'].recipeId,
+                      widget.collection.id);
 
                   setState(() {
                     _isLoading = false;
                   });
-                },
-                imageLoading: () {
-                  setState(() {
-                    _isImageLoading = true;
-                  });
-                },
-                imageNotLoading: () {
-                  setState(() {
-                    _isImageLoading = false;
-                  });
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, 'collections/', ModalRoute.withName('profile/'));
                 },
               ),
               const Divider(),
@@ -192,70 +199,45 @@ class _IngredientsListState extends State<IngredientsList> {
   }
 }
 
-class AddIngredientListTile extends StatefulWidget {
-  const AddIngredientListTile({
+class AddRecipeListTile extends StatefulWidget {
+  const AddRecipeListTile({
     Key? key,
     required this.searchResult,
     required this.controller,
     required this.langCode,
     required this.onClick,
-    required this.imageLoading,
-    required this.imageNotLoading,
   }) : super(key: key);
 
-  final HomePageController controller;
+  final BackEndController controller;
   final String langCode;
   final Function onClick;
-  final Recipe searchResult;
-  final Function imageLoading;
-  final Function imageNotLoading;
+  final Map<String, dynamic> searchResult;
 
   @override
-  _AddIngredientListTileState createState() =>
-      _AddIngredientListTileState(isAdded: false);
+  _AddRecipeListTileState createState() =>
+      _AddRecipeListTileState(isAdded: searchResult['isAdded']);
 }
 
-class _AddIngredientListTileState extends State<AddIngredientListTile> {
-  _AddIngredientListTileState({required this.isAdded});
+class _AddRecipeListTileState extends State<AddRecipeListTile> {
+  _AddRecipeListTileState({required this.isAdded});
 
   bool isAdded;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) => loadImage());
-  }
-
-  Future loadImage() async {
-    widget.imageLoading();
-    await cacheImage(
-      context,
-      widget.searchResult.recipeImageUrl,
-    );
-    widget.imageNotLoading();
-  }
-
-  Future cacheImage(BuildContext context, String imageUrl) async {
-    precacheImage(CachedNetworkImageProvider(imageUrl), context);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ListTile(
-
       leading: ClipRRect(
-        borderRadius:BorderRadius.circular(10),
-        child: Image(
-
-            image: CachedNetworkImageProvider(
-              widget.searchResult.recipeImageUrl,
-            ),
-            fit: BoxFit.cover),
+        borderRadius: BorderRadius.circular(10),
+        child: Image.network(
+          'https://media-exp3.licdn.com/dms/image/C561BAQHnh3Tsc_uBKQ/company-background_10000/0/1561589281326?e=2159024400&v=beta&t=3cfGYoRfVwt5-vQJL_x4W7MrP_uwZB-PRzqqpfBr5Gg',
+          fit: BoxFit.cover,
+        ),
+        //child: Container(),
       ),
       title: Text(
-        widget.searchResult.recipeName,
+        widget.searchResult['recipe'].recipeName,
         style: const TextStyle(
-          fontSize: 20,
+          fontSize: 15,
           fontWeight: FontWeight.bold,
         ),
       ),

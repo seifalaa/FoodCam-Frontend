@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
@@ -14,36 +13,10 @@ class RecipeBox extends StatefulWidget {
   final Recipe recipe;
 
   @override
-  _RecipeBoxState createState() => _RecipeBoxState(recipe.recipeImageUrl);
+  _RecipeBoxState createState() => _RecipeBoxState();
 }
 
 class _RecipeBoxState extends State<RecipeBox> {
-  final String imageUrl;
-
-  _RecipeBoxState(this.imageUrl);
-
-  bool isLoading = false;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance!.addPostFrameCallback((_) => loadImage());
-  // }
-
-  // Future loadImage() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //   await cacheImage(context, imageUrl);
-  //   setState(() {
-  //     isLoading = false;
-  //   });
-  // }
-
-  // Future cacheImage(BuildContext context, String imageUrl) async {
-  //   precacheImage(CachedNetworkImageProvider(imageUrl), context);
-  // }
-
   List<Widget> getRate(double rate, double _screenWidth) {
     final List<Widget> stars = [];
     for (int i = 0; i < rate.toInt(); i++) {
@@ -98,75 +71,76 @@ class _RecipeBoxState extends State<RecipeBox> {
     final double _screenWidth = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: !isLoading
-          ? Stack(
-              children: [
-                Positioned.fill(
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.network(
-                        widget.recipe.recipeImageUrl,
-                        fit: BoxFit.cover,
-                      )),
-                ),
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0x40000000),
-                      borderRadius: BorderRadius.circular(20),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              // child: Image.network(
+              //   widget.recipe.recipeImageUrl,
+              //   fit: BoxFit.cover,
+              // ),
+              child: Container(),
+            ),
+          ),
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0x40000000),
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.recipe.recipeName,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: _screenWidth <= kMobileScreenSize
+                          ? _screenWidth * 0.05
+                          : _screenWidth * 0.0225,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.recipe.recipeName,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: _screenWidth <= kMobileScreenSize
-                                ? _screenWidth * 0.05
-                                : _screenWidth * 0.0225,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Row(
-                          children: getRate(
-                            widget.recipe.recipeRate,
-                            _screenWidth,
-                          ),
-                        ),
-                      ],
+                  Row(
+                    children: getRate(
+                      widget.recipe.recipeRate,
+                      _screenWidth,
                     ),
                   ),
-                ),
-                Positioned.fill(
-                    child: Material(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    highlightColor: Colors.transparent,
-                    splashColor: const Color(0x50D0F1DD),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RecipePage(
-                            recipe: widget.recipe,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                )),
-              ],
-            )
-          : Container(),
+                ],
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: Material(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(20),
+                highlightColor: Colors.transparent,
+                splashColor: const Color(0x50D0F1DD),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RecipePage(
+                        recipe: widget.recipe,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
