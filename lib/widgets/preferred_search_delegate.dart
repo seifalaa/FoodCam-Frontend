@@ -58,31 +58,32 @@ class PreferredSearchDelegate extends SearchDelegate {
         langCode: langCode,
       );
     } else if (searchResults.isEmpty && query.isNotEmpty) {
-      return StreamBuilder(
-          stream: Stream.fromFuture(
-            _homePageController.ingredientSearch(query, langCode),
-          ),
-          builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
-            if (snapshot.hasData) {
-              searchResults = snapshot.data!;
-              if (snapshot.data!.isNotEmpty) {
-                return IngredientsList(
-                  searchResults: snapshot.data!,
-                  langCode: langCode,
-                  pageName: page,
-                  controller: _homePageController,
-                );
-              } else {
-                return const NoResultsPage();
-              }
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: kPrimaryColor,
-                ),
-              );
-            }
-          });
+      return Container();
+      // return StreamBuilder(
+      //     stream: Stream.fromFuture(
+      //       _homePageController.ingredientSearch(query, langCode),
+      //     ),
+      //     builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
+      //       if (snapshot.hasData) {
+      //         searchResults = snapshot.data!;
+      //         if (snapshot.data!.isNotEmpty) {
+      //           return IngredientsList(
+      //             searchResults: snapshot.data!,
+      //             langCode: langCode,
+      //             pageName: page,
+      //             controller: _homePageController,
+      //           );
+      //         } else {
+      //           return const NoResultsPage();
+      //         }
+      //       } else {
+      //         return const Center(
+      //           child: CircularProgressIndicator(
+      //             color: kPrimaryColor,
+      //           ),
+      //         );
+      //       }
+      //     });
     } else {
       return StartSearchPage(
         text: AppLocalizations.of(context)!.startSearchIng,
@@ -94,31 +95,32 @@ class PreferredSearchDelegate extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     final String langCode = Provider.of<LanguageProvider>(context).getLangCode;
     if (query != '') {
-      return StreamBuilder(
-          stream: Stream.fromFuture(
-            _homePageController.ingredientSearch(query, langCode),
-          ),
-          builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
-            if (snapshot.hasData) {
-              searchResults = snapshot.data!;
-              if (snapshot.data!.isNotEmpty) {
-                return IngredientsList(
-                  searchResults: snapshot.data!,
-                  langCode: langCode,
-                  pageName: page,
-                  controller: _homePageController,
-                );
-              } else {
-                return const NoResultsPage();
-              }
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: kPrimaryColor,
-                ),
-              );
-            }
-          });
+      return Container();
+      // return StreamBuilder(
+      //     stream: Stream.fromFuture(
+      //       _homePageController.ingredientSearch(query, langCode),
+      //     ),
+      //     builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
+      //       if (snapshot.hasData) {
+      //         searchResults = snapshot.data!;
+      //         if (snapshot.data!.isNotEmpty) {
+      //           return IngredientsList(
+      //             searchResults: snapshot.data!,
+      //             langCode: langCode,
+      //             pageName: page,
+      //             controller: _homePageController,
+      //           );
+      //         } else {
+      //           return const NoResultsPage();
+      //         }
+      //       } else {
+      //         return const Center(
+      //           child: CircularProgressIndicator(
+      //             color: kPrimaryColor,
+      //           ),
+      //         );
+      //       }
+      //     });
     } else {
       return StartSearchPage(
           text: AppLocalizations.of(context)!.startSearchIng);
@@ -176,22 +178,22 @@ class _IngredientsListState extends State<IngredientsList> {
                   });
 
                   if (pageName == 'basket') {
-                    await widget.controller.addIngredientInBasket(
-                      widget.searchResults[index],
-                      widget.langCode,
-                    );
+                    // await widget.controller.addIngredientInBasket(
+                    //   widget.searchResults[index],
+                    //   widget.langCode,
+                    // );
                   }
                   if (pageName == 'preferred') {
-                    await widget.controller.addIngredientInPreferred(
-                      widget.searchResults[index],
-                      widget.langCode,
-                    );
+                    // await widget.controller.addIngredientInPreferred(
+                    //   widget.searchResults[index],
+                    //   widget.langCode,
+                    // );
                   }
                   if (pageName == 'disPreferred') {
-                    await widget.controller.addIngredientInDisPreferred(
-                      widget.searchResults[index],
-                      widget.langCode,
-                    );
+                    // await widget.controller.addIngredientInDisPreferred(
+                    //   widget.searchResults[index],
+                    //   widget.langCode,
+                    // );
                   }
                   setState(() {
                     _isLoading = false;
@@ -237,7 +239,7 @@ class AddIngredientListTile extends StatefulWidget {
 
   @override
   _AddIngredientListTileState createState() =>
-      _AddIngredientListTileState(isAdded: searchResult.addedToBasket);
+      _AddIngredientListTileState(isAdded: false);
 }
 
 class _AddIngredientListTileState extends State<AddIngredientListTile> {

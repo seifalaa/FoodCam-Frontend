@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/models/nutrition_info.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/widgets/recipe_rate_buttom_sheet.dart';
 import 'package:foodcam_frontend/widgets/recipe_steps_bottom_sheet.dart';
@@ -95,11 +96,15 @@ class RecipePage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8.0),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
-                      'وجبة غداء  -  30 دقيقة',
-                      style: TextStyle(fontSize: 12, color: Colors.white70),
+                      checkMinuteMinutes(recipe.prepareTime, _lang),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -108,8 +113,8 @@ class RecipePage extends StatelessWidget {
               background: Stack(
                 children: [
                   Positioned.fill(
-                    child: Image(
-                      image: CachedNetworkImageProvider(recipe.recipeImageUrl),
+                    child: Image.network(
+                      recipe.recipeImageUrl,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -147,13 +152,19 @@ class RecipePage extends StatelessWidget {
                           circularStrokeCap: CircularStrokeCap.round,
                           animation: true,
                           animationDuration: 1200,
-                          radius: 50.0,
+                          radius: 55.0,
                           lineWidth: 10.0,
-                          percent: 0.4,
-                          center: const Text('40%'),
+                          percent: getNutritionPercent(
+                            recipe.nutritionInfo.calories,
+                            recipe.nutritionInfo,
+                          ),
+                          center: Text('${(getNutritionPercent(
+                                recipe.nutritionInfo.calories,
+                                recipe.nutritionInfo,
+                              ) * 100).toStringAsFixed(1)}%'),
                           progressColor: kPrimaryColor,
                           footer: Text(
-                            AppLocalizations.of(context)!.protein,
+                            AppLocalizations.of(context)!.cal,
                           ),
                         ),
                       ),
@@ -161,12 +172,18 @@ class RecipePage extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: CircularPercentIndicator(
                           circularStrokeCap: CircularStrokeCap.round,
-                          radius: 50.0,
+                          radius: 55.0,
                           lineWidth: 10.0,
-                          percent: 0.3,
+                          percent: getNutritionPercent(
+                            recipe.nutritionInfo.carbs,
+                            recipe.nutritionInfo,
+                          ),
                           animation: true,
                           animationDuration: 1200,
-                          center: const Text('30%'),
+                          center: Text('${(getNutritionPercent(
+                                recipe.nutritionInfo.carbs,
+                                recipe.nutritionInfo,
+                              ) * 100).toStringAsFixed(1)}%'),
                           progressColor: kPrimaryColor,
                           footer: Text(
                             AppLocalizations.of(context)!.carb,
@@ -177,15 +194,21 @@ class RecipePage extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: CircularPercentIndicator(
                           circularStrokeCap: CircularStrokeCap.round,
-                          radius: 50.0,
+                          radius: 55.0,
                           lineWidth: 10.0,
-                          percent: 0.3,
+                          percent: getNutritionPercent(
+                            recipe.nutritionInfo.fats,
+                            recipe.nutritionInfo,
+                          ),
                           animation: true,
                           animationDuration: 1200,
-                          center: const Text('30%'),
+                          center: Text('${(getNutritionPercent(
+                                recipe.nutritionInfo.fats,
+                                recipe.nutritionInfo,
+                              ) * 100).toStringAsFixed(1)}%'),
                           progressColor: kPrimaryColor,
                           footer: Text(
-                            AppLocalizations.of(context)!.sugar,
+                            AppLocalizations.of(context)!.fat,
                           ),
                         ),
                       ),
@@ -193,15 +216,43 @@ class RecipePage extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: CircularPercentIndicator(
                           circularStrokeCap: CircularStrokeCap.round,
-                          radius: 50.0,
+                          radius: 55.0,
                           lineWidth: 10.0,
-                          percent: 0.3,
+                          percent: getNutritionPercent(
+                            recipe.nutritionInfo.protein,
+                            recipe.nutritionInfo,
+                          ),
                           animation: true,
                           animationDuration: 1200,
-                          center: const Text('30%'),
+                          center: Text('${(getNutritionPercent(
+                                recipe.nutritionInfo.protein,
+                                recipe.nutritionInfo,
+                              ) * 100).toStringAsFixed(1)}%'),
                           progressColor: kPrimaryColor,
                           footer: Text(
-                            AppLocalizations.of(context)!.cal,
+                            AppLocalizations.of(context)!.protein,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircularPercentIndicator(
+                          circularStrokeCap: CircularStrokeCap.round,
+                          radius: 55.0,
+                          lineWidth: 10.0,
+                          percent: getNutritionPercent(
+                            recipe.nutritionInfo.sugar,
+                            recipe.nutritionInfo,
+                          ),
+                          animation: true,
+                          animationDuration: 1200,
+                          center: Text('${(getNutritionPercent(
+                                recipe.nutritionInfo.sugar,
+                                recipe.nutritionInfo,
+                              ) * 100).toStringAsFixed(1)}%'),
+                          progressColor: kPrimaryColor,
+                          footer: Text(
+                            AppLocalizations.of(context)!.sugar,
                           ),
                         ),
                       ),
@@ -300,5 +351,34 @@ class RecipePage extends StatelessWidget {
         ),
       ),
     ];
+  }
+
+  String checkMinuteMinutes(int prepareTime, String langCode) {
+    if (langCode == 'ar') {
+      if (prepareTime == 2) {
+        return 'دقيقتان';
+      } else if (prepareTime >= 3 && prepareTime <= 10) {
+        return '$prepareTime دقائق';
+      } else {
+        return '$prepareTime دقيقة';
+      }
+    } else if (langCode == 'en') {
+      if (prepareTime == 1) {
+        return '$prepareTime minute';
+      } else {
+        return '$prepareTime minutes';
+      }
+    } else {
+      return '';
+    }
+  }
+
+  double getNutritionPercent(double nutrition, NutritionInfo nutritionInfo) {
+    return nutrition /
+        (nutritionInfo.calories +
+            nutritionInfo.carbs +
+            nutritionInfo.fats +
+            nutritionInfo.protein +
+            nutritionInfo.sugar);
   }
 }

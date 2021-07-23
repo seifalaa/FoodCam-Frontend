@@ -54,27 +54,28 @@ class SearchResultsPage extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: const CustomButtonNavigationBar(),
-      body: FutureBuilder<List<Recipe>>(
-        future: _controller.recipeSearchWithMultipleIngredients(
-            ingredientsDocs, lang),
-        builder: (context, snapshot) => snapshot.hasData
-            ? GridView.builder(
-                itemCount: snapshot.data!.length,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 600,
-                  childAspectRatio: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemBuilder: (context, index) =>
-                    RecipeBox(recipe: snapshot.data![index]),
-              )
-            : const Center(
-                child: CircularProgressIndicator(
-                  color: kPrimaryColor,
-                ),
-              ),
-      ),
+      // body: FutureBuilder<List<Recipe>>(
+      //   future: _controller.recipeSearchWithMultipleIngredients(
+      //       ingredientsDocs, lang),
+      //   builder: (context, snapshot) => snapshot.hasData
+      //       ? GridView.builder(
+      //           itemCount: snapshot.data!.length,
+      //           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+      //             maxCrossAxisExtent: 600,
+      //             childAspectRatio: 2,
+      //             crossAxisSpacing: 10,
+      //             mainAxisSpacing: 10,
+      //           ),
+      //           itemBuilder: (context, index) =>
+      //               RecipeBox(recipe: snapshot.data![index]),
+      //         )
+      //       : const Center(
+      //           child: CircularProgressIndicator(
+      //             color: kPrimaryColor,
+      //           ),
+      //         ),
+      // ),
+      body: Container(),
     );
   }
 }

@@ -53,28 +53,29 @@ class RandomRecipePage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: const CustomButtonNavigationBar(),
-      body: StreamBuilder(
-        stream: Stream.fromFuture(
-          _homepageController.getRandomRecipe(_langCode, categoryName),
-        ),
-        builder: (context, AsyncSnapshot<Recipe> snapshot) => snapshot.hasData
-            ? GridView(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 600,
-                  childAspectRatio: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                children: [
-                  RecipeBox(recipe: snapshot.data!),
-                ],
-              )
-            : const Center(
-                child: CircularProgressIndicator(
-                  color: kPrimaryColor,
-                ),
-              ),
-      ),
+      // body: StreamBuilder(
+      //   stream: Stream.fromFuture(
+      //     _homepageController.getRandomRecipe(_langCode, categoryName),
+      //   ),
+      //   builder: (context, AsyncSnapshot<Recipe> snapshot) => snapshot.hasData
+      //       ? GridView(
+      //           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+      //             maxCrossAxisExtent: 600,
+      //             childAspectRatio: 2,
+      //             crossAxisSpacing: 10,
+      //             mainAxisSpacing: 10,
+      //           ),
+      //           children: [
+      //             RecipeBox(recipe: snapshot.data!),
+      //           ],
+      //         )
+      //       : const Center(
+      //           child: CircularProgressIndicator(
+      //             color: kPrimaryColor,
+      //           ),
+      //         ),
+      // ),
+      body: Container(),
     );
   }
 }

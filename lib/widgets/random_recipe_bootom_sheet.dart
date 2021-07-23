@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/pages/random_recipe_page.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
@@ -11,7 +12,7 @@ class RandomRecipeBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomePageController _homePageController = HomePageController();
+    final BackEndController _backendController = BackEndController();
     final String _langCode = Provider.of<LanguageProvider>(context).getLangCode;
     return DraggableScrollableSheet(
       maxChildSize: 0.7,
@@ -41,49 +42,50 @@ class RandomRecipeBottomSheet extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            StreamBuilder(
-              stream: Stream.fromFuture(
-                _homePageController.getCategoryNames(_langCode),
-              ),
-              builder: (context, AsyncSnapshot<List<String>> snapshot) =>
-                  snapshot.hasData
-                      ? Column(
-                          children: snapshot.data!
-                              .map(
-                                (e) => Column(
-                                  children: [
-                                    ListTile(
-                                      onTap: () {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                RandomRecipePage(
-                                              categoryName: e,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      title: Text(
-                                        e,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ),
-                                    const Divider(),
-                                  ],
-                                ),
-                              )
-                              .toList(),
-                        )
-                      : const Center(
-                          child: CircularProgressIndicator(
-                            color: kPrimaryColor,
-                          ),
-                        ),
-            ),
+            // StreamBuilder(
+            //   stream: Stream.fromFuture(
+            //     _homePageController.getCategoryNames(_langCode),
+            //   ),
+            //   builder: (context, AsyncSnapshot<List<String>> snapshot) =>
+            //       snapshot.hasData
+            //           ? Column(
+            //               children: snapshot.data!
+            //                   .map(
+            //                     (e) => Column(
+            //                       children: [
+            //                         ListTile(
+            //                           onTap: () {
+            //                             Navigator.pushReplacement(
+            //                               context,
+            //                               MaterialPageRoute(
+            //                                 builder: (context) =>
+            //                                     RandomRecipePage(
+            //                                   categoryName: e,
+            //                                 ),
+            //                               ),
+            //                             );
+            //                           },
+            //                           title: Text(
+            //                             e,
+            //                             style: const TextStyle(
+            //                               fontWeight: FontWeight.bold,
+            //                               fontSize: 20,
+            //                             ),
+            //                           ),
+            //                         ),
+            //                         const Divider(),
+            //                       ],
+            //                     ),
+            //                   )
+            //                   .toList(),
+            //             )
+            //           : const Center(
+            //               child: CircularProgressIndicator(
+            //                 color: kPrimaryColor,
+            //               ),
+            //             ),
+            //),
+            Container(),
           ],
         ),
       ),

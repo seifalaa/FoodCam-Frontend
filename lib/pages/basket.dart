@@ -62,7 +62,7 @@ class _BasketPageState extends State<BasketPage> {
     setState(() {
       _isLoading = true;
     });
-    await _controller.deleteIngredientFromBasket(ingredientName, langCode);
+    //await _controller.deleteIngredientFromBasket(ingredientName, langCode);
 
     setState(() {
       _isLoading = false;
@@ -176,19 +176,20 @@ class _BasketPageState extends State<BasketPage> {
                         ),
                         children: [
                           for (int i = 0; i < snapshot.data!.docs.length; i++)
-                            FutureBuilder<Ingredient>(
-                                future: _controller
-                                    .ingredientFromQueryDocumentSnapshot(
-                                        snapshot.data!.docs[i]),
-                                builder: (context, ingredientSnapshot) {
-                                  return ingredientSnapshot.hasData
-                                      ? IngredientBox(
-                                          ingredient: ingredientSnapshot.data!,
-                                          index: i,
-                                          onDelete: deleteItem,
-                                        )
-                                      : Container();
-                                }),
+                          Container(),
+                            // FutureBuilder<Ingredient>(
+                            //     future: _controller
+                            //         .ingredientFromQueryDocumentSnapshot(
+                            //             snapshot.data!.docs[i]),
+                            //     builder: (context, ingredientSnapshot) {
+                            //       return ingredientSnapshot.hasData
+                            //           ? IngredientBox(
+                            //               ingredient: ingredientSnapshot.data!,
+                            //               index: i,
+                            //               onDelete: deleteItem,
+                            //             )
+                            //           : Container();
+                            //     }),
                           AddBox(onTab: addItem),
                         ],
                       );

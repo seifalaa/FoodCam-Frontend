@@ -48,6 +48,7 @@
 	"carb": "Carbs",
 	"cal" : "Calories",
 	"sugar" : "Sugar",
+	"fat": "Fat",
 	"rate": "Rate",
 	"submit": "Submit",
 	"changeLang": "Change Language",
@@ -76,5 +77,6 @@
 	"invalidPassword": "Password must contain at least 8 ubbercase, lowercase characters, numbers,special charachters",
 	"userExists": "This user already exists",
 	"usernameExist": "User with this username already exists",
-	"emailExists": "User with this email already exists"
+	"emailExists": "User with this email already exists",
+	"collectionExists":"This collection already exists"
 }

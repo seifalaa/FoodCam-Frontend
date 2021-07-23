@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
@@ -8,9 +9,9 @@ import '../constants.dart';
 
 class TopRated extends StatefulWidget {
   const TopRated(
-      {Key? key, required this.homePageController, required this.langCode})
+      {Key? key, required this.backendController, required this.langCode})
       : super(key: key);
-  final HomePageController homePageController;
+  final BackEndController backendController;
   final String langCode;
 
   @override
@@ -28,13 +29,13 @@ class _TopRatedState extends State<TopRated> {
   }
 
   Future<void> _initializeStreamController() async {
-    await widget.homePageController
+    await widget.backendController
         .getTopRated(widget.langCode)
         .then((value) => _streamController.add(value));
-  }
+   }
 
   Future<void> _handleRefresh() async {
-    await widget.homePageController
+    await widget.backendController
         .getTopRated(widget.langCode)
         .then((value) => _streamController.add(value));
   }

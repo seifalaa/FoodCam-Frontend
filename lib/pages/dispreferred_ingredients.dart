@@ -97,20 +97,21 @@ class _DisPreferredIngredientsState extends State<DisPreferredIngredients> {
                           ),
                           children: [
                             for (int i = 0; i < snapshot.data!.docs.length; i++)
-                              FutureBuilder<Ingredient>(
-                                  future: _controller
-                                      .ingredientFromQueryDocumentSnapshot(
-                                          snapshot.data!.docs[i]),
-                                  builder: (context, ingredientSnapshot) {
-                                    return ingredientSnapshot.hasData
-                                        ? IngredientBox(
-                                            ingredient:
-                                                ingredientSnapshot.data!,
-                                            index: i,
-                                            onDelete: deleteItem,
-                                          )
-                                        : Container();
-                                  }),
+                            Container(),
+                              // FutureBuilder<Ingredient>(
+                              //     future: _controller
+                              //         .ingredientFromQueryDocumentSnapshot(
+                              //             snapshot.data!.docs[i]),
+                              //     builder: (context, ingredientSnapshot) {
+                              //       return ingredientSnapshot.hasData
+                              //           ? IngredientBox(
+                              //               ingredient:
+                              //                   ingredientSnapshot.data!,
+                              //               index: i,
+                              //               onDelete: deleteItem,
+                              //             )
+                              //           : Container();
+                              //     }),
                             AddBox(onTab: addItem),
                           ],
                         )
@@ -129,10 +130,10 @@ class _DisPreferredIngredientsState extends State<DisPreferredIngredients> {
     setState(() {
       _isLoading = true;
     });
-    await _homePageController.deleteDisPreferredIngredient(
-      langCode,
-      ingredientName,
-    );
+    // await _homePageController.deleteDisPreferredIngredient(
+    //   langCode,
+    //   ingredientName,
+    // );
     setState(() {
       _isLoading = false;
     });

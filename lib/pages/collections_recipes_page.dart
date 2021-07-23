@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/pages/empty_collection_page.dart';
 import 'package:foodcam_frontend/pages/empty_collection_recipe_page.dart';
+import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/add_box.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/collection_search_delegate.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
+import 'package:provider/provider.dart';
 
 class CollectionsRecipes extends StatefulWidget {
   const CollectionsRecipes({
@@ -24,10 +27,26 @@ class CollectionsRecipes extends StatefulWidget {
 }
 
 class _CollectionsRecipesState extends State<CollectionsRecipes> {
-  final HomePageController _homePageController = HomePageController();
+  final BackEndController _backendController = BackEndController();
 
   @override
   Widget build(BuildContext context) {
+    final String _langCode = Provider.of<LanguageProvider>(context).getLangCode;
+    String collectionNamee = "";
+    if (_langCode == "ar") {
+      if (widget.collectionName == 'Breakfast') {
+        collectionNamee = "فطور";
+      }
+      else if (widget.collectionName == 'Dinner') {
+        collectionNamee = "عشاء";
+      }
+      else if (widget.collectionName == 'Launch') {
+        collectionNamee = "غداء";
+      }
+      else{collectionNamee = widget.collectionName;}
+    } else {
+      collectionNamee = widget.collectionName;
+    }
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -40,7 +59,7 @@ class _CollectionsRecipesState extends State<CollectionsRecipes> {
           ),
         ),
         title: Text(
-          widget.collectionName,
+          collectionNamee,
           style: const TextStyle(color: kTextColor),
         ),
         elevation: 0,

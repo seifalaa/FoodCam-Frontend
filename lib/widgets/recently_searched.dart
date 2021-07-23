@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/pages/empty_recentlysearch_page.dart';
@@ -11,10 +12,10 @@ import '../constants.dart';
 class RecentlySearched extends StatefulWidget {
   const RecentlySearched({
     Key? key,
-    required this.homePageController,
+    required this.backendController,
     required this.langCode,
   }) : super(key: key);
-  final HomePageController homePageController;
+  final BackEndController backendController;
   final String langCode;
 
   @override
@@ -32,15 +33,15 @@ class _RecentlySearchedState extends State<RecentlySearched> {
   }
 
   Future<void> _initializeStreamController() async {
-    await widget.homePageController
-        .getRecentlySearched(widget.langCode)
-        .then((value) => _streamController.add(value));
+    // await widget.homePageController
+    //     .getRecentlySearched(widget.langCode)
+    //     .then((value) => _streamController.add(value));
   }
 
   Future<void> _handleRefresh() async {
-    await widget.homePageController
-        .getRecentlySearched(widget.langCode)
-        .then((value) => _streamController.add(value));
+    // await widget.homePageController
+    //     .getRecentlySearched(widget.langCode)
+    //     .then((value) => _streamController.add(value));
   }
 
   @override

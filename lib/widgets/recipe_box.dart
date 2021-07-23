@@ -22,27 +22,27 @@ class _RecipeBoxState extends State<RecipeBox> {
 
   _RecipeBoxState(this.imageUrl);
 
-  bool isLoading = true;
+  bool isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) => loadImage());
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance!.addPostFrameCallback((_) => loadImage());
+  // }
 
-  Future loadImage() async {
-    setState(() {
-      isLoading = true;
-    });
-    await cacheImage(context, imageUrl);
-    setState(() {
-      isLoading = false;
-    });
-  }
+  // Future loadImage() async {
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+  //   await cacheImage(context, imageUrl);
+  //   setState(() {
+  //     isLoading = false;
+  //   });
+  // }
 
-  Future cacheImage(BuildContext context, String imageUrl) async {
-    precacheImage(CachedNetworkImageProvider(imageUrl), context);
-  }
+  // Future cacheImage(BuildContext context, String imageUrl) async {
+  //   precacheImage(CachedNetworkImageProvider(imageUrl), context);
+  // }
 
   List<Widget> getRate(double rate, double _screenWidth) {
     final List<Widget> stars = [];
@@ -103,14 +103,11 @@ class _RecipeBoxState extends State<RecipeBox> {
               children: [
                 Positioned.fill(
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image(
-                      image: CachedNetworkImageProvider(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.network(
                         widget.recipe.recipeImageUrl,
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                        fit: BoxFit.cover,
+                      )),
                 ),
                 Positioned.fill(
                   child: Container(

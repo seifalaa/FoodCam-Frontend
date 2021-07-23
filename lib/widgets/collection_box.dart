@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/models/category.dart';
+import 'package:foodcam_frontend/models/collection.dart';
 import 'package:foodcam_frontend/pages/collections_recipes_page.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:provider/provider.dart';
@@ -10,10 +12,10 @@ import '../constants.dart';
 class CollectionBox extends StatefulWidget {
   const CollectionBox({
     Key? key,
-    required this.category,
+    required this.collection,
     required this.onDelete,
   }) : super(key: key);
-  final Category category;
+  final Collection collection;
   final Function onDelete;
 
   @override
@@ -27,6 +29,22 @@ class _CollectionBoxState extends State<CollectionBox> {
   Widget build(BuildContext context) {
     final double _screenWidth = MediaQuery.of(context).size.width;
     final String _langCode = Provider.of<LanguageProvider>(context).getLangCode;
+    final BackEndController _backendController = BackEndController();
+    String collectionName = "";
+    if (_langCode == "ar") {
+      if (widget.collection.collectionName == 'Breakfast') {
+        collectionName = "فطور";
+      }
+      else if (widget.collection.collectionName == 'Dinner') {
+        collectionName = "عشاء";
+      }
+      else if (widget.collection.collectionName == 'Launch') {
+        collectionName = "غداء";
+      }
+      else{collectionName = widget.collection.collectionName;}
+    } else {
+      collectionName = widget.collection.collectionName;
+    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(
@@ -35,7 +53,7 @@ class _CollectionBoxState extends State<CollectionBox> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.network(
-                widget.category.categoryImageUrl,
+                widget.collection.collectionImageUrl,
                 fit: BoxFit.cover,
               ),
             ),
@@ -56,7 +74,7 @@ class _CollectionBoxState extends State<CollectionBox> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.category.categoryName,
+                    collectionName,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: _screenWidth <= kMobileScreenSize
@@ -69,7 +87,7 @@ class _CollectionBoxState extends State<CollectionBox> {
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Text(
                       handleRecipesOrRecipe(
-                          widget.category.recipes.length, _langCode),
+                          widget.collection.recipes.length, _langCode),
                       style: TextStyle(
                         color: const Color(0xFFFFC107),
                         fontWeight: FontWeight.bold,
@@ -114,13 +132,14 @@ class _CollectionBoxState extends State<CollectionBox> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => CollectionsRecipes(
-                              recipes: widget.category.recipes,
-                              collectionName: widget.category.categoryName,
+                              recipes: widget.collection.recipes,
+                              collectionName: widget.collection.collectionName,
                             ),
                           ),
                         );
                 },
-                onLongPress: () {
+                onLongPress: ()  {
+
                   setState(() {
                     _isVisible = true;
                   });
@@ -142,7 +161,7 @@ class _CollectionBoxState extends State<CollectionBox> {
                 ),
                 onPressed: () async {
                   await widget.onDelete(
-                      widget.category.categoryName, _langCode);
+                      widget.collection.collectionName, _langCode);
                   setState(() {
                     _isVisible = false;
                   });

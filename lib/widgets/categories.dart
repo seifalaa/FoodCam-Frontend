@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/category.dart';
 
@@ -9,10 +10,10 @@ import 'category_box.dart';
 
 class Categories extends StatefulWidget {
   const Categories(
-      {Key? key, required this.homePageController, required this.langCode})
+      {Key? key, required this.backendController, required this.langCode})
       : super(key: key);
 
-  final HomePageController homePageController;
+  final BackEndController backendController;
   final String langCode;
 
   @override
@@ -30,15 +31,15 @@ class _CategoriesState extends State<Categories> {
   }
 
   Future<void> _initializeStreamController() async {
-    await widget.homePageController
-        .getCategories(widget.langCode)
-        .then((value) => _streamController.add(value));
+    // await widget.homePageController
+    //     .getCategories(widget.langCode)
+    //     .then((value) => _streamController.add(value));
   }
 
   Future<void> _handleRefresh() async {
-    await widget.homePageController
-        .getCategories(widget.langCode)
-        .then((value) => _streamController.add(value));
+    // await widget.homePageController
+    //     .getCategories(widget.langCode)
+    //     .then((value) => _streamController.add(value));
   }
 
   @override

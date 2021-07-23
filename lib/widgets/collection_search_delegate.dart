@@ -53,30 +53,31 @@ class CollectionRecipeSearchDelegate extends SearchDelegate {
         langCode: _langCode,
       );
     } else if (searchResults.isEmpty && query.isNotEmpty) {
-      return StreamBuilder(
-          stream: Stream.fromFuture(
-            _homePageController.recipeSearch(query, _langCode),
-          ),
-          builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
-            if (snapshot.hasData) {
-              searchResults = snapshot.data!;
-              if (snapshot.data!.isNotEmpty) {
-                return IngredientsList(
-                  searchResults: snapshot.data!,
-                  langCode: _langCode,
-                  controller: _homePageController,
-                );
-              } else {
-                return const NoResultsPage();
-              }
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: kPrimaryColor,
-                ),
-              );
-            }
-          });
+      return Container();
+      // return StreamBuilder(
+      //     stream: Stream.fromFuture(
+      //       _homePageController.recipeSearch(query, _langCode),
+      //     ),
+      //     builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
+      //       if (snapshot.hasData) {
+      //         searchResults = snapshot.data!;
+      //         if (snapshot.data!.isNotEmpty) {
+      //           return IngredientsList(
+      //             searchResults: snapshot.data!,
+      //             langCode: _langCode,
+      //             controller: _homePageController,
+      //           );
+      //         } else {
+      //           return const NoResultsPage();
+      //         }
+      //       } else {
+      //         return const Center(
+      //           child: CircularProgressIndicator(
+      //             color: kPrimaryColor,
+      //           ),
+      //         );
+      //       }
+      //     });
     } else {
       return StartSearchPage(
         text: AppLocalizations.of(context)!.startSearch,
@@ -88,30 +89,31 @@ class CollectionRecipeSearchDelegate extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     final String langCode = Provider.of<LanguageProvider>(context).getLangCode;
     if (query != '') {
-      return StreamBuilder(
-          stream: Stream.fromFuture(
-            _homePageController.recipeSearch(query, langCode),
-          ),
-          builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
-            if (snapshot.hasData) {
-              searchResults = snapshot.data!;
-              if (snapshot.data!.isNotEmpty) {
-                return IngredientsList(
-                  searchResults: snapshot.data!,
-                  langCode: langCode,
-                  controller: _homePageController,
-                );
-              } else {
-                return const NoResultsPage();
-              }
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: kPrimaryColor,
-                ),
-              );
-            }
-          });
+      return Container();
+      // return StreamBuilder(
+      //     stream: Stream.fromFuture(
+      //       _homePageController.recipeSearch(query, langCode),
+      //     ),
+      //     builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
+      //       if (snapshot.hasData) {
+      //         searchResults = snapshot.data!;
+      //         if (snapshot.data!.isNotEmpty) {
+      //           return IngredientsList(
+      //             searchResults: snapshot.data!,
+      //             langCode: langCode,
+      //             controller: _homePageController,
+      //           );
+      //         } else {
+      //           return const NoResultsPage();
+      //         }
+      //       } else {
+      //         return const Center(
+      //           child: CircularProgressIndicator(
+      //             color: kPrimaryColor,
+      //           ),
+      //         );
+      //       }
+      //     });
     } else {
       return StartSearchPage(
         text: AppLocalizations.of(context)!.startSearch,

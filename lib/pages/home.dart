@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/pages/basket.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
@@ -19,7 +20,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomePageController _homePageController = HomePageController();
+    final BackEndController _backendController = BackEndController();
     final String _langCode = Localizations.localeOf(context).languageCode;
     final double _screenWidth = MediaQuery.of(context).size.width;
     return DefaultTabController(
@@ -97,11 +98,11 @@ class Home extends StatelessWidget {
         body: TabBarView(
           children: [
             TopRated(
-                homePageController: _homePageController, langCode: _langCode),
+                backendController: _backendController, langCode: _langCode),
             Categories(
-                homePageController: _homePageController, langCode: _langCode),
+                backendController: _backendController, langCode: _langCode),
             RecentlySearched(
-                homePageController: _homePageController, langCode: _langCode),
+                backendController: _backendController, langCode: _langCode),
           ],
         ),
         floatingActionButton: FloatingActionButton(

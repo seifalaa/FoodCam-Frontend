@@ -10,11 +10,18 @@ const String kClientSecret =
 const kMobileScreenSize = 500;
 const kTabletScreenSize = 768;
 const List<String> kCollectionImageUrls = [
-  'https://image.freepik.com/free-photo/high-angle-fast-food-white-table_23-2148273120.jpg',
-  'https://image.freepik.com/free-photo/ingredients-healthy-foods-selection-concept-healthy-food-set-up_35641-2941.jpg',
-  'https://img.freepik.com/free-photo/organic-food-background-vegetables-basket_135427-233.jpg?size=338&ext=jpg',
-  'https://image.freepik.com/free-photo/mixed-fruits-with-apple-banana-orange-other_74190-938.jpg',
-  'https://image.freepik.com/free-photo/eastern-sweets_2829-14162.jpg',
+  'https://drive.google.com/file/d/1qC8UK_k9A6OJc0_PSkhWIhoJipA_ETR5/view?usp=sharing',
+  'https://drive.google.com/file/d/1btWU4SdCgj4ugtE53KwCPUPGZOtGEV40/view?usp=sharing',
+  'https://drive.google.com/file/d/1cXmrOnCTe92gvn6di604URr5BeshB0AY/view?usp=sharing',
+  'https://drive.google.com/file/d/1G5KjRXIrZnefwRPu8GV23YcpRYDfWuwX/view?usp=sharing',
+  'https://drive.google.com/file/d/1-JV3pD7XdPDY2hdGNmixQDv-RMdZznPb/view?usp=sharing',
+  'https://drive.google.com/file/d/1YAR7s5dnY6USquKH9-ZgHQWFu4GbjFzK/view?usp=sharing',
+  'https://drive.google.com/file/d/1NYoQwhwohqJnlxQovpgZO-_MYII4u3Vs/view?usp=sharing',
+  'https://drive.google.com/file/d/1DzBJu2LQySAuj-6K-eXrF_bibl8ah-s_/view?usp=sharing',
+  'https://drive.google.com/file/d/1f4dthkp8g1abXQg71tn6S48mcl6nMdfL/view?usp=sharing',
+  'https://drive.google.com/file/d/1B7WhqGsDmvZOO1XE5_y2dWQ5ZkEHFA2k/view?usp=sharing',
+  'https://drive.google.com/file/d/1gpDRufF-tEm5nd9G8jcXYWpA2IrR2vy4/view?usp=sharing',
+  'https://drive.google.com/file/d/144kWtfp4Klsouq7orcA4Q-npmTVgurfm/view?usp=sharing',
 ];
 Widget makeDismissible(
         {required Widget child, required BuildContext context}) =>

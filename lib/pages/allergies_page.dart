@@ -68,46 +68,47 @@ class _AllergiesPageState extends State<AllergiesPage> {
         progressIndicator: const CircularProgressIndicator(
           color: kPrimaryColor,
         ),
-        child: StreamBuilder(
-          stream: Stream.fromFuture(
-            _homePageController.getUserAllergies(_langCode),
-          ),
-          builder: (context, AsyncSnapshot<List<Allergy>> snapshot) =>
-              snapshot.hasData
-                  ? snapshot.data!.isNotEmpty
-                      ? GridView(
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 300,
-                            childAspectRatio: 0.8,
-                            crossAxisSpacing: 5,
-                            mainAxisSpacing: 5,
-                          ),
-                          children: [
-                            for (int i = 0; i < snapshot.data!.length; i++)
-                              AllergyBox(
-                                allergy: snapshot.data![i],
-                                onDelete: deleteItem,
-                              ),
-                            AddBox(
-                              onTab: () {
-                                showModalBottomSheet(
-                                    backgroundColor: Colors.transparent,
-                                    isScrollControlled: true,
-                                    context: context,
-                                    builder: (context) =>
-                                        const AddAllergyBottomSheet());
-                              },
-                            ),
-                          ],
-                        )
-                      : const EmptyAllergiesPage()
-                  : const Center(
-                      child: CircularProgressIndicator(
-                        color: kPrimaryColor,
-                      ),
-                    ),
-        ),
+        // child: StreamBuilder(
+        //   stream: Stream.fromFuture(
+        //     _homePageController.getUserAllergies(_langCode),
+        //   ),
+        //   builder: (context, AsyncSnapshot<List<Allergy>> snapshot) =>
+        //       snapshot.hasData
+        //           ? snapshot.data!.isNotEmpty
+        //               ? GridView(
+        //                   gridDelegate:
+        //                       const SliverGridDelegateWithMaxCrossAxisExtent(
+        //                     maxCrossAxisExtent: 300,
+        //                     childAspectRatio: 0.8,
+        //                     crossAxisSpacing: 5,
+        //                     mainAxisSpacing: 5,
+        //                   ),
+        //                   children: [
+        //                     for (int i = 0; i < snapshot.data!.length; i++)
+        //                       AllergyBox(
+        //                         allergy: snapshot.data![i],
+        //                         onDelete: deleteItem,
+        //                       ),
+        //                     AddBox(
+        //                       onTab: () {
+        //                         showModalBottomSheet(
+        //                             backgroundColor: Colors.transparent,
+        //                             isScrollControlled: true,
+        //                             context: context,
+        //                             builder: (context) =>
+        //                                 const AddAllergyBottomSheet());
+        //                       },
+        //                     ),
+        //                   ],
+        //                 )
+        //               : const EmptyAllergiesPage()
+        //           : const Center(
+        //               child: CircularProgressIndicator(
+        //                 color: kPrimaryColor,
+        //               ),
+        //             ),
+        // ),
+        child: Container(),
       ),
     );
   }
@@ -116,7 +117,7 @@ class _AllergiesPageState extends State<AllergiesPage> {
     setState(() {
       _isLoading = true;
     });
-    await _homePageController.deleteAllergy(allergyName, langCode);
+    //await _homePageController.deleteAllergy(allergyName, langCode);
     setState(() {
       _isLoading = false;
     });

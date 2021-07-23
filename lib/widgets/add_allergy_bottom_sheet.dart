@@ -60,59 +60,60 @@ class _AddAllergyBottomSheetState extends State<AddAllergyBottomSheet> {
               ),
               Opacity(
                 opacity: !_isLoading ? 1.0 : 0.0,
-                child: StreamBuilder(
-                  stream: Stream.fromFuture(
-                    _homePageController.getAllergies(_langCode),
-                  ),
-                  builder: (context, AsyncSnapshot<List<Allergy>> snapshot) =>
-                      snapshot.hasData
-                          ? Column(
-                              children: snapshot.data!
-                                  .map(
-                                    (e) => Column(
-                                      children: [
-                                        ListTile(
-                                          title: Text(
-                                            e.allergyName,
-                                            style: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          trailing: IconButton(
-                                            icon: const Icon(
-                                              Icons.add_rounded,
-                                              color: kPrimaryColor,
-                                            ),
-                                            onPressed: () async {
-                                              setState(() {
-                                                _isLoading = true;
-                                              });
-                                              await _homePageController
-                                                  .addAllergy(
-                                                _langCode,
-                                                e.allergyName,
-                                              );
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                context,
-                                                'allergies/',
-                                                ModalRoute.withName('profile/'),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        const Divider(),
-                                      ],
-                                    ),
-                                  )
-                                  .toList(),
-                            )
-                          : const Center(
-                              child: CircularProgressIndicator(
-                                color: kPrimaryColor,
-                              ),
-                            ),
-                ),
+                child: Container(),
+                // child: StreamBuilder(
+                //   stream: Stream.fromFuture(
+                //     _homePageController.getAllergies(_langCode),
+                //   ),
+                //   builder: (context, AsyncSnapshot<List<Allergy>> snapshot) =>
+                //       snapshot.hasData
+                //           ? Column(
+                //               children: snapshot.data!
+                //                   .map(
+                //                     (e) => Column(
+                //                       children: [
+                //                         ListTile(
+                //                           title: Text(
+                //                             e.allergyName,
+                //                             style: const TextStyle(
+                //                               fontSize: 20,
+                //                               fontWeight: FontWeight.bold,
+                //                             ),
+                //                           ),
+                //                           trailing: IconButton(
+                //                             icon: const Icon(
+                //                               Icons.add_rounded,
+                //                               color: kPrimaryColor,
+                //                             ),
+                //                             onPressed: () async {
+                //                               setState(() {
+                //                                 _isLoading = true;
+                //                               });
+                //                               await _homePageController
+                //                                   .addAllergy(
+                //                                 _langCode,
+                //                                 e.allergyName,
+                //                               );
+                //                               Navigator.pushNamedAndRemoveUntil(
+                //                                 context,
+                //                                 'allergies/',
+                //                                 ModalRoute.withName('profile/'),
+                //                               );
+                //                             },
+                //                           ),
+                //                         ),
+                //                         const Divider(),
+                //                       ],
+                //                     ),
+                //                   )
+                //                   .toList(),
+                //             )
+                //           : const Center(
+                //               child: CircularProgressIndicator(
+                //                 color: kPrimaryColor,
+                //               ),
+                //             ),
+                // ),
               ),
             ],
           ),

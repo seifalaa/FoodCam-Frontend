@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
@@ -11,7 +12,7 @@ import 'package:foodcam_frontend/pages/start_search_page.dart';
 import 'package:provider/provider.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
-  final HomePageController _controller = HomePageController();
+  final BackEndController _backendController = BackEndController();
   List<Recipe> searchResults = [];
 
   @override
@@ -44,7 +45,7 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    final String langCode = Localizations.localeOf(context).languageCode;
+    final String __langCode = Localizations.localeOf(context).languageCode;
     if (searchResults.isNotEmpty && query.isNotEmpty) {
       return GridView.builder(
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -60,7 +61,7 @@ class CustomSearchDelegate extends SearchDelegate {
       );
     } else if (searchResults.isEmpty && query.isNotEmpty) {
       return FutureBuilder(
-          future: _controller.recipeSearch(query, langCode),
+          future: _backendController.searchRecipeByName(query),
           builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
             if (snapshot.hasData) {
               searchResults = snapshot.data!;
@@ -97,10 +98,10 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final String langCode = Provider.of<LanguageProvider>(context).getLangCode;
+    final String _langCode = Provider.of<LanguageProvider>(context).getLangCode;
     if (query != '') {
       return FutureBuilder(
-        future: _controller.recipeSearch(query, langCode),
+        future: _backendController.searchRecipeByName(query),
         builder: (context, AsyncSnapshot<List<Recipe>> snapshot) {
           if (snapshot.hasData) {
             searchResults = snapshot.data!;

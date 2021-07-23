@@ -94,20 +94,21 @@ class _PreferredIngredientsState extends State<PreferredIngredients> {
                           ),
                           children: [
                             for (int i = 0; i < snapshot.data!.docs.length; i++)
-                              FutureBuilder<Ingredient>(
-                                  future: _homePageController
-                                      .ingredientFromQueryDocumentSnapshot(
-                                          snapshot.data!.docs[i]),
-                                  builder: (context, ingredientSnapshot) {
-                                    return ingredientSnapshot.hasData
-                                        ? IngredientBox(
-                                            ingredient:
-                                                ingredientSnapshot.data!,
-                                            index: i,
-                                            onDelete: deleteItem,
-                                          )
-                                        : Container();
-                                  }),
+                            Container(),
+                              // FutureBuilder<Ingredient>(
+                              //     future: _homePageController
+                              //         .ingredientFromQueryDocumentSnapshot(
+                              //             snapshot.data!.docs[i]),
+                              //     builder: (context, ingredientSnapshot) {
+                              //       return ingredientSnapshot.hasData
+                              //           ? IngredientBox(
+                              //               ingredient:
+                              //                   ingredientSnapshot.data!,
+                              //               index: i,
+                              //               onDelete: deleteItem,
+                              //             )
+                              //           : Container();
+                              //     }),
                             AddBox(onTab: addItem),
                           ],
                         )
@@ -126,8 +127,8 @@ class _PreferredIngredientsState extends State<PreferredIngredients> {
     setState(() {
       _isLoading = true;
     });
-    await _homePageController.deletePreferredIngredient(
-        langCode, ingredientName);
+    // await _homePageController.deletePreferredIngredient(
+    //     langCode, ingredientName);
     setState(() {
       _isLoading = false;
     });
