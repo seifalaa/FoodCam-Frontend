@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:foodcam_frontend/widgets/add_collection_bottom_sheet.dart';
+import 'package:foodcam_frontend/models/collection.dart';
 import 'package:foodcam_frontend/widgets/collection_search_delegate.dart';
 
 import '../constants.dart';
-class emptyCollectionRecipePage extends StatelessWidget {
-  const emptyCollectionRecipePage({Key? key}) : super(key: key);
 
+class EmptyCollectionRecipePage extends StatelessWidget {
+  const EmptyCollectionRecipePage({Key? key,required this.collectionName}) : super(key: key);
+  final Collection collectionName;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -25,9 +26,9 @@ class emptyCollectionRecipePage extends StatelessWidget {
             padding: const EdgeInsets.only(top: 20.0),
             child: ElevatedButton(
               onPressed: () {
-                 showSearch(
+                showSearch(
                     context: context,
-                    delegate: CollectionRecipeSearchDelegate());
+                    delegate: CollectionRecipeSearchDelegate(collection: collectionName));
               },
               style: ElevatedButton.styleFrom(
                 primary: kPrimaryColor,

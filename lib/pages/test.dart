@@ -21,7 +21,8 @@ class _TestPageState extends State<TestPage> {
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
-            await _backEndController.searchRecipeByName("Al");
+            await _backEndController.getUserCollections(
+                'ar');
           },
           child: const Text('click'),
         ),

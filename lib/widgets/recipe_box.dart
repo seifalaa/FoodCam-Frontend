@@ -14,7 +14,7 @@ class RecipeBox extends StatefulWidget {
   final Recipe recipe;
 
   @override
-  _RecipeBoxState createState() => _RecipeBoxState(recipe.recipeImageUrl);
+  _RecipeBoxState createState() => _RecipeBoxState();
 }
 
 class _RecipeBoxState extends State<RecipeBox> {

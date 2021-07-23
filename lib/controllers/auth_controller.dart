@@ -23,7 +23,7 @@ class AuthController {
   }
 
   Future<void> logout() async {
-    final url = Uri.parse('http://192.168.1.5:8000//dj-rest-auth/logout/');
+    final url = Uri.parse('http://192.168.1.5:8000/dj-rest-auth/logout/');
     await http.post(
       url,
       headers: {

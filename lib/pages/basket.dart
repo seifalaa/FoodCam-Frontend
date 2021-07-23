@@ -29,7 +29,7 @@ class BasketPage extends StatefulWidget {
 }
 
 class _BasketPageState extends State<BasketPage> {
-  final picker = ImagePicker();
+  //final picker = ImagePicker();
   final BackEndController _backendController = BackEndController();
 
   //final HomePageController _controller = HomePageController();
@@ -38,14 +38,14 @@ class _BasketPageState extends State<BasketPage> {
   bool _isLoading = false;
 
   Future<void> pickImage() async {
-    final pickedImage = await picker.getImage(
-      source: ImageSource.camera,
-    );
-    setState(() {
-      if (pickedImage != null) {
-        _image = File(pickedImage.path);
-      }
-    });
+    // final pickedImage = await picker.getImage(
+    //   source: ImageSource.camera,
+    // );
+    // setState(() {
+    //   if (pickedImage != null) {
+    //     _image = File(pickedImage.path);
+    //   }
+    // });
   }
 
   void addItem() {

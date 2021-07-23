@@ -5,12 +5,35 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/models/collection.dart';
-import 'package:foodcam_frontend/models/ingredient.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BackEndController {
+  Future<String> refreshToken(String refreshToken) async {
+    final url =
+        Uri.parse("http://192.168.1.5:8000/dj-rest-auth/token/refresh/");
+    final http.Response response = await http.post(
+      url,
+      body: convert.jsonEncode(
+        {'refresh': refreshToken},
+      ),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    //print(response.body);
+    final responseJson = jsonDecode(
+      utf8.decode(response.bodyBytes),
+    );
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    flutterSecureStorage.write(
+      key: 'access_token',
+      value: responseJson['access'],
+    );
+    return responseJson['access'];
+  }
+
   Future<List<Recipe>> searchRecipeByName(String query) async {
     final url = Uri.parse(
         "http://192.168.1.5:8000/SearchRecipeByName?user_input=$query");
@@ -38,17 +61,43 @@ class BackEndController {
 
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
+      const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+      final String? accessToken =
+          await flutterSecureStorage.read(key: 'access_token');
+      final String? refreshToken =
+          await flutterSecureStorage.read(key: 'refresh_token');
       final url = Uri.parse(
           "http://192.168.1.5:8000/CollectionView/?username=$userName&lang_code=$langCode");
       final http.Response response = await http.get(
         url,
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
         },
       );
-
-      final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
-
+      //TODO: check response and send refresh token if the access token is exired
+      var _responseJson;
+      //print(response.body);
+      if (response.body.contains('Given token not valid')) {
+        //print('here');
+        final String newAccessToken = await this.refreshToken(refreshToken!);
+        final http.Response newResponse = await http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $newAccessToken',
+          },
+        );
+        //print(newResponse);
+        _responseJson = jsonDecode(
+          utf8.decode(newResponse.bodyBytes),
+        );
+      } else {
+        _responseJson = jsonDecode(
+          utf8.decode(response.bodyBytes),
+        );
+      }
+      //print(_responseJson);
       final List<Collection> collections = [];
 
       for (final item in _responseJson) {
@@ -58,7 +107,58 @@ class BackEndController {
 
       return collections;
     } else {
-      print("username is null");
+      //print("username is null");
+      return [];
+    }
+  }
+
+  Future<List<Recipe>> getCollectionRecipes(
+      int collectionId, String langCode) async {
+    final SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+
+    final String? userName = _sharedPreferences.getString('userName');
+    if (userName != null) {
+      const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+      final String? accessToken =
+          await flutterSecureStorage.read(key: 'access_token');
+      final String? refreshToken =
+          await flutterSecureStorage.read(key: 'refresh_token');
+      final url = Uri.parse(
+          "http://192.168.1.5:8000/CollectionRecipeView/?collection_id=$collectionId&lang_code=$langCode");
+      final http.Response response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      var _responseJson;
+
+      if (response.body.contains('Given token not valid')) {
+        final String newAccessToken = await this.refreshToken(refreshToken!);
+        final http.Response newResponse = await http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $newAccessToken',
+          },
+        );
+        //print(newResponse);
+        _responseJson = jsonDecode(
+          utf8.decode(newResponse.bodyBytes),
+        );
+      } else {
+        _responseJson = jsonDecode(
+          utf8.decode(response.bodyBytes),
+        );
+      }
+      final List<Recipe> recipes = [];
+      for (final item in _responseJson) {
+        recipes.add(Recipe.fromMap(item));
+      }
+      return recipes;
+    } else {
       return [];
     }
   }
@@ -123,10 +223,10 @@ class BackEndController {
       recipes.add(Recipe.fromMap(item));
     }
     return recipes;
+  }
 
-
-    }
-
+  Future<http.Response> addCollection(
+      String collectionName, String image) async {
     // Future<List<Recipe>> getRecentlySearch ()async{
     //
     //
@@ -279,39 +379,189 @@ class BackEndController {
         await SharedPreferences.getInstance();
 
     final String? userName = sharedPreferences.getString('userName');
-
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+        await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+        await flutterSecureStorage.read(key: 'refresh_token');
     final url = Uri.parse("http://192.168.1.5:8000/CollectionView/");
     final response = await http.post(
       url,
       body: convert.jsonEncode(<String, dynamic>{
         'collection_name': collectionName,
         'username': userName,
-        'image':image,
+        'image': image,
       }),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
       },
     );
-    return response;
+    //TODO: check response and send refresh token if the access token is exired
+    if (response.body.contains('Given token not valid')) {
+      final String newAccessToken = await this.refreshToken(refreshToken!);
+      final http.Response newResponse = await http.post(
+        url,
+        body: convert.jsonEncode(<String, dynamic>{
+          'collection_name': collectionName,
+          'username': userName,
+          'image': image,
+        }),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      return newResponse;
+    } else {
+      return response;
+    }
   }
-  Future<void> deleteCollection(String collectionName)async{
-    final SharedPreferences _sharedPreferences =
-    await SharedPreferences.getInstance();
 
+  Future<void> deleteCollection(String collectionName) async {
+    final SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+        await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+        await flutterSecureStorage.read(key: 'refresh_token');
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
       final url = Uri.parse(
           "http://192.168.1.5:8000/CollectionView/?username=$userName&collection_name=$collectionName");
+      final http.Response response = await http.delete(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      if (response.body.contains('Given token not valid')) {
+        final String newAccessToken = await this.refreshToken(refreshToken!);
+        await http.delete(
+          url,
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $newAccessToken',
+          },
+        );
+      }
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getRecipesIntoCollection(
+      String query, String collectionName) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+        await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+        await flutterSecureStorage.read(key: 'refresh_token');
+    final String userName = sharedPreferences.getString('userName')!;
+    final url = Uri.parse(
+        'http://192.168.1.5:8000/SearchRecipeByNameInCollection?user_input=$query&username=$userName&collection_name=$collectionName');
+    final http.Response response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    //TODO: check response and send refresh token if the access token is exired
+    var responseJson;
+    if (response.body.contains('Given token not valid')) {
+      final String newAccessToken = await this.refreshToken(refreshToken!);
+      final http.Response newResponse = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $newAccessToken',
+        },
+      );
+      responseJson = jsonDecode(
+        utf8.decode(newResponse.bodyBytes),
+      );
+    } else {
+      responseJson = jsonDecode(
+        utf8.decode(response.bodyBytes),
+      );
+    }
+
+    final List<Map<String, dynamic>> recipes = [];
+    for (final Map<String, dynamic> item in responseJson) {
+      final Recipe recipe = Recipe.fromMap(item);
+      final bool isAdded = item['isExist_InCollection'];
+      recipes.add({
+        'recipe': recipe,
+        'isAdded': isAdded,
+      });
+    }
+    return recipes;
+  }
+
+  Future<void> addRecipeInCollection(int recipeId, int collectionId) async {
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+        await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+        await flutterSecureStorage.read(key: 'refresh_token');
+    final url = Uri.parse('http://192.168.1.5:8000/CollectionRecipeView/');
+    final http.Response response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: convert.jsonEncode(<String, String>{
+        'collection': collectionId.toString(),
+        'recipe': recipeId.toString(),
+      }),
+    );
+    if (response.body.contains('Given token not valid')) {
+      final String newAccessToken = await this.refreshToken(refreshToken!);
+      await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $newAccessToken',
+        },
+        body: convert.jsonEncode(<String, String>{
+          'collection': collectionId.toString(),
+          'recipe': recipeId.toString(),
+        }),
+      );
+    }
+  }
+
+  Future<void> deleteRecipeFromCollection(
+      int recipeId, int collectionId) async {
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+        await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+        await flutterSecureStorage.read(key: 'refresh_token');
+    final url = Uri.parse(
+        'http://192.168.1.5:8000/CollectionRecipeView/?collection_id=$collectionId&recipe_id=$recipeId');
+    final http.Response response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.body.contains('Given token not valid')) {
+      final String newAccessToken = await this.refreshToken(refreshToken!);
       await http.delete(
         url,
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $newAccessToken',
         },
       );
     }
-
   }
-
-
-
 }

@@ -1,21 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/backend_controller.dart';
-import 'package:foodcam_frontend/controllers/homepage_controller.dart';
-import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/models/collection.dart';
-import 'package:foodcam_frontend/models/user.dart';
 import 'package:foodcam_frontend/pages/empty_collection_page.dart';
-import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/add_box.dart';
 import 'package:foodcam_frontend/widgets/add_collection_bottom_sheet.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/collection_box.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CollectionPage extends StatefulWidget {
@@ -114,7 +108,6 @@ class _CollectionPageState extends State<CollectionPage> {
                   );
           },
         ),
-        //child: Container(),
       ),
     );
   }
@@ -131,12 +124,12 @@ class _CollectionPageState extends State<CollectionPage> {
   }
 
   Future<void> deleteItem(String collectionName, String langCode) async {
-    await _backendController.deleteCollection(collectionName);
+    
     setState(() {
       _isLoading = true;
     });
-    //await _homePageController.deleteCollection(collectionName, langCode);
 
+await _backendController.deleteCollection(collectionName);
     setState(() {
       _isLoading = false;
     });

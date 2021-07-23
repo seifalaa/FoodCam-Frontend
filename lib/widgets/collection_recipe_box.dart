@@ -1,52 +1,83 @@
 import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/controllers/backend_controller.dart';
-import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/models/collection.dart';
-import 'package:foodcam_frontend/pages/collections_recipes_page.dart';
-import 'package:foodcam_frontend/providers/lang_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:foodcam_frontend/models/recipe.dart';
+import 'package:foodcam_frontend/pages/recipe_page.dart';
 
 import '../constants.dart';
 
-class CollectionBox extends StatefulWidget {
-  const CollectionBox({
+class CollectionRecipeBox extends StatefulWidget {
+  const CollectionRecipeBox({
     Key? key,
-    required this.collection,
+    required this.recipe,
     required this.onDelete,
+    required this.collection,
   }) : super(key: key);
+  final Recipe recipe;
   final Collection collection;
   final Function onDelete;
-
   @override
-  _CollectionBoxState createState() => _CollectionBoxState();
+  _CollectionRecipeBoxState createState() => _CollectionRecipeBoxState();
 }
 
-class _CollectionBoxState extends State<CollectionBox> {
-  bool _isVisible = false;
+class _CollectionRecipeBoxState extends State<CollectionRecipeBox> {
+  List<Widget> getRate(double rate, double _screenWidth) {
+    final List<Widget> stars = [];
+    for (int i = 0; i < rate.toInt(); i++) {
+      stars.add(
+        Icon(
+          Icons.star_rounded,
+          size: _screenWidth <= kMobileScreenSize
+              ? _screenWidth * 0.045
+              : _screenWidth * 0.0225,
+          color: const Color(0xFFFFC107),
+        ),
+      );
+    }
+    final bool noHalves = rate.toInt() == rate;
+    if (noHalves) {
+      for (int i = 0; i < 5 - widget.recipe.recipeRate.toInt(); i++) {
+        stars.add(
+          Icon(
+            Icons.star_rounded,
+            size: _screenWidth <= kMobileScreenSize
+                ? _screenWidth * 0.045
+                : _screenWidth * 0.0225,
+            color: Colors.white54,
+          ),
+        );
+      }
+    } else {
+      stars.add(
+        Icon(
+          Icons.star_half_rounded,
+          size: _screenWidth <= kMobileScreenSize
+              ? _screenWidth * 0.045
+              : _screenWidth * 0.0225,
+          color: const Color(0xFFFFC107),
+        ),
+      );
+      for (int i = 0; i < 5 - widget.recipe.recipeRate.toInt() - 1; i++) {
+        stars.add(Icon(
+          Icons.star_rounded,
+          size: _screenWidth <= kMobileScreenSize
+              ? _screenWidth * 0.045
+              : _screenWidth * 0.0225,
+          color: Colors.white54,
+        ));
+      }
+    }
+    return stars;
+  }
 
+  final BackEndController _backEndController = BackEndController();
+  bool _isVisible = false;
   @override
   Widget build(BuildContext context) {
     final double _screenWidth = MediaQuery.of(context).size.width;
-    final String _langCode = Provider.of<LanguageProvider>(context).getLangCode;
-    final BackEndController _backendController = BackEndController();
-    String collectionName = "";
-    if (_langCode == "ar") {
-      if (widget.collection.collectionName == 'Breakfast') {
-        collectionName = "فطور";
-      }
-      else if (widget.collection.collectionName == 'Dinner') {
-        collectionName = "عشاء";
-      }
-      else if (widget.collection.collectionName == 'Launch') {
-        collectionName = "غداء";
-      } else {
-        collectionName = widget.collection.collectionName;
-      }
-      else{collectionName = widget.collection.collectionName;}
-    } else {
-      collectionName = widget.collection.collectionName;
-    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(
@@ -54,19 +85,17 @@ class _CollectionBoxState extends State<CollectionBox> {
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: //Image.asset('lib/assets/avatar.png' , fit:BoxFit.cover ,),
-
-              Image.network(
-                //widget.collection.collectionImageUrl
-                'https://lh3.googleusercontent.com/95oUJyeApyr-g6NfyGmfCLnl6omIcbtb83PCSSDuMm0OzvXCXFwrw-G7B3hN9_FeQ-6i8Vz-Esh0e2v0-COYQjo3se9f1Ap-18HbPuTEeCQe1rYbbTHyfGi4WmJ2TxX-oN5zjSHmB7odGaf4fZh8TCqtDX5p31EELJ6HF7ppQMVFIOxbu0dB8fAnvOjsxUmsbFPPD7K0eCw6oK_bgZtQe9_3qo7pDQuKhv9TQa7AnvC-YKqx5GWQ3gwEAqSPVZyjF6-48qENK1-_gf5FoxmmWMTPNANF1nOkvUil1XGh74SjMMjzaJqjnXQPxXWiTBTtZlAbK1bdd5AHeiaXap290awv1x-nOrwIW1txd616NEwZkwNkdaOc6PspwCI__1l7VURm2DbMSOh8vXtmgqdTyolcTmj8xHTpKWUH26ZfDkXpiTu9ZQPQBbT3X-tnt48hsHoeoI-VJzMs9CHeSN6_LZuwsa-j4K7raB_CTrZzetS-1QRx7EpfKbkGBlCiLWs6MT3v5P--hRlMtOTxp0n-EfRqI1rpOmYOwlWt4ryyYNDMQYSzQ5EscQTDhAO2_r5VzqKXfRFX3eBu2_JMZ_cdOwrgCkgsAX6NgjmzeQlR4SoUV7JtDNMCH1CzWxezpD7ozGznd_gt4_t-MlC8eYmnl52RGh7apdErb75ck70HtBSJC5lQx5ldMV6zTjErg4zwW8sH-vo4b5tRvw1Jm65rAQ=w626-h417-no?authuser=0',
-                fit: BoxFit.cover,
-              ),
+              // child: Image.network(
+              //   widget.recipe.recipeImageUrl,
+              //   fit: BoxFit.cover,
+              // ),
+              child: Container(),
             ),
           ),
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
-                color: const Color(0x30000000),
+                color: const Color(0x40000000),
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
@@ -79,29 +108,19 @@ class _CollectionBoxState extends State<CollectionBox> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    collectionName,
+                    widget.recipe.recipeName,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: _screenWidth <= kMobileScreenSize
-                          ? _screenWidth * 0.045
+                          ? _screenWidth * 0.05
                           : _screenWidth * 0.0225,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Text(
-                      handleRecipesOrRecipe(
-                        widget.collection.recipeCount,
-                        _langCode,
-                      ),
-                      style: TextStyle(
-                        color: const Color(0xFFFFC107),
-                        fontWeight: FontWeight.bold,
-                        fontSize: _screenWidth <= kMobileScreenSize
-                            ? _screenWidth * 0.038
-                            : _screenWidth * 0.0194,
-                      ),
+                  Row(
+                    children: getRate(
+                      widget.recipe.recipeRate,
+                      _screenWidth,
                     ),
                   ),
                 ],
@@ -138,8 +157,8 @@ class _CollectionBoxState extends State<CollectionBox> {
                       : Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CollectionsRecipes(
-                              collection: widget.collection,
+                            builder: (context) => RecipePage(
+                              recipe: widget.recipe,
                             ),
                           ),
                         );
@@ -166,7 +185,9 @@ class _CollectionBoxState extends State<CollectionBox> {
                 ),
                 onPressed: () async {
                   await widget.onDelete(
-                      widget.collection.collectionName, _langCode);
+                    widget.recipe.recipeId,
+                    widget.collection.id,
+                  );
                   setState(() {
                     _isVisible = false;
                   });
@@ -178,21 +199,6 @@ class _CollectionBoxState extends State<CollectionBox> {
         ],
       ),
     );
-  }
-
-  String handleRecipesOrRecipe(int quantity, String langCode) {
-    if (langCode == 'ar') {
-      if (quantity > 1 && quantity < 11) {
-        return quantity == 2 ? 'وصفتين' : '$quantity وصفات';
-      } else if (quantity == 0) {
-        return 'فارغة';
-      } else {
-        return 'وصفة';
-      }
-    } else if (langCode == 'en') {
-      return quantity == 1 ? '$quantity recipe' : '$quantity recipes';
-    } else {
-      return '';
-    }
+    ;
   }
 }

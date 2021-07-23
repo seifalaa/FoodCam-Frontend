@@ -8,8 +8,9 @@ class CustomButtonNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double _screenHeight = MediaQuery.of(context).size.height;
     return SizedBox(
-      height: 60,
+      height: _screenHeight * 0.109,
       child: ClipRRect(
         borderRadius: const BorderRadius.only(
           topRight: Radius.circular(20),
@@ -49,10 +50,10 @@ class CustomButtonNavigationBar extends StatelessWidget {
                             AppLocalizations.of(context)!.home,
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
-                              color:
-                                  ModalRoute.of(context)!.settings.name == 'home/'
-                                      ? kPrimaryColor
-                                      : const Color(0x70262626),
+                              color: ModalRoute.of(context)!.settings.name ==
+                                      'home/'
+                                  ? kPrimaryColor
+                                  : const Color(0x70262626),
                             ),
                           ),
                         ],
