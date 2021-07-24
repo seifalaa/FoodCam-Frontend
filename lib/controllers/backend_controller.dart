@@ -723,4 +723,38 @@ class BackEndController {
       );
     }
   }
+
+  Future<void> rateRecipe(int recipeId, int rate) async {
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+        await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+        await flutterSecureStorage.read(key: 'refresh_token');
+    final url = Uri.parse('http://192.168.1.5:8000/RecipeRateView/');
+    final http.Response response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: convert.jsonEncode(<String, dynamic>{
+        'recipe': recipeId,
+        'rete': rate,
+      }),
+    );
+    if (response.body.contains('Given token not valid')) {
+      final String newAccessToken = await this.refreshToken(refreshToken!);
+      await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $newAccessToken',
+        },
+        body: convert.jsonEncode(<String, dynamic>{
+          'recipe': recipeId,
+          'rete': rate,
+        }),
+      );
+    }
+  }
 }
