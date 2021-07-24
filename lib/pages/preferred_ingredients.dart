@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
 import 'package:foodcam_frontend/pages/empty_preferred_page.dart';
@@ -24,14 +25,14 @@ class PreferredIngredients extends StatefulWidget {
 }
 
 class _PreferredIngredientsState extends State<PreferredIngredients> {
-  final HomePageController _homePageController = HomePageController();
-  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+  final BackEndController _backendController = BackEndController();
+  //final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   bool _isLoading = false;
 
   void addItem() {
     showSearch(
       context: context,
-      delegate: PreferredSearchDelegate('preferred'),
+      delegate: PreferredSearchDelegate(),
     );
   }
 
@@ -77,13 +78,11 @@ class _PreferredIngredientsState extends State<PreferredIngredients> {
           color: kPrimaryColor,
         ),
         child: StreamBuilder(
-            stream: _langCode == 'ar'
-                ? _fireStore.collection('PreferredIngredients-ar').snapshots()
-                : _fireStore.collection('PreferredIngredients').snapshots(),
+            stream:Stream.fromFuture(_backendController.getPreferedIngredients(_langCode)),
             builder: (context,
-                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                AsyncSnapshot<List<Ingredient>> snapshot) {
               return snapshot.hasData
-                  ? snapshot.data!.docs.isNotEmpty
+                  ? snapshot.data!.isNotEmpty
                       ? GridView(
                           gridDelegate:
                               const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -93,22 +92,13 @@ class _PreferredIngredientsState extends State<PreferredIngredients> {
                             mainAxisSpacing: 5,
                           ),
                           children: [
-                            for (int i = 0; i < snapshot.data!.docs.length; i++)
-                            Container(),
-                              // FutureBuilder<Ingredient>(
-                              //     future: _homePageController
-                              //         .ingredientFromQueryDocumentSnapshot(
-                              //             snapshot.data!.docs[i]),
-                              //     builder: (context, ingredientSnapshot) {
-                              //       return ingredientSnapshot.hasData
-                              //           ? IngredientBox(
-                              //               ingredient:
-                              //                   ingredientSnapshot.data!,
-                              //               index: i,
-                              //               onDelete: deleteItem,
-                              //             )
-                              //           : Container();
-                              //     }),
+                            for (int i = 0; i < snapshot.data!.length; i++)
+                               IngredientBox(
+                                            ingredient:
+                                                snapshot.data![i],
+                                            index: i,
+                                            onDelete: deleteItem,
+                                          ),
                             AddBox(onTab: addItem),
                           ],
                         )

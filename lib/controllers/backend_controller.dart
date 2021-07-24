@@ -212,6 +212,59 @@ class BackEndController {
     }
   }
 
+  Future<List<Recipe>> getRecentlySearched(
+       String langCode) async {
+    final SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+
+    final String? userName = _sharedPreferences.getString('userName');
+    if (userName != null) {
+      const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+      final String? accessToken =
+      await flutterSecureStorage.read(key: 'access_token');
+      final String? refreshToken =
+      await flutterSecureStorage.read(key: 'refresh_token');
+      final url = Uri.parse(
+          "http://192.168.1.5:8000/RecentRecipes/?username=$userName&land_code=$langCode");
+      final http.Response response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      var _responseJson;
+
+      if (response.body.contains('Given token not valid')) {
+        final String newAccessToken = await this.refreshToken(refreshToken!);
+        final http.Response newResponse = await http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $newAccessToken',
+          },
+        );
+        //print(newResponse);
+        _responseJson = jsonDecode(
+          utf8.decode(newResponse.bodyBytes),
+        );
+      } else {
+        _responseJson = jsonDecode(
+          utf8.decode(response.bodyBytes),
+        );
+      }
+      final List<Recipe> recipes = [];
+      for (final item in _responseJson) {
+        recipes.add(Recipe.fromMap(item));
+      }
+      print(recipes);
+      return recipes;
+    } else {
+      print("empty");
+      return [];
+    }
+  }
+
   Future<List<Category>> getAllCategories(String langCode) async {
     final url = Uri.parse(
         "http://192.168.1.5:8000/ListRecipeCategories/?lang_code=$langCode");
@@ -308,6 +361,182 @@ class BackEndController {
       return [];
     }
   }
+  Future<List<Ingredient>> getPreferedIngredients(String langCode) async {
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+        await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+        await flutterSecureStorage.read(key: 'refresh_token');
+    final SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    //print("Saeed");
+    final String? userName = _sharedPreferences.getString('userName');
+    if (userName != null) {
+      final url = Uri.parse(
+          "http://192.168.1.5:8000/UserPreferenceIngredientView/?username=$userName&is_preferred=1&lang_code=$langCode");
+      final http.Response response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+
+      //print(_responseJson);
+      final List<Ingredient> ingredients = [];
+
+      for (final item in _responseJson) {
+        //print(item);
+        ingredients.add(Ingredient.fromMapBasket(item));
+      }
+      // print("sae");
+      //print(ingredients);
+      return ingredients;
+    } else {
+      print("username is null");
+      return [];
+    }
+  }
+  Future<List<Ingredient>> getDisPreferedIngredients(String langCode) async {
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+        await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+        await flutterSecureStorage.read(key: 'refresh_token');
+    final SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    //print("Saeed");
+    final String? userName = _sharedPreferences.getString('userName');
+    if (userName != null) {
+      final url = Uri.parse(
+          "http://192.168.1.5:8000/UserPreferenceIngredientView/?username=$userName&is_preferred=0&lang_code=$langCode");
+      final http.Response response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+
+      //print(_responseJson);
+      final List<Ingredient> ingredients = [];
+
+      for (final item in _responseJson) {
+        //print(item);
+        ingredients.add(Ingredient.fromMapBasket(item));
+      }
+      // print("sae");
+      //print(ingredients);
+      return ingredients;
+    } else {
+      print("username is null");
+      return [];
+    }
+  }
+  Future<void> addPreferredIngredient(int ingredientId)async{
+    final SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+
+    final String? userName = _sharedPreferences.getString('userName');
+    if (userName != null) {
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+    await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+    await flutterSecureStorage.read(key: 'refresh_token');
+    final url = Uri.parse(
+    "http://192.168.1.5:8000/UserPreferenceIngredientView/");
+    final http.Response response = await http.post(
+    url,
+    body:convert.jsonEncode(<String, dynamic>  {
+      "username":userName,
+      "ingredient":ingredientId,
+      "is_preferred":1,
+    }),
+    headers: {
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Authorization': 'Bearer $accessToken',
+    },
+    );
+    var _responseJson;
+
+    if (response.body.contains('Given token not valid')) {
+    final String newAccessToken = await this.refreshToken(refreshToken!);
+    final http.Response newResponse = await http.get(
+    url,
+    headers: {
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Authorization': 'Bearer $newAccessToken',
+    },
+    );
+    //print(newResponse);
+    _responseJson = jsonDecode(
+    utf8.decode(newResponse.bodyBytes),
+    );
+    } else {
+    _responseJson = jsonDecode(
+    utf8.decode(response.bodyBytes),
+    );
+    }
+    print("Saeed");
+    print(_responseJson);
+  }
+
+  }
+  Future<void> addDisPreferredIngredient(int ingredientId)async{
+    final SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+
+    final String? userName = _sharedPreferences.getString('userName');
+    if (userName != null) {
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+    await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+    await flutterSecureStorage.read(key: 'refresh_token');
+    final url = Uri.parse(
+    "http://192.168.1.5:8000/UserPreferenceIngredientView/");
+    final http.Response response = await http.post(
+    url,
+    body:convert.jsonEncode(<String, dynamic>  {
+      "username":userName,
+      "ingredient":ingredientId,
+      "is_preferred":0,
+    }),
+    headers: {
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Authorization': 'Bearer $accessToken',
+    },
+    );
+    var _responseJson;
+
+    if (response.body.contains('Given token not valid')) {
+    final String newAccessToken = await this.refreshToken(refreshToken!);
+    final http.Response newResponse = await http.get(
+    url,
+    headers: {
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Authorization': 'Bearer $newAccessToken',
+    },
+    );
+    //print(newResponse);
+    _responseJson = jsonDecode(
+    utf8.decode(newResponse.bodyBytes),
+    );
+    } else {
+    _responseJson = jsonDecode(
+    utf8.decode(response.bodyBytes),
+    );
+    }
+    print("Saeed");
+    print(_responseJson);
+  }
+
+  }
 
   Future<void> deleteIngredientFromBasket(int ingredientID) async {
     const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
@@ -399,6 +628,95 @@ class BackEndController {
       }
       //print("Saeed");
       //print(ingredients);
+      return ingredients;
+    } else {
+      print("username is null");
+      return [];
+    }
+  }
+  Future<List<Map<String, dynamic>>> ingredientpreferredSearch(
+      String query) async {
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+    await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+    await flutterSecureStorage.read(key: 'refresh_token');
+    final SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+    //print("Saeed");
+    final String? userName = _sharedPreferences.getString('userName');
+    if (userName != null) {
+      final url = Uri.parse(
+          "http://192.168.1.5:8000/SearchIngredientInPreference/?user_input=$query&username=$userName&is_pref=1");
+      final http.Response response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+
+      //print(_responseJson);
+      //print("Saeed");
+      final List<Map<String, dynamic>> ingredients = [];
+
+      for (final Map<String, dynamic> item in _responseJson) {
+        final Ingredient ingredient = Ingredient.fromMapBasket(item);
+        final bool isAdded = item['ingredient']['isExist_inPref'];
+        ingredients.add({
+          'ingredient': ingredient,
+          'isAdded': isAdded,
+        });
+      }
+      print("Saeed");
+      //print(ingredients);
+      return ingredients;
+    } else {
+      print("username is null");
+      return [];
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> ingredientDispreferredSearch(
+      String query) async {
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+    await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+    await flutterSecureStorage.read(key: 'refresh_token');
+    final SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+    //print("Saeed");
+    final String? userName = _sharedPreferences.getString('userName');
+    if (userName != null) {
+      final url = Uri.parse(
+          "http://192.168.1.5:8000/SearchIngredientInPreference/?user_input=$query&username=$userName&is_pref=0");
+      final http.Response response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+
+      print(_responseJson);
+      //print("Saeed");
+      final List<Map<String, dynamic>> ingredients = [];
+
+      for (final Map<String, dynamic> item in _responseJson) {
+        final Ingredient ingredient = Ingredient.fromMapBasket(item);
+        final bool isAdded = item['ingredient']['isExist_inPref'];
+        ingredients.add({
+          'ingredient': ingredient,
+          'isAdded': isAdded,
+        });
+      }
+      //print("Saeed");
+      print(ingredients);
       return ingredients;
     } else {
       print("username is null");

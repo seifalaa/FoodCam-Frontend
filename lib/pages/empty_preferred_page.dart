@@ -26,7 +26,7 @@ class EmptyPreferredPage extends StatelessWidget {
               onPressed: () {
                 showSearch(
                   context: context,
-                  delegate: PreferredSearchDelegate('preferred'),
+                  delegate: PreferredSearchDelegate(),
                 );
               },
               style: ElevatedButton.styleFrom(

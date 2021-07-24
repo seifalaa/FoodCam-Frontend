@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:foodcam_frontend/widgets/dispreferred_search_deleget.dart';
 import 'package:foodcam_frontend/widgets/preferred_search_delegate.dart';
 
 class EmptyDisPreferredPage extends StatelessWidget {
@@ -26,7 +27,7 @@ class EmptyDisPreferredPage extends StatelessWidget {
               onPressed: () {
                 showSearch(
                   context: context,
-                  delegate: PreferredSearchDelegate('disPreferred'),
+                  delegate: DisPreferredSearchDelegate(),
                 );
               },
               style: ElevatedButton.styleFrom(

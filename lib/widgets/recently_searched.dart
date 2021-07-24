@@ -33,15 +33,15 @@ class _RecentlySearchedState extends State<RecentlySearched> {
   }
 
   Future<void> _initializeStreamController() async {
-    // await widget.homePageController
-    //     .getRecentlySearched(widget.langCode)
-    //     .then((value) => _streamController.add(value));
+    await widget.backendController
+        .getRecentlySearched(widget.langCode)
+        .then((value) => _streamController.add(value));
   }
 
   Future<void> _handleRefresh() async {
-    // await widget.homePageController
-    //     .getRecentlySearched(widget.langCode)
-    //     .then((value) => _streamController.add(value));
+    await widget.backendController
+        .getRecentlySearched(widget.langCode)
+        .then((value) => _streamController.add(value));
   }
 
   @override
