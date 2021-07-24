@@ -74,7 +74,7 @@ class BackEndController {
         await flutterSecureStorage.read(key: 'access_token');
     final String? refreshToken =
         await flutterSecureStorage.read(key: 'refresh_token');
-
+    
     final url = Uri.parse(
         "http://192.168.1.5:8000/GeneratorButton/?lang_code=$langCode&category=$categoryName");
     final http.Response response = await http.get(
