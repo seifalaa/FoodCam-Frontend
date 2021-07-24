@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/models/allergy.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
@@ -27,7 +26,6 @@ class _AllergyBoxState extends State<AllergyBox> {
   @override
   Widget build(BuildContext context) {
     final double _screenWidth = MediaQuery.of(context).size.width;
-    final String _langCode = Provider.of<LanguageProvider>(context).getLangCode;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Stack(
@@ -35,9 +33,8 @@ class _AllergyBoxState extends State<AllergyBox> {
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image(
-                image:
-                    CachedNetworkImageProvider(widget.allergy.allergyImageUrl),
+              child: Image.network(
+                widget.allergy.allergyImageUrl,
                 fit: BoxFit.cover,
               ),
             ),
@@ -109,27 +106,29 @@ class _AllergyBoxState extends State<AllergyBox> {
           Visibility(
             visible: _isVisible,
             child: Positioned(
-                child: Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100),
+              child: Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    padding: EdgeInsets.zero,
+                    primary: Colors.red,
                   ),
-                  padding: EdgeInsets.zero,
-                  primary: Colors.red,
+                  onPressed: () async {
+                    await widget.onDelete(
+                      widget.allergy.allergyId,
+                    );
+                    setState(() {
+                      _isVisible = false;
+                    });
+                  },
+                  child: const Icon(
+                    Icons.clear,
+                  ),
                 ),
-                onPressed: () async {
-                  await widget.onDelete(
-                    widget.allergy.allergyName,
-                    _langCode,
-                  );
-                  setState(() {
-                    _isVisible = false;
-                  });
-                },
-                child: const Icon(Icons.clear,),
               ),
-            ),),
+            ),
           )
         ],
       ),
