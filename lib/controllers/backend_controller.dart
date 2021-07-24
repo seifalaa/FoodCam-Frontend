@@ -4,6 +4,7 @@ import 'dart:convert' as convert;
 //import 'dart:html';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:foodcam_frontend/models/allergy.dart';
 import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/models/collection.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
@@ -52,8 +53,8 @@ class BackEndController {
     }
     return recipes;
   }
-  Future<List<String>> getCategoriesNames(String langCode)async{
 
+  Future<List<String>> getCategoriesNames(String langCode) async {
     final url = Uri.parse(
         "http://192.168.1.5:8000/GetCategoriesName/?lang_code=$langCode");
     final http.Response response = await http.get(
@@ -68,18 +69,14 @@ class BackEndController {
       names.add(item['category_name']);
     }
     return names;
-
-
-
   }
 
-  Future<Recipe> getRandomRecipe(String langCode,String categoryName)async{
+  Future<Recipe> getRandomRecipe(String langCode, String categoryName) async {
     const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
     final String? accessToken =
-    await flutterSecureStorage.read(key: 'access_token');
+        await flutterSecureStorage.read(key: 'access_token');
     final String? refreshToken =
-    await flutterSecureStorage.read(key: 'refresh_token');
-
+        await flutterSecureStorage.read(key: 'refresh_token');
 
     final url = Uri.parse(
         "http://192.168.1.5:8000/GeneratorButton/?lang_code=$langCode&category=$categoryName");
@@ -88,19 +85,17 @@ class BackEndController {
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $accessToken',
-
       },
     );
     final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
     print(_responseJson);
 
-    final Recipe recipe ;
-      recipe=Recipe.fromMap(_responseJson[0]);
-
+    final Recipe recipe;
+    recipe = Recipe.fromMap(_responseJson[0]);
 
     return recipe;
-
   }
+
   // Future<Recipe> generateRandomRecipe(String categoryName,String langcode){
 
   // }
@@ -212,18 +207,17 @@ class BackEndController {
     }
   }
 
-  Future<List<Recipe>> getRecentlySearched(
-       String langCode) async {
+  Future<List<Recipe>> getRecentlySearched(String langCode) async {
     final SharedPreferences _sharedPreferences =
-    await SharedPreferences.getInstance();
+        await SharedPreferences.getInstance();
 
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
       const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
       final String? accessToken =
-      await flutterSecureStorage.read(key: 'access_token');
+          await flutterSecureStorage.read(key: 'access_token');
       final String? refreshToken =
-      await flutterSecureStorage.read(key: 'refresh_token');
+          await flutterSecureStorage.read(key: 'refresh_token');
       final url = Uri.parse(
           "http://192.168.1.5:8000/RecentRecipes/?username=$userName&land_code=$langCode");
       final http.Response response = await http.get(
@@ -343,8 +337,24 @@ class BackEndController {
           'Authorization': 'Bearer $accessToken',
         },
       );
-
-      final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+      var _responseJson;
+      if (response.body.contains('Given token not valid')) {
+        final String newAccessToken = await this.refreshToken(refreshToken!);
+        final http.Response newResponse = await http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $newAccessToken',
+          },
+        );
+        _responseJson = jsonDecode(
+          utf8.decode(newResponse.bodyBytes),
+        );
+      } else {
+        _responseJson = jsonDecode(
+          utf8.decode(response.bodyBytes),
+        );
+      }
 
       //print(_responseJson);
       final List<Ingredient> ingredients = [];
@@ -361,6 +371,7 @@ class BackEndController {
       return [];
     }
   }
+
   Future<List<Ingredient>> getPreferedIngredients(String langCode) async {
     const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
     final String? accessToken =
@@ -399,6 +410,7 @@ class BackEndController {
       return [];
     }
   }
+
   Future<List<Ingredient>> getDisPreferedIngredients(String langCode) async {
     const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
     final String? accessToken =
@@ -437,105 +449,105 @@ class BackEndController {
       return [];
     }
   }
-  Future<void> addPreferredIngredient(int ingredientId)async{
+
+  Future<void> addPreferredIngredient(int ingredientId) async {
     final SharedPreferences _sharedPreferences =
-    await SharedPreferences.getInstance();
+        await SharedPreferences.getInstance();
 
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
-    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
-    final String? accessToken =
-    await flutterSecureStorage.read(key: 'access_token');
-    final String? refreshToken =
-    await flutterSecureStorage.read(key: 'refresh_token');
-    final url = Uri.parse(
-    "http://192.168.1.5:8000/UserPreferenceIngredientView/");
-    final http.Response response = await http.post(
-    url,
-    body:convert.jsonEncode(<String, dynamic>  {
-      "username":userName,
-      "ingredient":ingredientId,
-      "is_preferred":1,
-    }),
-    headers: {
-    'Content-Type': 'application/json; charset=UTF-8',
-    'Authorization': 'Bearer $accessToken',
-    },
-    );
-    var _responseJson;
+      const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+      final String? accessToken =
+          await flutterSecureStorage.read(key: 'access_token');
+      final String? refreshToken =
+          await flutterSecureStorage.read(key: 'refresh_token');
+      final url =
+          Uri.parse("http://192.168.1.5:8000/UserPreferenceIngredientView/");
+      final http.Response response = await http.post(
+        url,
+        body: convert.jsonEncode(<String, dynamic>{
+          "username": userName,
+          "ingredient": ingredientId,
+          "is_preferred": 1,
+        }),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      var _responseJson;
 
-    if (response.body.contains('Given token not valid')) {
-    final String newAccessToken = await this.refreshToken(refreshToken!);
-    final http.Response newResponse = await http.get(
-    url,
-    headers: {
-    'Content-Type': 'application/json; charset=UTF-8',
-    'Authorization': 'Bearer $newAccessToken',
-    },
-    );
-    //print(newResponse);
-    _responseJson = jsonDecode(
-    utf8.decode(newResponse.bodyBytes),
-    );
-    } else {
-    _responseJson = jsonDecode(
-    utf8.decode(response.bodyBytes),
-    );
+      if (response.body.contains('Given token not valid')) {
+        final String newAccessToken = await this.refreshToken(refreshToken!);
+        final http.Response newResponse = await http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $newAccessToken',
+          },
+        );
+        //print(newResponse);
+        _responseJson = jsonDecode(
+          utf8.decode(newResponse.bodyBytes),
+        );
+      } else {
+        _responseJson = jsonDecode(
+          utf8.decode(response.bodyBytes),
+        );
+      }
+      print("Saeed");
+      print(_responseJson);
     }
-    print("Saeed");
-    print(_responseJson);
   }
 
-  }
-  Future<void> addDisPreferredIngredient(int ingredientId)async{
+  Future<void> addDisPreferredIngredient(int ingredientId) async {
     final SharedPreferences _sharedPreferences =
-    await SharedPreferences.getInstance();
+        await SharedPreferences.getInstance();
 
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
-    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
-    final String? accessToken =
-    await flutterSecureStorage.read(key: 'access_token');
-    final String? refreshToken =
-    await flutterSecureStorage.read(key: 'refresh_token');
-    final url = Uri.parse(
-    "http://192.168.1.5:8000/UserPreferenceIngredientView/");
-    final http.Response response = await http.post(
-    url,
-    body:convert.jsonEncode(<String, dynamic>  {
-      "username":userName,
-      "ingredient":ingredientId,
-      "is_preferred":0,
-    }),
-    headers: {
-    'Content-Type': 'application/json; charset=UTF-8',
-    'Authorization': 'Bearer $accessToken',
-    },
-    );
-    var _responseJson;
+      const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+      final String? accessToken =
+          await flutterSecureStorage.read(key: 'access_token');
+      final String? refreshToken =
+          await flutterSecureStorage.read(key: 'refresh_token');
+      final url =
+          Uri.parse("http://192.168.1.5:8000/UserPreferenceIngredientView/");
+      final http.Response response = await http.post(
+        url,
+        body: convert.jsonEncode(<String, dynamic>{
+          "username": userName,
+          "ingredient": ingredientId,
+          "is_preferred": 0,
+        }),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      var _responseJson;
 
-    if (response.body.contains('Given token not valid')) {
-    final String newAccessToken = await this.refreshToken(refreshToken!);
-    final http.Response newResponse = await http.get(
-    url,
-    headers: {
-    'Content-Type': 'application/json; charset=UTF-8',
-    'Authorization': 'Bearer $newAccessToken',
-    },
-    );
-    //print(newResponse);
-    _responseJson = jsonDecode(
-    utf8.decode(newResponse.bodyBytes),
-    );
-    } else {
-    _responseJson = jsonDecode(
-    utf8.decode(response.bodyBytes),
-    );
+      if (response.body.contains('Given token not valid')) {
+        final String newAccessToken = await this.refreshToken(refreshToken!);
+        final http.Response newResponse = await http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $newAccessToken',
+          },
+        );
+        //print(newResponse);
+        _responseJson = jsonDecode(
+          utf8.decode(newResponse.bodyBytes),
+        );
+      } else {
+        _responseJson = jsonDecode(
+          utf8.decode(response.bodyBytes),
+        );
+      }
+      print("Saeed");
+      print(_responseJson);
     }
-    print("Saeed");
-    print(_responseJson);
-  }
-
   }
 
   Future<void> deleteIngredientFromBasket(int ingredientID) async {
@@ -551,13 +563,23 @@ class BackEndController {
     if (userName != null) {
       final url = Uri.parse(
           "http://192.168.1.5:8000/UserIngredientView/?username=$userName&ingredient=$ingredientID");
-      await http.delete(
+      final http.Response response = await http.delete(
         url,
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $accessToken',
         },
       );
+      if (response.body.contains('Given token not valid')) {
+        final String newAccessToken = await this.refreshToken(refreshToken!);
+        await http.delete(
+          url,
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $newAccessToken',
+          },
+        );
+      }
     }
   }
 
@@ -585,9 +607,25 @@ class BackEndController {
         'Authorization': 'Bearer $accessToken',
       },
     );
-    final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
-    print(_responseJson);
-    return response;
+    if (response.body.contains('Given token not valid')) {
+      print('expired');
+      final String newAccessToken = await this.refreshToken(refreshToken!);
+      final http.Response newResponse = await http.post(
+        url,
+        body: convert.jsonEncode(<String, dynamic>{
+          'username': userName,
+          'ingredient': ingredientId,
+        }),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $newAccessToken',
+        },
+      );
+      print(newResponse.body);
+      return newResponse;
+    } else {
+      return response;
+    }
   }
 
   Future<List<Map<String, dynamic>>> ingredientBasketSearch(
@@ -611,11 +649,20 @@ class BackEndController {
           'Authorization': 'Bearer $accessToken',
         },
       );
-
-      final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
-
-      print(_responseJson);
-      //print("Saeed");
+      var _responseJson;
+      if (response.body.contains('Given token not valid')) {
+        final String newAccessToken = await this.refreshToken(refreshToken!);
+        final http.Response newResponse = await http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $newAccessToken',
+          },
+        );
+        _responseJson = jsonDecode(utf8.decode(newResponse.bodyBytes));
+      } else {
+        _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+      }
       final List<Map<String, dynamic>> ingredients = [];
 
       for (final Map<String, dynamic> item in _responseJson) {
@@ -634,15 +681,16 @@ class BackEndController {
       return [];
     }
   }
+
   Future<List<Map<String, dynamic>>> ingredientpreferredSearch(
       String query) async {
     const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
     final String? accessToken =
-    await flutterSecureStorage.read(key: 'access_token');
+        await flutterSecureStorage.read(key: 'access_token');
     final String? refreshToken =
-    await flutterSecureStorage.read(key: 'refresh_token');
+        await flutterSecureStorage.read(key: 'refresh_token');
     final SharedPreferences _sharedPreferences =
-    await SharedPreferences.getInstance();
+        await SharedPreferences.getInstance();
     //print("Saeed");
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
@@ -683,11 +731,11 @@ class BackEndController {
       String query) async {
     const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
     final String? accessToken =
-    await flutterSecureStorage.read(key: 'access_token');
+        await flutterSecureStorage.read(key: 'access_token');
     final String? refreshToken =
-    await flutterSecureStorage.read(key: 'refresh_token');
+        await flutterSecureStorage.read(key: 'refresh_token');
     final SharedPreferences _sharedPreferences =
-    await SharedPreferences.getInstance();
+        await SharedPreferences.getInstance();
     //print("Saeed");
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
@@ -912,6 +960,189 @@ class BackEndController {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $newAccessToken',
         },
+      );
+    }
+  }
+
+  Future<List<Allergy>> getUserAllergies(String langCode) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+        await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+        await flutterSecureStorage.read(key: 'refresh_token');
+    final String userName = sharedPreferences.getString('userName')!;
+    final url = Uri.parse(
+        'http://192.168.1.5:8000/userPrefAllergy/?username=$userName&lang_code=$langCode');
+    final http.Response response = await http.get(url, headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $accessToken',
+    });
+    print(response.body);
+    var _responseJson;
+    if (response.body.contains('Given token not valid')) {
+      final String newAccessToken = await this.refreshToken(refreshToken!);
+      final http.Response newResponse = await http.get(url, headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $newAccessToken',
+      });
+      _responseJson = jsonDecode(
+        utf8.decode(newResponse.bodyBytes),
+      );
+    } else {
+      _responseJson = jsonDecode(
+        utf8.decode(response.bodyBytes),
+      );
+    }
+    final List<Allergy> allergies = [];
+    for (final item in _responseJson) {
+      allergies.add(Allergy.fromMap(item));
+    }
+    return allergies;
+  }
+
+  Future<List<Map<String, dynamic>>> getAllergies(String langCode) async {
+    final SharedPreferences sharedPreference =
+        await SharedPreferences.getInstance();
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+        await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+        await flutterSecureStorage.read(key: 'refresh_token');
+    final String userName = sharedPreference.getString('userName')!;
+    final url = Uri.parse(
+        'http://192.168.1.5:8000/GetAllergies/?lang_code=$langCode&username=$userName');
+    final http.Response response = await http.get(url, headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $accessToken',
+    });
+    var _responseJson;
+    if (response.body.contains('Given token not valid')) {
+      final String newAccessToken = await this.refreshToken(refreshToken!);
+      final http.Response newResponse = await http.get(url, headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $newAccessToken',
+      });
+      _responseJson = jsonDecode(
+        utf8.decode(newResponse.bodyBytes),
+      );
+    } else {
+      _responseJson = jsonDecode(
+        utf8.decode(response.bodyBytes),
+      );
+    }
+    List<Map<String, dynamic>> allergies = [];
+    for (final item in _responseJson) {
+      final Allergy allergy = Allergy.fromMapAllAllergies(item);
+      final bool isAdded = item['isExist_In_my_Allergies'];
+      allergies.add({
+        'allergy': allergy,
+        'isAdded': isAdded,
+      });
+    }
+    return allergies;
+  }
+
+  Future<void> addAllergy(int allergyId) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+        await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+        await flutterSecureStorage.read(key: 'refresh_token');
+    final String userName = sharedPreferences.getString('userName')!;
+    final url = Uri.parse('http://192.168.1.5:8000/userPrefAllergy/');
+    final http.Response response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: convert.jsonEncode(
+        <String, dynamic>{'username': userName, 'allergy': allergyId},
+      ),
+    );
+    if (response.body.contains('Given token not valid')) {
+      final String newAccessToken = await this.refreshToken(refreshToken!);
+      await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $newAccessToken',
+        },
+        body: convert.jsonEncode(
+          <String, dynamic>{'username': userName, 'allergy': allergyId},
+        ),
+      );
+    }
+  }
+
+  Future<void> deleteAllergy(int allergyId) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+        await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+        await flutterSecureStorage.read(key: 'refresh_token');
+    final String userName = sharedPreferences.getString('userName')!;
+    final url = Uri.parse(
+        'http://192.168.1.5:8000/DeleteAllergy/?allergy=$allergyId&username=$userName');
+    final http.Response response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    if (response.body.contains('Given token not valid')) {
+      final String newAccessToken = await this.refreshToken(refreshToken!);
+      await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $newAccessToken',
+        },
+        body: convert.jsonEncode(
+          <String, dynamic>{'username': userName, 'allergy': allergyId},
+        ),
+      );
+    }
+  }
+
+  Future<void> rateRecipe(int recipeId, int rate) async {
+    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+    final String? accessToken =
+        await flutterSecureStorage.read(key: 'access_token');
+    final String? refreshToken =
+        await flutterSecureStorage.read(key: 'refresh_token');
+    final url = Uri.parse('http://192.168.1.5:8000/RecipeRateView/');
+    final http.Response response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: convert.jsonEncode(<String, dynamic>{
+        'recipe': recipeId,
+        'rete': rate,
+      }),
+    );
+    if (response.body.contains('Given token not valid')) {
+      final String newAccessToken = await this.refreshToken(refreshToken!);
+      await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $newAccessToken',
+        },
+        body: convert.jsonEncode(<String, dynamic>{
+          'recipe': recipeId,
+          'rete': rate,
+        }),
       );
     }
   }
