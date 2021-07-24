@@ -1,14 +1,17 @@
-import 'package:foodcam_frontend/models/recipe.dart';
 
 class Category {
   final String categoryName;
   final String categoryImageUrl;
-  final List<Recipe> recipes;
+  final int recipeCount;
+  final int categoryId;
+  //final List<Recipe> recipes;
 
   Category({
     required this.categoryName,
     required this.categoryImageUrl,
-    required this.recipes,
+    required this.recipeCount,
+    required this.categoryId,
+    //required this.recipes,
   });
 
   factory Category.fromMap(Map<String, dynamic> map) {
@@ -17,16 +20,16 @@ class Category {
     // url =
     // 'https://drive.google.com/uc?id=${url.substring(0, url.indexOf('/'))}';
 
-    final List<Recipe> recipes = [];
-    for (final recipe in map['recipes']) {
-      recipes.add(Recipe.fromMap(recipe));
-    }
+    // final List<Recipe> recipes = [];
+    // for (final recipe in map['recipes']) {
+    //   recipes.add(Recipe.fromMap(recipe));
+    // }
     return Category(
-
-        categoryName: map['categoryName'],
-        categoryImageUrl: map['categoryImage'],
-        recipes: recipes)
-
-    ;
+      categoryName: map['categoryName'],
+      categoryImageUrl: map['categoryImage'],
+      recipeCount: map['recipes'],
+      categoryId:map['id'],
+      //recipes: recipes,
+    );
   }
 }
