@@ -235,7 +235,6 @@ class BackEndController {
           utf8.decode(response.bodyBytes),
         );
       }
-      print(_responseJson);
       final List<Recipe> recipes = [];
       for (final item in _responseJson) {
         recipes.add(Recipe.fromMap(item));
@@ -300,32 +299,18 @@ class BackEndController {
         await SharedPreferences.getInstance();
 
     final String? userName = _sharedPreferences.getString('userName');
-    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
-    final String? accessToken =
-        await flutterSecureStorage.read(key: 'access_token');
-    final String? refreshToken =
-        await flutterSecureStorage.read(key: 'refresh_token');
-    final url = Uri.parse('http://$kIpAddress:8000/RecentRecipes/');
-    final http.Response response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $accessToken',
-      },
-      body: convert.jsonEncode(
-        <String, dynamic>{
-          'recipe': recipeId,
-          'username': userName,
-        },
-      ),
-    );
-    if (response.body.contains('Given token not valid')) {
-      final String newAccessToken = await this.refreshToken(refreshToken!);
-      await http.post(
+    if (userName != null) {
+      const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+      final String? accessToken =
+          await flutterSecureStorage.read(key: 'access_token');
+      final String? refreshToken =
+          await flutterSecureStorage.read(key: 'refresh_token');
+      final url = Uri.parse('http://192.168.1.5:8000/RecentRecipes/');
+      final http.Response response = await http.post(
         url,
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $newAccessToken',
+          'Authorization': 'Bearer $accessToken',
         },
         body: convert.jsonEncode(
           <String, dynamic>{
@@ -334,6 +319,22 @@ class BackEndController {
           },
         ),
       );
+      if (response.body.contains('Given token not valid')) {
+        final String newAccessToken = await this.refreshToken(refreshToken!);
+        await http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $newAccessToken',
+          },
+          body: convert.jsonEncode(
+            <String, dynamic>{
+              'recipe': recipeId,
+              'username': userName,
+            },
+          ),
+        );
+      }
     }
   }
 
