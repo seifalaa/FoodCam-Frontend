@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:foodcam_frontend/controllers/homepage_controller.dart';
-import 'package:foodcam_frontend/models/allergy.dart';
+import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
-import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import '../constants.dart';
 
@@ -19,7 +17,7 @@ class _AddAllergyBottomSheetState extends State<AddAllergyBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final HomePageController _homePageController = HomePageController();
+    final BackEndController _backEndController = BackEndController();
     final String _langCode = Provider.of<LanguageProvider>(context).getLangCode;
     return makeDismissible(
       child: DraggableScrollableSheet(
@@ -60,60 +58,69 @@ class _AddAllergyBottomSheetState extends State<AddAllergyBottomSheet> {
               ),
               Opacity(
                 opacity: !_isLoading ? 1.0 : 0.0,
-                child: Container(),
-                // child: StreamBuilder(
-                //   stream: Stream.fromFuture(
-                //     _homePageController.getAllergies(_langCode),
-                //   ),
-                //   builder: (context, AsyncSnapshot<List<Allergy>> snapshot) =>
-                //       snapshot.hasData
-                //           ? Column(
-                //               children: snapshot.data!
-                //                   .map(
-                //                     (e) => Column(
-                //                       children: [
-                //                         ListTile(
-                //                           title: Text(
-                //                             e.allergyName,
-                //                             style: const TextStyle(
-                //                               fontSize: 20,
-                //                               fontWeight: FontWeight.bold,
-                //                             ),
-                //                           ),
-                //                           trailing: IconButton(
-                //                             icon: const Icon(
-                //                               Icons.add_rounded,
-                //                               color: kPrimaryColor,
-                //                             ),
-                //                             onPressed: () async {
-                //                               setState(() {
-                //                                 _isLoading = true;
-                //                               });
-                //                               await _homePageController
-                //                                   .addAllergy(
-                //                                 _langCode,
-                //                                 e.allergyName,
-                //                               );
-                //                               Navigator.pushNamedAndRemoveUntil(
-                //                                 context,
-                //                                 'allergies/',
-                //                                 ModalRoute.withName('profile/'),
-                //                               );
-                //                             },
-                //                           ),
-                //                         ),
-                //                         const Divider(),
-                //                       ],
-                //                     ),
-                //                   )
-                //                   .toList(),
-                //             )
-                //           : const Center(
-                //               child: CircularProgressIndicator(
-                //                 color: kPrimaryColor,
-                //               ),
-                //             ),
-                // ),
+                child: StreamBuilder(
+                  stream: Stream.fromFuture(
+                    _backEndController.getAllergies(_langCode),
+                  ),
+                  builder: (context,
+                          AsyncSnapshot<List<Map<String, dynamic>>> snapshot) =>
+                      snapshot.hasData
+                          ? Column(
+                              children: snapshot.data!
+                                  .map(
+                                    (e) => Column(
+                                      children: [
+                                        ListTile(
+                                          title: Text(
+                                            e['allergy'].allergyName,
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          trailing: e['isAdded']
+                                              ? const Padding(
+                                                  padding: EdgeInsets.all(11.0),
+                                                  child: Icon(
+                                                    Icons.check_rounded,
+                                                    color: kPrimaryColor,
+                                                  ),
+                                                )
+                                              : IconButton(
+                                                  icon: const Icon(
+                                                    Icons.add_rounded,
+                                                    color: kPrimaryColor,
+                                                  ),
+                                                  onPressed: () async {
+                                                    setState(() {
+                                                      _isLoading = true;
+                                                    });
+                                                    //TODO:add allergy here
+                                                    await _backEndController
+                                                        .addAllergy(e['allergy']
+                                                            .allergyId);
+                                                    Navigator
+                                                        .pushNamedAndRemoveUntil(
+                                                      context,
+                                                      'allergies/',
+                                                      ModalRoute.withName(
+                                                          'profile/'),
+                                                    );
+                                                  },
+                                                ),
+                                        ),
+                                        const Divider(),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(
+                                color: kPrimaryColor,
+                              ),
+                            ),
+                ),
               ),
             ],
           ),
