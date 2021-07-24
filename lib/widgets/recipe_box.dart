@@ -106,7 +106,7 @@ class _RecipeBoxState extends State<RecipeBox> {
                     borderRadius: BorderRadius.circular(20),
                     child: Image.network(
                       widget.recipe.recipeImageUrl,
-                      // 'https://lh3.googleusercontent.com/0aQ1IuGehjOyBhSf_ddCaBEI80SG2P62V5rvhOGrBdIwL3iQSk3xs1zxPxfKrcf9Hv_--hdCPmiPxAtAmzw9ILeqQsUEiLGqg63Jd6ivrjXTHBLHKo9iWdbri4vCsxwpMR5IOnwsQBvSP2lE257to3NB9kUzpwGRMbaA7CEvv6G57eagmLCYu4p1Texc-hWTAKZHXROVWAlkEM4AmhihRAr4eXjirfOyGSqNk2I1gASJBczL6cHp3hCaXXoHugN6V3rwbJQdBsR3JxT7dZgB5kMhOE9PtFbnsCNHcUWxlaGs86NRYGJodZF6nZaYcl9RgP_xzku5k6zxXTnNGwkuoWtk5Aii371FnbRe7pMc3GpQwRZSwICev2n26bc87x-HAaH32MB8jsa7--SZrwsy723zYKzMA4K9oSsp55kUxDl-Vza_0QyMMUQll3GN18Em4w4RqO-U4MyOg2yO1K6L-Hjom6kLRGbLr12lMaDTeXSYDlW4HAb5V3fthu24PamlmoDQttyaQYcVdggnJZ2fesdWNC52BhfAmnberUmmDfa2bDVSvKLD4Mvfq8XBBz-Fg-l5wB4Ay51arELmOL33vejBCo9vtPAQpfJUhd4F9AH_0UuAd7iIlPikEp5VRjuoZi8cV7ETTR02OSdMcYcm30gp2-7TmHKHe5kVE0W1kNCUTUYE0u0KdC0y-DJkBK0HsnFZoMcfqkoM_smTK9T7xg=w659-h411-no?authuser=0',
+                      // 'https://photos.app.goo.gl/by7QVL8fm2PPy5jQ8',
                       fit: BoxFit.cover,
                     ),
                   ),

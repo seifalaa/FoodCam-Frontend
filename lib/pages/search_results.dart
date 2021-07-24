@@ -74,12 +74,12 @@ class SearchResultsPage extends StatelessWidget {
                     itemBuilder: (context, index) =>
                         RecipeBox(recipe: snapshot.data![index]),
                   )
-                : const Center(
-                    child: CircularProgressIndicator(
-                      color: kPrimaryColor,
-                    ),
-                  )
-            : const NoResultsPage(),
+                : const NoResultsPage()
+            : const Center(
+          child: CircularProgressIndicator(
+            color: kPrimaryColor,
+          ),
+        ) ,
       ),
     );
   }
