@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:convert' as convert;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/models/allergy.dart';
 import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/models/collection.dart';
@@ -13,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class BackEndController {
   Future<String> refreshToken(String refreshToken) async {
     final url =
-        Uri.parse("http://192.168.1.5:8000/dj-rest-auth/token/refresh/");
+        Uri.parse("http://$kIpAddress:8000/dj-rest-auth/token/refresh/");
     final http.Response response = await http.post(
       url,
       body: convert.jsonEncode(
@@ -36,7 +37,7 @@ class BackEndController {
 
   Future<List<Recipe>> searchRecipeByName(String query) async {
     final url = Uri.parse(
-        "http://192.168.1.5:8000/SearchRecipeByName?user_input=$query");
+        "http://$kIpAddress:8000/SearchRecipeByName?user_input=$query");
     final http.Response response = await http.get(
       url,
       headers: {
@@ -53,7 +54,7 @@ class BackEndController {
 
   Future<List<String>> getCategoriesNames(String langCode) async {
     final url = Uri.parse(
-        "http://192.168.1.5:8000/GetCategoriesName/?lang_code=$langCode");
+        "http://$kIpAddress:8000/GetCategoriesName/?lang_code=$langCode");
     final http.Response response = await http.get(
       url,
       headers: {
@@ -76,7 +77,7 @@ class BackEndController {
         await flutterSecureStorage.read(key: 'refresh_token');
 
     final url = Uri.parse(
-        "http://192.168.1.5:8000/GeneratorButton/?lang_code=$langCode&category=$categoryName");
+        "http://$kIpAddress:8000/GeneratorButton/?lang_code=$langCode&category=$categoryName");
     final http.Response response = await http.get(
       url,
       headers: {
@@ -107,7 +108,7 @@ class BackEndController {
   Future<List<Ingredient>> getRecipeIngredients(
       int recipeId, String langCode) async {
     final url = Uri.parse(
-        "http://192.168.1.5:8000/GetIngredientsInRecipe?recipe=$recipeId&lang_code=$langCode");
+        "http://$kIpAddress:8000/GetIngredientsInRecipe?recipe=$recipeId&lang_code=$langCode");
     final http.Response response = await http.get(
       url,
       headers: {
@@ -127,7 +128,7 @@ class BackEndController {
   Future<List<Recipe>> getCategoryRecipes(
       int categoryId, String langCode) async {
     final url = Uri.parse(
-        "http://192.168.1.5:8000/GetRecipesInCategory?category=$categoryId&lang_code=$langCode");
+        "http://$kIpAddress:8000/GetRecipesInCategory?category=$categoryId&lang_code=$langCode");
     final http.Response response = await http.get(
       url,
       headers: {
@@ -156,7 +157,7 @@ class BackEndController {
       final String? refreshToken =
           await flutterSecureStorage.read(key: 'refresh_token');
       final url = Uri.parse(
-          "http://192.168.1.5:8000/CollectionView/?username=$userName&lang_code=$langCode");
+          "http://$kIpAddress:8000/CollectionView/?username=$userName&lang_code=$langCode");
       final http.Response response = await http.get(
         url,
         headers: {
@@ -207,7 +208,7 @@ class BackEndController {
       final String? refreshToken =
           await flutterSecureStorage.read(key: 'refresh_token');
       final url = Uri.parse(
-          "http://192.168.1.5:8000/CollectionRecipeView/?collection_id=$collectionId&lang_code=$langCode");
+          "http://$kIpAddress:8000/CollectionRecipeView/?collection_id=$collectionId&lang_code=$langCode");
       final http.Response response = await http.get(
         url,
         headers: {
@@ -257,7 +258,7 @@ class BackEndController {
       final String? refreshToken =
           await flutterSecureStorage.read(key: 'refresh_token');
       final url = Uri.parse(
-          "http://192.168.1.5:8000/RecentRecipes/?username=$userName&lang_code=$langCode");
+          "http://$kIpAddress:8000/RecentRecipes/?username=$userName&lang_code=$langCode");
       final http.Response response = await http.get(
         url,
         headers: {
@@ -304,7 +305,7 @@ class BackEndController {
         await flutterSecureStorage.read(key: 'access_token');
     final String? refreshToken =
         await flutterSecureStorage.read(key: 'refresh_token');
-    final url = Uri.parse('http://192.168.1.5:8000/RecentRecipes/');
+    final url = Uri.parse('http://$kIpAddress:8000/RecentRecipes/');
     final http.Response response = await http.post(
       url,
       headers: {
@@ -338,7 +339,7 @@ class BackEndController {
 
   Future<List<Category>> getAllCategories(String langCode) async {
     final url = Uri.parse(
-        "http://192.168.1.5:8000/ListRecipeCategories/?lang_code=$langCode");
+        "http://$kIpAddress:8000/ListRecipeCategories/?lang_code=$langCode");
     final http.Response response = await http.get(
       url,
       headers: {
@@ -356,7 +357,7 @@ class BackEndController {
 
   Future<List<Recipe>> searchByMultipleIngredients(
       String langCode, List<String> ingredientName) async {
-    final url = Uri.parse("http://192.168.1.5:8000/SearchRecipeByIngredients/");
+    final url = Uri.parse("http://$kIpAddress:8000/SearchRecipeByIngredients/");
     final http.Response response = await http.post(
       url,
       body: convert.jsonEncode(<String, dynamic>{
@@ -378,7 +379,7 @@ class BackEndController {
 
   Future<List<Recipe>> getTopRated(String langCode) async {
     final url = Uri.parse(
-        "http://192.168.1.5:8000/GetTopRatedRecipes/?lang_code=$langCode");
+        "http://$kIpAddress:8000/GetTopRatedRecipes/?lang_code=$langCode");
     final http.Response response = await http.get(
       url,
       headers: {
@@ -405,7 +406,7 @@ class BackEndController {
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
       final url = Uri.parse(
-          "http://192.168.1.5:8000/UserIngredientView/?username=$userName&lang_code=$langCode");
+          "http://$kIpAddress:8000/UserIngredientView/?username=$userName&lang_code=$langCode");
       final http.Response response = await http.get(
         url,
         headers: {
@@ -454,7 +455,7 @@ class BackEndController {
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
       final url = Uri.parse(
-          "http://192.168.1.5:8000/UserPreferenceIngredientView/?username=$userName&is_preferred=1&lang_code=$langCode");
+          "http://$kIpAddress:8000/UserPreferenceIngredientView/?username=$userName&is_preferred=1&lang_code=$langCode");
       final http.Response response = await http.get(
         url,
         headers: {
@@ -498,7 +499,7 @@ class BackEndController {
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
       final url = Uri.parse(
-          "http://192.168.1.5:8000/UserPreferenceIngredientView/?username=$userName&is_preferred=0&lang_code=$langCode");
+          "http://$kIpAddress:8000/UserPreferenceIngredientView/?username=$userName&is_preferred=0&lang_code=$langCode");
       final http.Response response = await http.get(
         url,
         headers: {
@@ -544,7 +545,7 @@ class BackEndController {
       final String? refreshToken =
           await flutterSecureStorage.read(key: 'refresh_token');
       final url =
-          Uri.parse("http://192.168.1.5:8000/UserPreferenceIngredientView/");
+          Uri.parse("http://$kIpAddress:8000/UserPreferenceIngredientView/");
       final http.Response response = await http.post(
         url,
         body: convert.jsonEncode(<String, dynamic>{
@@ -591,7 +592,7 @@ class BackEndController {
       final String? refreshToken =
           await flutterSecureStorage.read(key: 'refresh_token');
       final url =
-          Uri.parse("http://192.168.1.5:8000/UserPreferenceIngredientView/");
+          Uri.parse("http://$kIpAddress:8000/UserPreferenceIngredientView/");
       final http.Response response = await http.post(
         url,
         body: convert.jsonEncode(<String, dynamic>{
@@ -638,7 +639,7 @@ class BackEndController {
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
       final url = Uri.parse(
-          "http://192.168.1.5:8000/UserIngredientView/?username=$userName&ingredient=$ingredientID");
+          "http://$kIpAddress:8000/UserIngredientView/?username=$userName&ingredient=$ingredientID");
       final http.Response response = await http.delete(
         url,
         headers: {
@@ -671,7 +672,7 @@ class BackEndController {
 
     final String? userName = sharedPreferences.getString('userName');
 
-    final url = Uri.parse("http://192.168.1.5:8000/UserIngredientView/");
+    final url = Uri.parse("http://$kIpAddress:8000/UserIngredientView/");
     final http.Response response = await http.post(
       url,
       body: convert.jsonEncode(<String, dynamic>{
@@ -714,7 +715,7 @@ class BackEndController {
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
       final url = Uri.parse(
-          "http://192.168.1.5:8000/searchIngredient/?user_input=$query&username=$userName");
+          "http://$kIpAddress:8000/searchIngredient/?user_input=$query&username=$userName");
       final http.Response response = await http.get(
         url,
         headers: {
@@ -764,7 +765,7 @@ class BackEndController {
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
       final url = Uri.parse(
-          "http://192.168.1.5:8000/SearchIngredientInPreference/?user_input=$query&username=$userName&is_pref=1");
+          "http://$kIpAddress:8000/SearchIngredientInPreference/?user_input=$query&username=$userName&is_pref=1");
       final http.Response response = await http.get(
         url,
         headers: {
@@ -814,7 +815,7 @@ class BackEndController {
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
       final url = Uri.parse(
-          "http://192.168.1.5:8000/SearchIngredientInPreference/?user_input=$query&username=$userName&is_pref=0");
+          "http://$kIpAddress:8000/SearchIngredientInPreference/?user_input=$query&username=$userName&is_pref=0");
       final http.Response response = await http.get(
         url,
         headers: {
@@ -863,7 +864,7 @@ class BackEndController {
         await flutterSecureStorage.read(key: 'access_token');
     final String? refreshToken =
         await flutterSecureStorage.read(key: 'refresh_token');
-    final url = Uri.parse("http://192.168.1.5:8000/CollectionView/");
+    final url = Uri.parse("http://$kIpAddress:8000/CollectionView/");
     final response = await http.post(
       url,
       body: convert.jsonEncode(<String, dynamic>{
@@ -907,7 +908,7 @@ class BackEndController {
     final String? userName = _sharedPreferences.getString('userName');
     if (userName != null) {
       final url = Uri.parse(
-          "http://192.168.1.5:8000/CollectionView/?username=$userName&collection_name=$collectionName");
+          "http://$kIpAddress:8000/CollectionView/?username=$userName&collection_name=$collectionName");
       final http.Response response = await http.delete(
         url,
         headers: {
@@ -939,7 +940,7 @@ class BackEndController {
         await flutterSecureStorage.read(key: 'refresh_token');
     final String userName = sharedPreferences.getString('userName')!;
     final url = Uri.parse(
-        'http://192.168.1.5:8000/SearchRecipeByNameInCollection?user_input=$query&username=$userName&collection_name=$collectionName');
+        'http://$kIpAddress:8000/SearchRecipeByNameInCollection?user_input=$query&username=$userName&collection_name=$collectionName');
     final http.Response response = await http.get(
       url,
       headers: {
@@ -984,7 +985,7 @@ class BackEndController {
         await flutterSecureStorage.read(key: 'access_token');
     final String? refreshToken =
         await flutterSecureStorage.read(key: 'refresh_token');
-    final url = Uri.parse('http://192.168.1.5:8000/CollectionRecipeView/');
+    final url = Uri.parse('http://$kIpAddress:8000/CollectionRecipeView/');
     final http.Response response = await http.post(
       url,
       headers: {
@@ -1020,7 +1021,7 @@ class BackEndController {
     final String? refreshToken =
         await flutterSecureStorage.read(key: 'refresh_token');
     final url = Uri.parse(
-        'http://192.168.1.5:8000/CollectionRecipeView/?collection_id=$collectionId&recipe_id=$recipeId');
+        'http://$kIpAddress:8000/CollectionRecipeView/?collection_id=$collectionId&recipe_id=$recipeId');
     final http.Response response = await http.delete(
       url,
       headers: {
@@ -1050,7 +1051,7 @@ class BackEndController {
         await flutterSecureStorage.read(key: 'refresh_token');
     final String userName = sharedPreferences.getString('userName')!;
     final url = Uri.parse(
-        'http://192.168.1.5:8000/userPrefAllergy/?username=$userName&lang_code=$langCode');
+        'http://$kIpAddress:8000/userPrefAllergy/?username=$userName&lang_code=$langCode');
     final http.Response response = await http.get(url, headers: {
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $accessToken',
@@ -1087,7 +1088,7 @@ class BackEndController {
         await flutterSecureStorage.read(key: 'refresh_token');
     final String userName = sharedPreference.getString('userName')!;
     final url = Uri.parse(
-        'http://192.168.1.5:8000/GetAllergies/?lang_code=$langCode&username=$userName');
+        'http://$kIpAddress:8000/GetAllergies/?lang_code=$langCode&username=$userName');
     final http.Response response = await http.get(url, headers: {
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $accessToken',
@@ -1128,7 +1129,7 @@ class BackEndController {
     final String? refreshToken =
         await flutterSecureStorage.read(key: 'refresh_token');
     final String userName = sharedPreferences.getString('userName')!;
-    final url = Uri.parse('http://192.168.1.5:8000/userPrefAllergy/');
+    final url = Uri.parse('http://$kIpAddress:8000/userPrefAllergy/');
     final http.Response response = await http.post(
       url,
       headers: {
@@ -1164,7 +1165,7 @@ class BackEndController {
         await flutterSecureStorage.read(key: 'refresh_token');
     final String userName = sharedPreferences.getString('userName')!;
     final url = Uri.parse(
-        'http://192.168.1.5:8000/DeleteAllergy/?allergy=$allergyId&username=$userName');
+        'http://$kIpAddress:8000/DeleteAllergy/?allergy=$allergyId&username=$userName');
     final http.Response response = await http.delete(
       url,
       headers: {
@@ -1190,35 +1191,36 @@ class BackEndController {
 
   Future<void> rateRecipe(int recipeId, int rate) async {
     const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
-    final String? accessToken =
-        await flutterSecureStorage.read(key: 'access_token');
-    final String? refreshToken =
-        await flutterSecureStorage.read(key: 'refresh_token');
-    final url = Uri.parse('http://192.168.1.5:8000/RecipeRateView/');
+    // final String? accessToken =
+    //     await flutterSecureStorage.read(key: 'access_token');
+    // final String? refreshToken =
+    //     await flutterSecureStorage.read(key: 'refresh_token');
+    final url = Uri.parse('http://$kIpAddress:8000/RecipeRateView/');
     final http.Response response = await http.post(
       url,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $accessToken',
+        //'Authorization': 'Bearer $accessToken',
       },
       body: convert.jsonEncode(<String, dynamic>{
         'recipe': recipeId,
-        'rete': rate,
+        'rate': rate,
       }),
     );
-    if (response.body.contains('Given token not valid')) {
-      final String newAccessToken = await this.refreshToken(refreshToken!);
-      await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $newAccessToken',
-        },
-        body: convert.jsonEncode(<String, dynamic>{
-          'recipe': recipeId,
-          'rete': rate,
-        }),
-      );
-    }
+    print(response.body);
+    // if (response.body.contains('Given token not valid')) {
+    //   final String newAccessToken = await this.refreshToken(refreshToken!);
+    //   await http.post(
+    //     url,
+    //     headers: {
+    //       'Content-Type': 'application/json; charset=UTF-8',
+    //       'Authorization': 'Bearer $newAccessToken',
+    //     },
+    //     body: convert.jsonEncode(<String, dynamic>{
+    //       'recipe': recipeId,
+    //       'rate': rate,
+    //     }),
+    //   );
+    // }
   }
 }
