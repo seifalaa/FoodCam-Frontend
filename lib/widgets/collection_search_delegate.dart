@@ -229,7 +229,8 @@ class _AddRecipeListTileState extends State<AddRecipeListTile> {
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Image.network(
-          'https://media-exp3.licdn.com/dms/image/C561BAQHnh3Tsc_uBKQ/company-background_10000/0/1561589281326?e=2159024400&v=beta&t=3cfGYoRfVwt5-vQJL_x4W7MrP_uwZB-PRzqqpfBr5Gg',
+          widget.searchResult['recipe'].recipeImageUrl,
+          //'https://media-exp3.licdn.com/dms/image/C561BAQHnh3Tsc_uBKQ/company-background_10000/0/1561589281326?e=2159024400&v=beta&t=3cfGYoRfVwt5-vQJL_x4W7MrP_uwZB-PRzqqpfBr5Gg',
           fit: BoxFit.cover,
         ),
         //child: Container(),

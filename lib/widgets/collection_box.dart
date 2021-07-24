@@ -54,8 +54,8 @@ class _CollectionBoxState extends State<CollectionBox> {
               child: //Image.asset('lib/assets/avatar.png' , fit:BoxFit.cover ,),
 
                   Image.network(
-                //widget.collection.collectionImageUrl,
-                'https://lh3.googleusercontent.com/pw/AM-JKLV1C6Mi-CZEqv3wlMpRH9upKndR88M4XoM72HCi1S4bdyLnrpDXk9tq0suoPxvEKrOMos7lkVU453EFntvWrtglKXCmBzKqKU-s5qNoPeQdcp8sPzuvuw_XJYnfs_mrne_3rlTcuMGaAgUp7Ej82YcQ=w670-h370-no?authuser=0',
+                widget.collection.collectionImageUrl,
+                //'https://lh3.googleusercontent.com/pw/AM-JKLV1C6Mi-CZEqv3wlMpRH9upKndR88M4XoM72HCi1S4bdyLnrpDXk9tq0suoPxvEKrOMos7lkVU453EFntvWrtglKXCmBzKqKU-s5qNoPeQdcp8sPzuvuw_XJYnfs_mrne_3rlTcuMGaAgUp7Ej82YcQ=w670-h370-no?authuser=0',
                 fit: BoxFit.cover,
               ),
             ),
