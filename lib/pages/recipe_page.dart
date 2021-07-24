@@ -83,67 +83,75 @@ class RecipePage extends StatelessWidget {
                                               fontSize: _screenWidth * 0.04,
                                             ),
                                           ),
-                                          SizedBox(
-                                            width: 60,
-                                            child: Padding(
-                                              padding: _langCode == 'ar'
-                                                  ? const EdgeInsets.only(
-                                                      right: 10.0)
-                                                  : const EdgeInsets.only(
-                                                      left: 10.0),
-                                              child: Center(
-                                                child: Material(
-                                                  color: Colors.transparent,
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  child: InkWell(
-                                                    highlightColor:
-                                                        Colors.transparent,
-                                                    splashColor: Colors.white54,
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: _langCode == 'ar'
+                                                    ? const EdgeInsets.only(
+                                                        right: 10.0)
+                                                    : const EdgeInsets.only(
+                                                        left: 10.0),
+                                                child: Center(
+                                                  child: Material(
+                                                    color: Colors.transparent,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             5),
-                                                    onTap: () {
-                                                      showModalBottomSheet(
-                                                        isScrollControlled:
-                                                            true,
-                                                        backgroundColor:
-                                                            Colors.transparent,
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            makeDismissible(
-                                                          child:
-                                                              RecipeRateBottomSheet(
-                                                            recipeId:
-                                                                recipe.recipeId,
-                                                          ),
+                                                    child: InkWell(
+                                                      highlightColor:
+                                                          Colors.transparent,
+                                                      splashColor:
+                                                          Colors.white54,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      onTap: () {
+                                                        showModalBottomSheet(
+                                                          isScrollControlled:
+                                                              true,
+                                                          backgroundColor:
+                                                              Colors
+                                                                  .transparent,
                                                           context: context,
+                                                          builder: (context) =>
+                                                              makeDismissible(
+                                                            child:
+                                                                RecipeRateBottomSheet(
+                                                              recipeId: recipe
+                                                                  .recipeId,
+                                                            ),
+                                                            context: context,
+                                                          ),
+                                                        );
+                                                      },
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal:
+                                                                    2.0),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
+                                                          children: _langCode ==
+                                                                  'ar'
+                                                              ? buildRateButton(
+                                                                      _screenWidth)
+                                                                  .reversed
+                                                                  .toList()
+                                                              : buildRateButton(
+                                                                      _screenWidth)
+                                                                  .toList(),
                                                         ),
-                                                      );
-                                                    },
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 2.0),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .end,
-                                                        children: _langCode ==
-                                                                'ar'
-                                                            ? buildRateButton(
-                                                                    _screenWidth)
-                                                                .reversed
-                                                                .toList()
-                                                            : buildRateButton(
-                                                                    _screenWidth)
-                                                                .toList(),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -154,7 +162,7 @@ class RecipePage extends StatelessWidget {
                                         checkMinuteMinutes(
                                             recipe.prepareTime, _langCode),
                                         style: TextStyle(
-                                          fontSize: _screenWidth * 0.03,
+                                          fontSize: _screenWidth * 0.025,
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -367,54 +375,68 @@ class RecipePage extends StatelessWidget {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Row(
-                                                  children: [
-                                                    Material(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                      elevation: 1,
-                                                      child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(5.0),
-                                                          child: Image.network(
-                                                            snapshot.data![i]
-                                                                .ingredientImageUrl,
-                                                            //'https://lh3.googleusercontent.com/95oUJyeApyr-g6NfyGmfCLnl6omIcbtb83PCSSDuMm0OzvXCXFwrw-G7B3hN9_FeQ-6i8Vz-Esh0e2v0-COYQjo3se9f1Ap-18HbPuTEeCQe1rYbbTHyfGi4WmJ2TxX-oN5zjSHmB7odGaf4fZh8TCqtDX5p31EELJ6HF7ppQMVFIOxbu0dB8fAnvOjsxUmsbFPPD7K0eCw6oK_bgZtQe9_3qo7pDQuKhv9TQa7AnvC-YKqx5GWQ3gwEAqSPVZyjF6-48qENK1-_gf5FoxmmWMTPNANF1nOkvUil1XGh74SjMMjzaJqjnXQPxXWiTBTtZlAbK1bdd5AHeiaXap290awv1x-nOrwIW1txd616NEwZkwNkdaOc6PspwCI__1l7VURm2DbMSOh8vXtmgqdTyolcTmj8xHTpKWUH26ZfDkXpiTu9ZQPQBbT3X-tnt48hsHoeoI-VJzMs9CHeSN6_LZuwsa-j4K7raB_CTrZzetS-1QRx7EpfKbkGBlCiLWs6MT3v5P--hRlMtOTxp0n-EfRqI1rpOmYOwlWt4ryyYNDMQYSzQ5EscQTDhAO2_r5VzqKXfRFX3eBu2_JMZ_cdOwrgCkgsAX6NgjmzeQlR4SoUV7JtDNMCH1CzWxezpD7ozGznd_gt4_t-MlC8eYmnl52RGh7apdErb75ck70HtBSJC5lQx5ldMV6zTjErg4zwW8sH-vo4b5tRvw1Jm65rAQ=w626-h417-no?authuser=0',
-                                                            width: 50,
-                                                            height: 50,
-                                                          )
-                                                          //
-                                                          // Image(
-                                                          //   image: CachedNetworkImageProvider(recipe
-                                                          //       .ingredients[i].ingredientImageUrl),
-                                                          //   width: 50,
-                                                          //   height: 50,
-                                                          // ),
+                                                Flexible(
+                                                  flex: 2,
+                                                  child: Row(
+                                                    children: [
+                                                      Material(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        elevation: 1,
+                                                        child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(5.0),
+                                                            child:
+                                                                Image.network(
+                                                              snapshot.data![i]
+                                                                  .ingredientImageUrl,
+                                                              //'https://lh3.googleusercontent.com/95oUJyeApyr-g6NfyGmfCLnl6omIcbtb83PCSSDuMm0OzvXCXFwrw-G7B3hN9_FeQ-6i8Vz-Esh0e2v0-COYQjo3se9f1Ap-18HbPuTEeCQe1rYbbTHyfGi4WmJ2TxX-oN5zjSHmB7odGaf4fZh8TCqtDX5p31EELJ6HF7ppQMVFIOxbu0dB8fAnvOjsxUmsbFPPD7K0eCw6oK_bgZtQe9_3qo7pDQuKhv9TQa7AnvC-YKqx5GWQ3gwEAqSPVZyjF6-48qENK1-_gf5FoxmmWMTPNANF1nOkvUil1XGh74SjMMjzaJqjnXQPxXWiTBTtZlAbK1bdd5AHeiaXap290awv1x-nOrwIW1txd616NEwZkwNkdaOc6PspwCI__1l7VURm2DbMSOh8vXtmgqdTyolcTmj8xHTpKWUH26ZfDkXpiTu9ZQPQBbT3X-tnt48hsHoeoI-VJzMs9CHeSN6_LZuwsa-j4K7raB_CTrZzetS-1QRx7EpfKbkGBlCiLWs6MT3v5P--hRlMtOTxp0n-EfRqI1rpOmYOwlWt4ryyYNDMQYSzQ5EscQTDhAO2_r5VzqKXfRFX3eBu2_JMZ_cdOwrgCkgsAX6NgjmzeQlR4SoUV7JtDNMCH1CzWxezpD7ozGznd_gt4_t-MlC8eYmnl52RGh7apdErb75ck70HtBSJC5lQx5ldMV6zTjErg4zwW8sH-vo4b5tRvw1Jm65rAQ=w626-h417-no?authuser=0',
+                                                              width: 50,
+                                                              height: 50,
+                                                            )
+                                                            //
+                                                            // Image(
+                                                            //   image: CachedNetworkImageProvider(recipe
+                                                            //       .ingredients[i].ingredientImageUrl),
+                                                            //   width: 50,
+                                                            //   height: 50,
+                                                            // ),
+                                                            ),
+                                                      ),
+                                                      Padding(
+                                                        padding: _langCode ==
+                                                                'ar'
+                                                            ? const EdgeInsets
+                                                                    .only(
+                                                                right: 20.0)
+                                                            : const EdgeInsets
+                                                                    .only(
+                                                                left: 20.0),
+                                                        child: Text(
+                                                          snapshot.data![i]
+                                                              .ingredientName,
+                                                          style:
+                                                              const TextStyle(
+                                                            color: kTextColor,
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight.bold,
                                                           ),
-                                                    ),
-                                                    Padding(
-                                                      padding: _langCode == 'ar'
-                                                          ? const EdgeInsets
-                                                              .only(right: 20.0)
-                                                          : const EdgeInsets
-                                                              .only(left: 20.0),
-                                                      child: Text(
-                                                        snapshot.data![i]
-                                                            .ingredientName,
-                                                        style: const TextStyle(
-                                                          color: kTextColor,
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold,
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                                Text(
-                                                    '${snapshot.data![i].ingredientAmount} ${snapshot.data![i].unit}'),
+                                                Flexible(
+                                                  child: Text(
+                                                    '${snapshot.data![i].ingredientAmount} ${snapshot.data![i].unit}',
+                                                    style: const TextStyle(
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ),
