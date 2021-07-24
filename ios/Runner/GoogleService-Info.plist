@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1097424995418-ev1ms46flmstqtl5f10kcjnrr6tq4sgo.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1097424995418-ev1ms46flmstqtl5f10kcjnrr6tq4sgo</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1097424995418-63qcnbhmgvfirf4s9tng2h197ore60aa.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBNdXJw24qbmviNTvKMogB4oLmlDcbjA-c</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1097424995418</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.foodcamFrontend</string>
+	<key>PROJECT_ID</key>
+	<string>django-social-auth-315508</string>
+	<key>STORAGE_BUCKET</key>
+	<string>django-social-auth-315508.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1097424995418:ios:ef3134949869d026c00463</string>
+	
+</dict>
+</plist>

@@ -114,7 +114,7 @@ class BackEndController {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-
+    print(response.body);
     final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
 
     final List<Ingredient> ingredients = [];
