@@ -11,6 +11,9 @@ import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../pages/no_results_page.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/tap_bounce_container.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class DisPreferredSearchDelegate extends SearchDelegate {
   DisPreferredSearchDelegate();
@@ -182,12 +185,25 @@ class _IngredientsListState extends State<IngredientsList> {
                     _isLoading = true;
                   });
 
-                  await widget.controller.addDisPreferredIngredient(
-                    widget.searchResults[index]['ingredient'].id,
-
+                  String response = await  widget.controller.addDisPreferredIngredient(
+                    widget.searchResults[index]['ingredient'].id
                   );
+
                   Navigator.pushNamedAndRemoveUntil(
                       context, 'disPrefIng/', ModalRoute.withName('home/'));
+
+                  if(response == 'Already Exists') {
+                    //ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    showTopSnackBar(
+                      context,
+                      CustomSnackBar.error(
+                        message:
+                        "This ingredient is in your preferred list",
+                      ),
+                    );
+
+                  }
+
                   setState(() {
                     _isLoading = false;
                   });
@@ -235,9 +251,9 @@ class _AddIngredientListTileState extends State<AddIngredientListTile> {
     return ListTile(
       leading: Image.network(
 
-        // widget.searchResult.ingredientImageUrl
+          widget.searchResult['ingredient'].ingredientImageUrl,
         // https://lh3.googleusercontent.com/UTW1wxp9bfxz1bhJDKEMSwUE6WLSoc_YMEAW_4WJrtOnDiuNgXihNMP0wOu3dFkgem7mYr_Y7dXDdaq-9SIg-Rfvcfzx7B3X7d0h3AVt-XPm1XCB-I1-T44FkfjaSagvxYOMtOXQw9TnPnvPHcW0JhlEP63dE8JsGfBZ6L0np48I-plEqynftj7n94j2fea41xfMkFZzfI3uCmNnMUXM7fLBfUNrDS7rhbbw7SaSPWE0Z6H-c9nFUgysoC934zdnvCaGwavkVQEev0FMUfxEGfXOF07hA9N2LoMB_5pJR0lPgPBxKEB07VGBstOPsfOH5vVm6bj1-8pPO_PN5whOs4NRQI0iGjLtzCjqzQMABVSBg2iss6ryPKaD9bJ9A5Yi1pl5CoRY45nL9F8EAaBXB2XdWbbtfCN1JJDrS5gYcHhVo5acPTWw5ZgWWui65EOKBjGBA0HBUEAxFt6mLM7UU2hXb__rF1Rfx5Ged9Bq3olqQwZ-TfnZen46APSye9-w7yhxcbcezjHTxtz6-zeUbu27PA-4ASSHQNHmGs3f3jEQqMJusq4lyIR8b1b-dvyL6oOmYso-wtSOQA0P9JT3P7yP0zx4nJb0DuxAiqxw5lvn8me9YyXGsDl9ODeVxgKkqKo_x22YtL_SDfZqpD-SfeLutCSqLx8gxdaAJKRbVLASSBUVsOauIG4aCG4MKOIO9aNH4yaazwtMntL5_Xc2EkmZ=w630-h300-no?authuser=0
-          'https://lh3.googleusercontent.com/YyQQ9BJBBfbavol1bRbjTTG4mVHjaj6-XgXAjuRQunhtVKIRc5yXJKITfSsHNWkeLwFm6vTmm7SFjeHUB9nnq1d-myD-m_iJBxffX3Cgvo5WoLyyVWQZeq5Nw8hZ2_zgqUJrzKGh-B0I_etDQxR-Wy_KfnuyYg68fX_vleXKHtdgItrq3uBQcDN1tSaJJRC4_AED0aeNcL_8LTIMKqy0DObqIpJxhKhe8UP0npLm0BVthty9At78oCkhUh8cBN4ZG7N0jA9n4_HOvmhOvHSlZ4Zqorp7g1Y8SQbg7iPjsP1U_97r1wgabdK_wPfWT5LQI_vC_yNt76iJf-wTnjzDQanjND1_8y8ys4rqNJYhMZDnMdB6xRjn24lIST8IsLoJvyD6qwzae5aNuTE19K1pBqFxkZfVW-n0cv199vD4CdR1hRVVr8Be8Otc9wHvEueu2Tu2et8qPewQzMh3c5mh1NCS1-4cpraM2soHUZ80TzbrrWwsj6FuGlYkvnoL9TtPI1CoFd3IsAKOEAWVUGttBgBjp5emyFg1BVKS7T9QemDA0i3pnMaODjemAQzliw5oNluYH5tcEnzTGwTlorWrsMOidpzxgAOdYsa24SJe2Y6cm7VFD470QiXAU0mraTizHffnP8rOLbO9Uo3Gjhe3W_OIgxZOEJt96sQx2jE8paRYLQ3L6DMzONRJ4UKh3i9ljcWNlAkDhtRrLRnV8A1nkVE1=w630-h300-no?authuser=0'
+          //'https://lh3.googleusercontent.com/YyQQ9BJBBfbavol1bRbjTTG4mVHjaj6-XgXAjuRQunhtVKIRc5yXJKITfSsHNWkeLwFm6vTmm7SFjeHUB9nnq1d-myD-m_iJBxffX3Cgvo5WoLyyVWQZeq5Nw8hZ2_zgqUJrzKGh-B0I_etDQxR-Wy_KfnuyYg68fX_vleXKHtdgItrq3uBQcDN1tSaJJRC4_AED0aeNcL_8LTIMKqy0DObqIpJxhKhe8UP0npLm0BVthty9At78oCkhUh8cBN4ZG7N0jA9n4_HOvmhOvHSlZ4Zqorp7g1Y8SQbg7iPjsP1U_97r1wgabdK_wPfWT5LQI_vC_yNt76iJf-wTnjzDQanjND1_8y8ys4rqNJYhMZDnMdB6xRjn24lIST8IsLoJvyD6qwzae5aNuTE19K1pBqFxkZfVW-n0cv199vD4CdR1hRVVr8Be8Otc9wHvEueu2Tu2et8qPewQzMh3c5mh1NCS1-4cpraM2soHUZ80TzbrrWwsj6FuGlYkvnoL9TtPI1CoFd3IsAKOEAWVUGttBgBjp5emyFg1BVKS7T9QemDA0i3pnMaODjemAQzliw5oNluYH5tcEnzTGwTlorWrsMOidpzxgAOdYsa24SJe2Y6cm7VFD470QiXAU0mraTizHffnP8rOLbO9Uo3Gjhe3W_OIgxZOEJt96sQx2jE8paRYLQ3L6DMzONRJ4UKh3i9ljcWNlAkDhtRrLRnV8A1nkVE1=w630-h300-no?authuser=0'
       ),
 
       title: Text(

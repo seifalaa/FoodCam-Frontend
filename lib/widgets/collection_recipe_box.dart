@@ -85,11 +85,11 @@ class _CollectionRecipeBoxState extends State<CollectionRecipeBox> {
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              // child: Image.network(
-              //   widget.recipe.recipeImageUrl,
-              //   fit: BoxFit.cover,
-              // ),
-              child: Container(),
+              child: Image.network(
+                widget.recipe.recipeImageUrl,
+                fit: BoxFit.cover,
+              ),
+             // child: Container(),
             ),
           ),
           Positioned.fill(

@@ -1,5 +1,7 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:http/http.dart' as http;
+//import 'package:async/async.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,8 +40,22 @@ class _BasketPageState extends State<BasketPage> {
   late File _image;
   bool _isLoading = false;
 
+  //var request = http.MultipartRequest(
+    //  "POST", Uri.parse("http://$kIpAddress:8000/dj-rest-auth/token/refresh/"));
+
   Future<void> pickImage() async {
-    // final pickedImage = await picker.getImage(
+    // final File image = File('lib/assets/allergy.png');
+    // final String imageName = image.path.split('/').last;
+    // final stream = http.ByteStream(image.openRead());
+    // stream.cast();
+    // final length = await image.length();
+    // final multipartFileSign =
+    //     http.MultipartFile('photo', stream, length, filename: imageName);
+    //
+    // request.files.add(multipartFileSign);
+    // final http.StreamedResponse response = await request.send();
+    // print(String.fromCharCodes(await response.stream.toBytes()));
+    // // final pickedImage = await picker.getImage(
     //   source: ImageSource.camera,
     // );
     // setState(() {
@@ -54,9 +70,9 @@ class _BasketPageState extends State<BasketPage> {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       context: context,
-      builder: (context) => makeDismissible(
+      builder: (context1) => makeDismissible(
         child: AddIngredientBottomSheet(pickImage: pickImage),
-        context: context,
+        context: context1,
       ),
     );
   }

@@ -12,6 +12,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BackEndController {
+
+
+
   Future<String> refreshToken(String refreshToken) async {
     final url =
         Uri.parse("http://$kIpAddress:8000/dj-rest-auth/token/refresh/");
@@ -305,7 +308,7 @@ class BackEndController {
           await flutterSecureStorage.read(key: 'access_token');
       final String? refreshToken =
           await flutterSecureStorage.read(key: 'refresh_token');
-      final url = Uri.parse('http://192.168.1.5:8000/RecentRecipes/');
+      final url = Uri.parse('http://$kIpAddress:8000/RecentRecipes/');
       final http.Response response = await http.post(
         url,
         headers: {
@@ -534,7 +537,7 @@ class BackEndController {
     }
   }
 
-  Future<void> addPreferredIngredient(int ingredientId) async {
+  Future<String> addPreferredIngredient(int ingredientId) async {
     final SharedPreferences _sharedPreferences =
         await SharedPreferences.getInstance();
 
@@ -578,10 +581,12 @@ class BackEndController {
           utf8.decode(response.bodyBytes),
         );
       }
+      return _responseJson.toString();
     }
+    return "";
   }
 
-  Future<void> addDisPreferredIngredient(int ingredientId) async {
+  Future<String> addDisPreferredIngredient(int ingredientId) async {
     final SharedPreferences _sharedPreferences =
         await SharedPreferences.getInstance();
 
@@ -625,7 +630,11 @@ class BackEndController {
           utf8.decode(response.bodyBytes),
         );
       }
+      print(_responseJson.toString());
+      return _responseJson.toString();
+
     }
+    return "";
   }
 
   Future<void> deleteIngredientFromBasket(int ingredientID) async {
@@ -658,6 +667,7 @@ class BackEndController {
           },
         );
       }
+
     }
   }
 
