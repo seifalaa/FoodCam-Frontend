@@ -1,25 +1,21 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/backend_controller.dart';
-import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
 import 'package:foodcam_frontend/models/user.dart';
+import 'package:foodcam_frontend/pages/empty_basket_page.dart';
 import 'package:foodcam_frontend/pages/search_results.dart';
-import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/add_box.dart';
 import 'package:foodcam_frontend/widgets/add_ingredient_bottom_sheet.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
-import 'package:foodcam_frontend/pages/empty_basket_page.dart';
 import 'package:foodcam_frontend/widgets/ingredient_box.dart';
 import 'package:foodcam_frontend/widgets/unloggedin_user_basket.dart';
-
-//import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BasketPage extends StatefulWidget {
@@ -30,23 +26,23 @@ class BasketPage extends StatefulWidget {
 }
 
 class _BasketPageState extends State<BasketPage> {
-  //final picker = ImagePicker();
   final BackEndController _backendController = BackEndController();
-
-  //final HomePageController _controller = HomePageController();
-  // final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-  late File _image;
   bool _isLoading = false;
 
-  Future<void> pickImage() async {
-    // final pickedImage = await picker.getImage(
-    //   source: ImageSource.camera,
-    // );
-    // setState(() {
-    //   if (pickedImage != null) {
-    //     _image = File(pickedImage.path);
-    //   }
-    // });
+  Future<Ingredient?> pickImage() async {
+    final String _langCode = Localizations.localeOf(context).languageCode;
+
+    final picker = ImagePicker();
+    late File image;
+    final pickedImage = await picker.pickImage(
+      source: ImageSource.camera,
+    );
+    setState(() {
+      if (pickedImage != null) {
+        image = File(pickedImage.path);
+      }
+    });
+    return _backendController.sendImageToModel(image, _langCode);
   }
 
   void addItem() {
@@ -54,9 +50,9 @@ class _BasketPageState extends State<BasketPage> {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       context: context,
-      builder: (context) => makeDismissible(
+      builder: (context1) => makeDismissible(
         child: AddIngredientBottomSheet(pickImage: pickImage),
-        context: context,
+        context: context1,
       ),
     );
   }

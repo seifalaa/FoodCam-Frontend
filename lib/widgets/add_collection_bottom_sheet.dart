@@ -3,9 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:foodcam_frontend/controllers/backend_controller.dart';
-import 'package:foodcam_frontend/controllers/homepage_controller.dart';
-import 'package:foodcam_frontend/generated/l10n.dart';
-import 'package:foodcam_frontend/widgets/text_form_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import '../constants.dart';
@@ -18,7 +15,6 @@ class AddCollectionBottomSheet extends StatelessWidget {
     final TextEditingController _collectionNameController =
         TextEditingController();
     final BackEndController _backendController = BackEndController();
-    //final String _langCode = Localizations.localeOf(context).languageCode;
 
     final GlobalKey<FormState> _formKey = GlobalKey();
     return DraggableScrollableSheet(
@@ -56,7 +52,6 @@ class AddCollectionBottomSheet extends StatelessWidget {
                 child: Column(
                   children: [
                     TextFormField(
-                      obscureText: false,
                       controller: _collectionNameController,
                       validator: (input) {
                         return input == ''
@@ -85,7 +80,7 @@ class AddCollectionBottomSheet extends StatelessWidget {
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                           borderSide: const BorderSide(
-                            color: Colors.blue,
+                            color: kPrimaryColor,
                           ),
                         ),
                         filled: true,

@@ -2,8 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/models/allergy.dart';
-import 'package:foodcam_frontend/providers/lang_provider.dart';
-import 'package:provider/provider.dart';
 
 import '../constants.dart';
 

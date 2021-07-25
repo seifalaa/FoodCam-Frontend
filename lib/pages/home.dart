@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/backend_controller.dart';
-import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/pages/basket.dart';
-import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/categories.dart';
 import 'package:foodcam_frontend/widgets/random_recipe_bootom_sheet.dart';
@@ -13,7 +11,6 @@ import 'package:foodcam_frontend/widgets/search_delegate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:foodcam_frontend/widgets/top_rated.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);

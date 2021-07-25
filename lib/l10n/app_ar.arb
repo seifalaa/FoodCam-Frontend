@@ -79,5 +79,9 @@
 	"usernameExist": "مستخدم بهذا الأسم مجود بالفعل",
 	"emailExists": "مستخدم بهذاالبريدالألكتروني موجود بالفعل",
 	"collectionExists":"هذه الموجموعة موجودة بالفعل",
-	"loginToShowRandomRecipe": "سجِّل دخولك لتستخدم الوصفة العشوائية"
+	"loginToShowRandomRecipe": "سجِّل دخولك لتستخدم الوصفة العشوائية",
+	"loginToShowRecentlySearch":"سجِّل دخولك لتعرض البحث عنه مؤخراً",
+	"modelError":"لا يمكن التعرف على المُكوِن",
+	"alreadyExistInDispreferred": "هذا المكون موجود بالفعل في المكونات غير المفضلة",
+	"alreadyExistInPreferred": "هذاالمكون مجود بالفعل في المكونات المفضلة"
 }

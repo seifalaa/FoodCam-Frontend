@@ -1,19 +1,15 @@
 import 'package:flutter/cupertino.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/backend_controller.dart';
-import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
 import 'package:foodcam_frontend/pages/empty_preferred_page.dart';
-import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/add_box.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
 import 'package:foodcam_frontend/widgets/ingredient_box.dart';
 import 'package:foodcam_frontend/widgets/preferred_search_delegate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:provider/provider.dart';
 
 class PreferredIngredients extends StatefulWidget {
   const PreferredIngredients({
@@ -26,7 +22,7 @@ class PreferredIngredients extends StatefulWidget {
 
 class _PreferredIngredientsState extends State<PreferredIngredients> {
   final BackEndController _backendController = BackEndController();
-  //final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+
   bool _isLoading = false;
 
   void addItem() {
@@ -78,9 +74,9 @@ class _PreferredIngredientsState extends State<PreferredIngredients> {
           color: kPrimaryColor,
         ),
         child: StreamBuilder(
-            stream:Stream.fromFuture(_backendController.getPreferedIngredients(_langCode)),
-            builder: (context,
-                AsyncSnapshot<List<Ingredient>> snapshot) {
+            stream: Stream.fromFuture(
+                _backendController.getPreferredIngredients(_langCode)),
+            builder: (context, AsyncSnapshot<List<Ingredient>> snapshot) {
               return snapshot.hasData
                   ? snapshot.data!.isNotEmpty
                       ? GridView(
@@ -93,12 +89,11 @@ class _PreferredIngredientsState extends State<PreferredIngredients> {
                           ),
                           children: [
                             for (int i = 0; i < snapshot.data!.length; i++)
-                               IngredientBox(
-                                            ingredient:
-                                                snapshot.data![i],
-                                            index: i,
-                                            onDelete: deleteItem,
-                                          ),
+                              IngredientBox(
+                                ingredient: snapshot.data![i],
+                                index: i,
+                                onDelete: deleteItem,
+                              ),
                             AddBox(onTab: addItem),
                           ],
                         )
@@ -113,7 +108,7 @@ class _PreferredIngredientsState extends State<PreferredIngredients> {
     );
   }
 
-  Future<void> deleteItem(String ingredientName,String langCode) async {
+  Future<void> deleteItem(String ingredientName, String langCode) async {
     setState(() {
       _isLoading = true;
     });

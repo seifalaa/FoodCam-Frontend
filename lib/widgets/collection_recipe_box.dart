@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/models/collection.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/pages/recipe_page.dart';
@@ -19,6 +18,7 @@ class CollectionRecipeBox extends StatefulWidget {
   final Recipe recipe;
   final Collection collection;
   final Function onDelete;
+
   @override
   _CollectionRecipeBoxState createState() => _CollectionRecipeBoxState();
 }
@@ -73,8 +73,8 @@ class _CollectionRecipeBoxState extends State<CollectionRecipeBox> {
     return stars;
   }
 
-  final BackEndController _backEndController = BackEndController();
   bool _isVisible = false;
+
   @override
   Widget build(BuildContext context) {
     final double _screenWidth = MediaQuery.of(context).size.width;
@@ -85,11 +85,11 @@ class _CollectionRecipeBoxState extends State<CollectionRecipeBox> {
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              // child: Image.network(
-              //   widget.recipe.recipeImageUrl,
-              //   fit: BoxFit.cover,
-              // ),
-              child: Container(),
+              child: Image.network(
+                widget.recipe.recipeImageUrl,
+                fit: BoxFit.cover,
+              ),
+              // child: Container(),
             ),
           ),
           Positioned.fill(
@@ -199,6 +199,5 @@ class _CollectionRecipeBoxState extends State<CollectionRecipeBox> {
         ],
       ),
     );
-    ;
   }
 }

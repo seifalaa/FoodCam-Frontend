@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:foodcam_frontend/widgets/dispreferred_search_deleget.dart';
-import 'package:foodcam_frontend/widgets/preferred_search_delegate.dart';
 
 class EmptyDisPreferredPage extends StatelessWidget {
   const EmptyDisPreferredPage({Key? key}) : super(key: key);

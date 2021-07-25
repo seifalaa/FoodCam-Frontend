@@ -102,7 +102,6 @@ class _SignupState extends State<Signup> {
       const FlutterSecureStorage _flutterSecureStorage = FlutterSecureStorage();
       final SharedPreferences _sharedPreferences =
           await SharedPreferences.getInstance();
-      print(_responseJson);
       if (response.statusCode == 201) {
         await _flutterSecureStorage.write(
             key: 'access_token', value: _responseJson['access_token']);
