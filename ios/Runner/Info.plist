@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>foodcam_frontend</string>
+	<string>Food Cam</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -41,5 +41,41 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIStatusBarHidden</key>
+	<false/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1097424995418-ev1ms46flmstqtl5f10kcjnrr6tq4sgo</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb525588101947496</string>
+			</array>
+		</dict>
+	</array>
+	<key>FacebookAppID</key>
+	<string>525588101947496</string>
+	<key>FacebookDisplayName</key>
+	<string>django-auth</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>store the scanned images to be passed to the model</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Scan images to pass them to the model to detet the ingredients</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>get voice commands from the suer</string>
 </dict>
 </plist>

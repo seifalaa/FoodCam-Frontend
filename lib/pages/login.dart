@@ -1,7 +1,17 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foodcam_frontend/constants.dart';
-import 'package:foodcam_frontend/widgets/login_bg.dart';
+import 'package:foodcam_frontend/controllers/auth_controller.dart';
+import 'package:foodcam_frontend/pages/signup1.dart';
+import 'package:foodcam_frontend/widgets/login_form.dart';
+import 'package:foodcam_frontend/widgets/social_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
+import 'package:loading_overlay/loading_overlay.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -12,195 +22,78 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AuthController _authController = AuthController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  final FlutterSecureStorage _flutterSecureStorage =
+      const FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              child: CustomPaint(
-                painter: BG(context: context),
-              ),
+    return LoadingOverlay(
+      isLoading: _isLoading,
+      color: Colors.black.withOpacity(0.3),
+      progressIndicator: const CircularProgressIndicator(
+        color: kPrimaryColor,
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 1,
+          centerTitle: true,
+          title: Text(
+            AppLocalizations.of(context)!.login,
+            style: const TextStyle(
+              color: kTextColor,
             ),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              color: kTextColor,
+            ),
+          ),
+        ),
+        body: Stack(
+          children: [
+            //CustomPaint(
+            //  painter: BG(context: context),
+            //),
             Center(
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  Form(
-                    key: _formKey,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Login',
-                            style: TextStyle(
-                              color: KTextColor,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Material(
-                            borderRadius: BorderRadius.circular(100),
-                            elevation: 10.0,
-                            shadowColor: Color(0xB0000000),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                filled: true,
-                                hintText: 'Username',
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.transparent, width: 2),
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.blue, width: 2),
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.red, width: 2),
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: Material(
-                              borderRadius: BorderRadius.circular(100),
-                              elevation: 10.0,
-                              shadowColor: Color(0xB0000000),
-                              child: TextFormField(
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  hintText: 'Password',
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.transparent, width: 2),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.blue, width: 2),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.red, width: 2),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                onPressed: () {},
-                                child: Text('forget your password?'),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: KPrimaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                              ),
-                              onPressed: () {},
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Text(
-                                  'Login',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                  LoginForm(
+                    emailController: _emailController,
+                    passwordController: _passwordController,
+                    formKey: _formKey,
+                    onLogin: onLogin,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 40.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: KTextColor,
-                            thickness: 2,
-                            indent: 50,
-                            endIndent: 5,
-                          ),
-                        ),
-                        Text(
-                          'Or with',
-                          style: TextStyle(
-                            color: KTextColor,
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: KTextColor,
-                            thickness: 2,
-                            indent: 5,
-                            endIndent: 50,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          onPressed: () {},
-                          child: Image.asset(
-                            'lib/assets/facebook.png',
-                            width: 40,
-                            height: 40,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Image.asset(
-                            'lib/assets/search.png',
-                            width: 40,
-                            height: 40,
-                          ),
-                        ),
-                      ],
+                    child: SocialAuth(
+                      onFacebookAuth: onFacebookAuth,
+                      onGoogleAuth: onGoogleAuth,
                     ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Don\'t have an account?'),
+                      Text(AppLocalizations.of(context)!.dontHaveAccount),
                       TextButton(
-                        onPressed: () {},
-                        child: Text('Signup'),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Signup1(),
+                            ),
+                          );
+                        },
+                        child: Text(AppLocalizations.of(context)!.signup),
                       )
                     ],
                   ),
@@ -211,5 +104,137 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  Future<void> onLogin() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      final SharedPreferences _sharedPreferences =
+          await SharedPreferences.getInstance();
+      final Response response = await _authController.loginWithEmailAndPassword(
+          _emailController.text, _passwordController.text);
+
+      final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+      if (response.statusCode == 200) {
+        await _flutterSecureStorage.write(
+            key: 'access_token', value: _responseJson['access_token']);
+        await _flutterSecureStorage.write(
+            key: 'refresh_token', value: _responseJson['refresh_token']);
+        await _sharedPreferences.setString(
+          'userName',
+          _responseJson['user']['username'],
+        );
+        await _sharedPreferences.setString(
+          'firstName',
+          _responseJson['user']['first_name'],
+        );
+        await _sharedPreferences.setString(
+          'lastName',
+          _responseJson['user']['last_name'],
+        );
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          'home/',
+          (route) => false,
+        );
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        if (_responseJson['non_field_errors'] != '') {
+          final String _langCode = Localizations.localeOf(context).languageCode;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.red,
+              content: Text(
+                AppLocalizations.of(context)!.invalidCreds,
+                style: TextStyle(
+                  fontFamily:
+                      _langCode == 'ar' ? GoogleFonts.cairo().fontFamily : null,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> onGoogleAuth() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final Response response = await _authController.loginWithGoogle();
+    final SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+    if (response.statusCode == 200) {
+      await _flutterSecureStorage.write(
+          key: 'access_token', value: _responseJson['access_token']);
+      await _flutterSecureStorage.write(
+          key: 'refresh_token', value: _responseJson['refresh_token']);
+      await _sharedPreferences.setString(
+        'userName',
+        _responseJson['user']['username'],
+      );
+      await _sharedPreferences.setString(
+        'firstName',
+        _responseJson['user']['first_name'],
+      );
+      await _sharedPreferences.setString(
+        'lastName',
+        _responseJson['user']['last_name'],
+      );
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        'home/',
+        (route) => false,
+      );
+    }
+  }
+
+  Future<void> onFacebookAuth() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final Response response = await _authController.loginWithFacebook();
+    final SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+    if (response.statusCode == 200) {
+      await _flutterSecureStorage.write(
+          key: 'access_token', value: _responseJson['access_token']);
+      await _flutterSecureStorage.write(
+          key: 'refresh_token', value: _responseJson['refresh_token']);
+      await _sharedPreferences.setString(
+        'userName',
+        _responseJson['user']['username'],
+      );
+      await _sharedPreferences.setString(
+        'firstName',
+        _responseJson['user']['first_name'],
+      );
+      await _sharedPreferences.setString(
+        'lastName',
+        _responseJson['user']['last_name'],
+      );
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        'home/',
+        (route) => false,
+      );
+    }
   }
 }

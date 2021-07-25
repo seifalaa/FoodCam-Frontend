@@ -1,6 +1,6 @@
 {
-    "name": "foodcam_frontend",
-    "short_name": "foodcam_frontend",
+    "name": "Food Cam",
+    "short_name": "Food Cam",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
