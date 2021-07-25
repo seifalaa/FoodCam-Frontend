@@ -39,8 +39,8 @@ class _IngredientBoxState extends State<IngredientBox> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.network(
-                //widget.ingredient.ingredientImageUrl,
-                'https://lh3.googleusercontent.com/YyQQ9BJBBfbavol1bRbjTTG4mVHjaj6-XgXAjuRQunhtVKIRc5yXJKITfSsHNWkeLwFm6vTmm7SFjeHUB9nnq1d-myD-m_iJBxffX3Cgvo5WoLyyVWQZeq5Nw8hZ2_zgqUJrzKGh-B0I_etDQxR-Wy_KfnuyYg68fX_vleXKHtdgItrq3uBQcDN1tSaJJRC4_AED0aeNcL_8LTIMKqy0DObqIpJxhKhe8UP0npLm0BVthty9At78oCkhUh8cBN4ZG7N0jA9n4_HOvmhOvHSlZ4Zqorp7g1Y8SQbg7iPjsP1U_97r1wgabdK_wPfWT5LQI_vC_yNt76iJf-wTnjzDQanjND1_8y8ys4rqNJYhMZDnMdB6xRjn24lIST8IsLoJvyD6qwzae5aNuTE19K1pBqFxkZfVW-n0cv199vD4CdR1hRVVr8Be8Otc9wHvEueu2Tu2et8qPewQzMh3c5mh1NCS1-4cpraM2soHUZ80TzbrrWwsj6FuGlYkvnoL9TtPI1CoFd3IsAKOEAWVUGttBgBjp5emyFg1BVKS7T9QemDA0i3pnMaODjemAQzliw5oNluYH5tcEnzTGwTlorWrsMOidpzxgAOdYsa24SJe2Y6cm7VFD470QiXAU0mraTizHffnP8rOLbO9Uo3Gjhe3W_OIgxZOEJt96sQx2jE8paRYLQ3L6DMzONRJ4UKh3i9ljcWNlAkDhtRrLRnV8A1nkVE1=w630-h300-no?authuser=0',
+                widget.ingredient.ingredientImageUrl,
+                //'https://lh3.googleusercontent.com/YyQQ9BJBBfbavol1bRbjTTG4mVHjaj6-XgXAjuRQunhtVKIRc5yXJKITfSsHNWkeLwFm6vTmm7SFjeHUB9nnq1d-myD-m_iJBxffX3Cgvo5WoLyyVWQZeq5Nw8hZ2_zgqUJrzKGh-B0I_etDQxR-Wy_KfnuyYg68fX_vleXKHtdgItrq3uBQcDN1tSaJJRC4_AED0aeNcL_8LTIMKqy0DObqIpJxhKhe8UP0npLm0BVthty9At78oCkhUh8cBN4ZG7N0jA9n4_HOvmhOvHSlZ4Zqorp7g1Y8SQbg7iPjsP1U_97r1wgabdK_wPfWT5LQI_vC_yNt76iJf-wTnjzDQanjND1_8y8ys4rqNJYhMZDnMdB6xRjn24lIST8IsLoJvyD6qwzae5aNuTE19K1pBqFxkZfVW-n0cv199vD4CdR1hRVVr8Be8Otc9wHvEueu2Tu2et8qPewQzMh3c5mh1NCS1-4cpraM2soHUZ80TzbrrWwsj6FuGlYkvnoL9TtPI1CoFd3IsAKOEAWVUGttBgBjp5emyFg1BVKS7T9QemDA0i3pnMaODjemAQzliw5oNluYH5tcEnzTGwTlorWrsMOidpzxgAOdYsa24SJe2Y6cm7VFD470QiXAU0mraTizHffnP8rOLbO9Uo3Gjhe3W_OIgxZOEJt96sQx2jE8paRYLQ3L6DMzONRJ4UKh3i9ljcWNlAkDhtRrLRnV8A1nkVE1=w630-h300-no?authuser=0',
                 fit: BoxFit.cover,
               ),
             ),

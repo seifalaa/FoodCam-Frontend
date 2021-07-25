@@ -1,6 +1,7 @@
 import 'dart:convert' as convert;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:foodcam_frontend/constants.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthController {
   Future<http.Response> loginWithEmailAndPassword(
       String email, String password) async {
-    final url = Uri.parse('http://192.168.1.5:8000/dj-rest-auth/login/');
+    final url = Uri.parse('http://$kIpAddress:8000/dj-rest-auth/login/');
     final response = await http.post(
       url,
       body: convert.jsonEncode(<String, String>{
@@ -23,7 +24,7 @@ class AuthController {
   }
 
   Future<void> logout() async {
-    final url = Uri.parse('http://192.168.1.5:8000/dj-rest-auth/logout/');
+    final url = Uri.parse('http://$kIpAddress:8000/dj-rest-auth/logout/');
     await http.post(
       url,
       headers: {
@@ -43,7 +44,7 @@ class AuthController {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser!.authentication;
-    final url = Uri.parse('http://192.168.1.5:8000/GoogleLogin/');
+    final url = Uri.parse('http://$kIpAddress:8000/GoogleLogin/');
     final response = await http.post(
       url,
       body: convert.jsonEncode(<String, dynamic>{
@@ -58,7 +59,7 @@ class AuthController {
 
   Future<http.Response> loginWithFacebook() async {
     final LoginResult result = await FacebookAuth.instance.login();
-    final url = Uri.parse('http://192.168.1.5:8000/FacebookLogin/');
+    final url = Uri.parse('http://$kIpAddress:8000/FacebookLogin/');
     final response = await http.post(
       url,
       body: convert.jsonEncode(<String, dynamic>{
@@ -73,7 +74,7 @@ class AuthController {
 
   Future<http.Response> register(String username, String email, String password,
       String password2, String firstName, String lastName) async {
-    final url = Uri.parse('http://192.168.1.5:8000/register/');
+    final url = Uri.parse('http://$kIpAddress:8000/register/');
     final response = await http.post(url,
         body: convert.jsonEncode(<String, dynamic>{
           'username': username,
