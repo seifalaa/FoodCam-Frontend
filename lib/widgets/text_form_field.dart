@@ -38,6 +38,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                     !obsecureClicked
                         ? Icons.visibility_off_rounded
                         : Icons.visibility_rounded,
+                    color: !obsecureClicked?Colors.grey.shade500:kPrimaryColor,
                   ),
                   onPressed: () {
                     setState(
@@ -51,8 +52,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             : null,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(100),
-          borderSide: const BorderSide(
-            color: kPrimaryColor,
+          borderSide: BorderSide(
+            color: Colors.grey.shade500,
           ),
         ),
         errorBorder: OutlineInputBorder(
@@ -70,7 +71,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(100),
           borderSide: const BorderSide(
-            color: Colors.blue,
+            color: kPrimaryColor,
           ),
         ),
         filled: true,

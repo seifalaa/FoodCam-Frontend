@@ -11,7 +11,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
-import 'home.dart';
 
 class Signup1 extends StatefulWidget {
   const Signup1({Key? key}) : super(key: key);

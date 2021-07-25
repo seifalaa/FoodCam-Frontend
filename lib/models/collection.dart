@@ -1,5 +1,3 @@
-import 'package:foodcam_frontend/models/recipe.dart';
-
 class Collection {
   final int id;
   final String collectionName;
@@ -15,12 +13,6 @@ class Collection {
       required this.recipeCount});
 
   factory Collection.fromMap(Map<String, dynamic> map) {
-    // String url = map['collection_image']
-    //     .replaceAll(RegExp("https://drive.google.com/file/d/"), "");
-    // url =
-    //     'https://drive.google.com/uc?id=${url.substring(0, url.indexOf('/'))}';
-    final List<Recipe> recipes = [];
-
     return Collection(
       id: map['id'],
       userId: map['user'],
@@ -29,12 +21,4 @@ class Collection {
       collectionImageUrl: map['collection_image'],
     );
   }
-
-// static Map<String, dynamic> toMap(Collection collection) {
-//   return {
-//     'collectionName': collection.collectionName,
-//     'recipes': collection.recipes,
-//     'collectionImageUrl': collection.collectionImageUrl
-//   };
-// }
 }

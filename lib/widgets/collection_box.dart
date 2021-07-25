@@ -1,7 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:foodcam_frontend/controllers/backend_controller.dart';
-import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/models/collection.dart';
 import 'package:foodcam_frontend/pages/collections_recipes_page.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
@@ -29,7 +27,6 @@ class _CollectionBoxState extends State<CollectionBox> {
   Widget build(BuildContext context) {
     final double _screenWidth = MediaQuery.of(context).size.width;
     final String _langCode = Provider.of<LanguageProvider>(context).getLangCode;
-    final BackEndController _backendController = BackEndController();
     String collectionName = "";
     if (_langCode == "ar") {
       if (widget.collection.collectionName == 'Breakfast') {

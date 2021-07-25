@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:foodcam_frontend/constants.dart';
 
-import '../constants.dart';
-
-class UnloggedInGenerateRandomRecipe extends StatelessWidget {
-  const UnloggedInGenerateRandomRecipe({Key? key}) : super(key: key);
+class UnLoggedInUserRecentSearchPage extends StatelessWidget {
+  const UnLoggedInUserRecentSearchPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+      ),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              AppLocalizations.of(context)!.loginToShowRandomRecipe,
+              AppLocalizations.of(context)!.loginToShowRecentlySearch,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                fontSize: 20,
+                fontSize: 25,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -39,7 +40,7 @@ class UnloggedInGenerateRandomRecipe extends StatelessWidget {
                   child: Text(
                     AppLocalizations.of(context)!.login,
                     style: const TextStyle(
-                      fontSize: 15,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

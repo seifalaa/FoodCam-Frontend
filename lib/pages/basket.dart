@@ -1,27 +1,21 @@
 import 'dart:io';
-//import 'package:http/http.dart' as http;
-//import 'package:async/async.dart';
-//import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:foodcam_frontend/constants.dart';
 import 'package:foodcam_frontend/controllers/backend_controller.dart';
-import 'package:foodcam_frontend/controllers/homepage_controller.dart';
 import 'package:foodcam_frontend/models/ingredient.dart';
 import 'package:foodcam_frontend/models/user.dart';
+import 'package:foodcam_frontend/pages/empty_basket_page.dart';
 import 'package:foodcam_frontend/pages/search_results.dart';
-import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:foodcam_frontend/widgets/add_box.dart';
 import 'package:foodcam_frontend/widgets/add_ingredient_bottom_sheet.dart';
 import 'package:foodcam_frontend/widgets/bottom_navigation_bar.dart';
-import 'package:foodcam_frontend/pages/empty_basket_page.dart';
 import 'package:foodcam_frontend/widgets/ingredient_box.dart';
 import 'package:foodcam_frontend/widgets/unloggedin_user_basket.dart';
-
-//import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BasketPage extends StatefulWidget {
@@ -32,37 +26,23 @@ class BasketPage extends StatefulWidget {
 }
 
 class _BasketPageState extends State<BasketPage> {
-  //final picker = ImagePicker();
   final BackEndController _backendController = BackEndController();
-
-  //final HomePageController _controller = HomePageController();
-  // final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-  late File _image;
   bool _isLoading = false;
 
-  //var request = http.MultipartRequest(
-    //  "POST", Uri.parse("http://$kIpAddress:8000/dj-rest-auth/token/refresh/"));
+  Future<Ingredient?> pickImage() async {
+    final String _langCode = Localizations.localeOf(context).languageCode;
 
-  Future<void> pickImage() async {
-    // final File image = File('lib/assets/allergy.png');
-    // final String imageName = image.path.split('/').last;
-    // final stream = http.ByteStream(image.openRead());
-    // stream.cast();
-    // final length = await image.length();
-    // final multipartFileSign =
-    //     http.MultipartFile('photo', stream, length, filename: imageName);
-    //
-    // request.files.add(multipartFileSign);
-    // final http.StreamedResponse response = await request.send();
-    // print(String.fromCharCodes(await response.stream.toBytes()));
-    // // final pickedImage = await picker.getImage(
-    //   source: ImageSource.camera,
-    // );
-    // setState(() {
-    //   if (pickedImage != null) {
-    //     _image = File(pickedImage.path);
-    //   }
-    // });
+    final picker = ImagePicker();
+    late File image;
+    final pickedImage = await picker.pickImage(
+      source: ImageSource.camera,
+    );
+    setState(() {
+      if (pickedImage != null) {
+        image = File(pickedImage.path);
+      }
+    });
+    return _backendController.sendImageToModel(image, _langCode);
   }
 
   void addItem() {

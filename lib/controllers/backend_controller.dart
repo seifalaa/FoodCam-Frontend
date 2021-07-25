@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:convert' as convert;
+import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foodcam_frontend/constants.dart';
@@ -12,9 +13,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BackEndController {
-
-
-
   Future<String> refreshToken(String refreshToken) async {
     final url =
         Uri.parse("http://$kIpAddress:8000/dj-rest-auth/token/refresh/");
@@ -36,6 +34,42 @@ class BackEndController {
       value: responseJson['access'],
     );
     return responseJson['access'];
+  }
+
+  Future<Ingredient?> sendImageToModel(File image, String langCode) async {
+    final request = http.MultipartRequest(
+        "POST", Uri.parse("http://$kIpAddress:8000/MachineView/"));
+
+    final String imageName = image.path.split('/').last;
+    final stream = http.ByteStream(image.openRead());
+    stream.cast();
+    final length = await image.length();
+    final multipartFileSign =
+        http.MultipartFile('photo', stream, length, filename: imageName);
+
+    request.files.add(multipartFileSign);
+    final http.StreamedResponse response = await request.send();
+
+    final _response = await http.Response.fromStream(response);
+    final _responseJson = jsonDecode(utf8.decode(_response.bodyBytes));
+    if (_responseJson == 'Not Found') {
+      return null;
+    } else {
+      final List<Map<String, dynamic>> ingredients = [];
+      for (final Map<String, dynamic> item in _responseJson) {
+        final Ingredient ingredient = Ingredient.fromMapBasket(item);
+        final int lang = item['language'];
+        ingredients.add({
+          'ingredient': ingredient,
+          'lang': lang,
+        });
+      }
+      if (ingredients[0]['lang'] == langCode) {
+        return ingredients[0]['ingredient'];
+      } else {
+        return ingredients[1]['ingredient'];
+      }
+    }
   }
 
   Future<List<Recipe>> searchRecipeByName(String query) async {
@@ -118,7 +152,6 @@ class BackEndController {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-
     final _responseJson = jsonDecode(utf8.decode(response.bodyBytes));
 
     final List<Ingredient> ingredients = [];
@@ -448,7 +481,7 @@ class BackEndController {
     }
   }
 
-  Future<List<Ingredient>> getPreferedIngredients(String langCode) async {
+  Future<List<Ingredient>> getPreferredIngredients(String langCode) async {
     const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
     final String? accessToken =
         await flutterSecureStorage.read(key: 'access_token');
@@ -492,7 +525,7 @@ class BackEndController {
     }
   }
 
-  Future<List<Ingredient>> getDisPreferedIngredients(String langCode) async {
+  Future<List<Ingredient>> getDisPreferredIngredients(String langCode) async {
     const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
     final String? accessToken =
         await flutterSecureStorage.read(key: 'access_token');
@@ -630,9 +663,7 @@ class BackEndController {
           utf8.decode(response.bodyBytes),
         );
       }
-      print(_responseJson.toString());
       return _responseJson.toString();
-
     }
     return "";
   }
@@ -667,7 +698,6 @@ class BackEndController {
           },
         );
       }
-
     }
   }
 
@@ -1201,37 +1231,16 @@ class BackEndController {
   }
 
   Future<void> rateRecipe(int recipeId, int rate) async {
-    const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
-    // final String? accessToken =
-    //     await flutterSecureStorage.read(key: 'access_token');
-    // final String? refreshToken =
-    //     await flutterSecureStorage.read(key: 'refresh_token');
     final url = Uri.parse('http://$kIpAddress:8000/RecipeRateView/');
-    final http.Response response = await http.post(
+    await http.post(
       url,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
-        //'Authorization': 'Bearer $accessToken',
       },
       body: convert.jsonEncode(<String, dynamic>{
         'recipe': recipeId,
         'rate': rate,
       }),
     );
-    print(response.body);
-    // if (response.body.contains('Given token not valid')) {
-    //   final String newAccessToken = await this.refreshToken(refreshToken!);
-    //   await http.post(
-    //     url,
-    //     headers: {
-    //       'Content-Type': 'application/json; charset=UTF-8',
-    //       'Authorization': 'Bearer $newAccessToken',
-    //     },
-    //     body: convert.jsonEncode(<String, dynamic>{
-    //       'recipe': recipeId,
-    //       'rate': rate,
-    //     }),
-    //   );
-    // }
   }
 }

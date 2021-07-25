@@ -83,10 +83,39 @@ class RecipePage extends StatelessWidget {
                                               fontSize: _screenWidth * 0.04,
                                             ),
                                           ),
+
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
                                             children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 8.0),
+                                                    child: Text(
+                                                      checkMinuteMinutes(
+                                                          recipe.prepareTime,
+                                                          _langCode),
+                                                      style: TextStyle(
+                                                        fontSize:
+                                                            _screenWidth * 0.04,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
                                               Padding(
                                                 padding: _langCode == 'ar'
                                                     ? const EdgeInsets.only(
@@ -153,19 +182,92 @@ class RecipePage extends StatelessWidget {
                                               ),
                                             ],
                                           ),
+
+                                          // Row(
+                                          //   mainAxisAlignment:
+                                          //       MainAxisAlignment.center,
+                                          //   children: [
+                                          //     Padding(
+                                          //       padding: _langCode == 'ar'
+                                          //           ? const EdgeInsets.only(
+                                          //               right: 10.0)
+                                          //           : const EdgeInsets.only(
+                                          //               left: 10.0),
+                                          //       child: Center(
+                                          //         child: Material(
+                                          //           color: Colors.transparent,
+                                          //           borderRadius:
+                                          //               BorderRadius.circular(
+                                          //                   5),
+                                          //           child: InkWell(
+                                          //             highlightColor:
+                                          //                 Colors.transparent,
+                                          //             splashColor:
+                                          //                 Colors.white54,
+                                          //             borderRadius:
+                                          //                 BorderRadius.circular(
+                                          //                     5),
+                                          //             onTap: () {
+                                          //               showModalBottomSheet(
+                                          //                 isScrollControlled:
+                                          //                     true,
+                                          //                 backgroundColor:
+                                          //                     Colors
+                                          //                         .transparent,
+                                          //                 context: context,
+                                          //                 builder: (context) =>
+                                          //                     makeDismissible(
+                                          //                   child:
+                                          //                       RecipeRateBottomSheet(
+                                          //                     recipeId: recipe
+                                          //                         .recipeId,
+                                          //                   ),
+                                          //                   context: context,
+                                          //                 ),
+                                          //               );
+                                          //             },
+                                          //             child: Padding(
+                                          //               padding:
+                                          //                   const EdgeInsets
+                                          //                           .symmetric(
+                                          //                       horizontal:
+                                          //                           2.0),
+                                          //               child: Row(
+                                          //                 mainAxisAlignment:
+                                          //                     MainAxisAlignment
+                                          //                         .end,
+                                          //                 children: _langCode ==
+                                          //                         'ar'
+                                          //                     ? buildRateButton(
+                                          //                             _screenWidth)
+                                          //                         .reversed
+                                          //                         .toList()
+                                          //                     : buildRateButton(
+                                          //                             _screenWidth)
+                                          //                         .toList(),
+                                          //               ),
+                                          //             ),
+                                          //           ),
+                                          //         ),
+                                          //       ),
+                                          //     ),
+                                          //   ],
+                                          // ),
+                                          // Padding(
+                                          //   padding:
+                                          //       const EdgeInsets.only(top: 8.0),
+                                          //   child: Text(
+                                          //     checkMinuteMinutes(
+                                          //         recipe.prepareTime,
+                                          //         _langCode),
+                                          //     style: TextStyle(
+                                          //       fontSize: _screenWidth * 0.025,
+                                          //       color: Colors.white,
+                                          //       fontWeight: FontWeight.bold,
+                                          //     ),
+                                          //   ),
+                                          // ),
                                         ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Text(
-                                        checkMinuteMinutes(
-                                            recipe.prepareTime, _langCode),
-                                        style: TextStyle(
-                                          fontSize: _screenWidth * 0.025,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
                                       ),
                                     ),
                                   ],

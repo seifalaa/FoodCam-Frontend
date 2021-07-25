@@ -79,5 +79,9 @@
 	"usernameExist": "User with this username already exists",
 	"emailExists": "User with this email already exists",
 	"collectionExists":"This collection already exists",
-	"loginToShowRandomRecipe": "Login to use random recipe"
+	"loginToShowRandomRecipe": "Login to use random recipe",
+	"loginToShowRecentlySearch":"Login to show recently search",
+	"modelError":"Cannot recognize this ingredient",
+	"alreadyExistInDispreferred": "This ingredient already exists in dispreferred ingredients",
+	"alreadyExistInPreferred": "This ingredient already exists in preferred ingredients"
 }

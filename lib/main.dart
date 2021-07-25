@@ -10,7 +10,6 @@ import 'package:foodcam_frontend/pages/login.dart';
 import 'package:foodcam_frontend/pages/preferred_ingredients.dart';
 import 'package:foodcam_frontend/pages/profile.dart';
 import 'package:foodcam_frontend/pages/signup1.dart';
-import 'package:foodcam_frontend/pages/test.dart';
 import 'package:foodcam_frontend/providers/lang_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

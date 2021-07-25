@@ -3,7 +3,6 @@ import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/models/category.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
-import 'package:foodcam_frontend/widgets/search_delegate.dart';
 import '../constants.dart';
 
 class CategoryPage extends StatelessWidget {
@@ -26,19 +25,6 @@ class CategoryPage extends StatelessWidget {
             color: kTextColor,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: CustomSearchDelegate(),
-              );
-            },
-            icon: const Icon(
-              Icons.search,
-            ),
-          ),
-        ],
         backgroundColor: Colors.white,
         elevation: 1,
         centerTitle: true,

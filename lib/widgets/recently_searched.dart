@@ -5,8 +5,8 @@ import 'package:foodcam_frontend/controllers/backend_controller.dart';
 import 'package:foodcam_frontend/models/recipe.dart';
 import 'package:foodcam_frontend/models/user.dart';
 import 'package:foodcam_frontend/pages/empty_recentlysearch_page.dart';
-import 'package:foodcam_frontend/pages/unloggedin_user_page.dart';
 import 'package:foodcam_frontend/widgets/recipe_box.dart';
+import 'package:foodcam_frontend/widgets/unloggedin_user_recent_search_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
@@ -56,7 +56,7 @@ class _RecentlySearchedState extends State<RecentlySearched> {
         builder: (context, snapshot) {
     if (snapshot.connectionState != ConnectionState.waiting) {
       if (snapshot.data == null) {
-        return const UnLoggedInUserPage();
+        return const UnLoggedInUserRecentSearchPage();
       }
       else {
         return StreamBuilder<List<Recipe>>(
