@@ -9,7 +9,7 @@ const String kClientSecret =
     'Xk2Aphx090vmyoaflMkFL3ylTnRWrFU2BDgGBHxGIu0PTKFsP3RfhxWv2qKZrANhmlnItDCrTF5HCMEeNqT6djkIbCicJ9gip6onmVXwZa9sBlUgqVLm17bg18b5MpsA';
 const kMobileScreenSize = 500;
 const kTabletScreenSize = 768;
-const kIpAddress='192.168.8.122';
+const kIpAddress='192.168.1.3';
 const List<String> kCollectionImageUrls = [
   'https://twodevguys.com/foodcam-images/categories/gettyimages-1031354828-612x612.jpg',
   'https://twodevguys.com/foodcam-images/categories/gettyimages-1150012244-612x612.jpg',

@@ -23,146 +23,154 @@ class AddCollectionBottomSheet extends StatelessWidget {
       initialChildSize: 0.8,
       builder: (context, scrollController) => Container(
         color: kBgColor,
-        child: ListView(
-          controller: scrollController,
-          children: [
-            Material(
-              elevation: 1,
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    AppLocalizations.of(context)!.addCollection,
-                    style: const TextStyle(
-                      color: kTextColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
+        child: GestureDetector(
+          onTap: () {
+            final FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: ListView(
+            controller: scrollController,
+            children: [
+              Material(
+                elevation: 1,
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(
+                      AppLocalizations.of(context)!.addCollection,
+                      style: const TextStyle(
+                        color: kTextColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: _collectionNameController,
-                      validator: (input) {
-                        return input == ''
-                            ? AppLocalizations.of(context)!.collectionError
-                            : null;
-                      },
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(
-                            color: Colors.grey.shade500,
+              const SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _collectionNameController,
+                        validator: (input) {
+                          return input == ''
+                              ? AppLocalizations.of(context)!.collectionError
+                              : null;
+                        },
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade500,
+                            ),
                           ),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: const BorderSide(
-                            color: Colors.red,
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(
+                              color: Colors.red,
+                            ),
                           ),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: const BorderSide(
-                            color: Colors.red,
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(
+                              color: Colors.red,
+                            ),
                           ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: const BorderSide(
-                            color: kPrimaryColor,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(
+                              color: kPrimaryColor,
+                            ),
                           ),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: AppLocalizations.of(context)!.collectionName,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20.0,
-                          vertical: 15.0,
-                        ),
-                        hintStyle: const TextStyle(
-                          color: Colors.black38,
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: AppLocalizations.of(context)!.collectionName,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20.0,
+                            vertical: 15.0,
+                          ),
+                          hintStyle: const TextStyle(
+                            color: Colors.black38,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: kPrimaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(100),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: kPrimaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
-                        ),
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            final rand = Random();
-                            final int index =
-                                rand.nextInt(kCollectionImageUrls.length);
-                            final Map<String, dynamic> collectionData = {
-                              "categoryName": _collectionNameController.text,
-                              "categoryImageUrl": kCollectionImageUrls[index],
-                              "recipes": [],
-                            };
-                            final Response response =
-                                await _backendController.addCollection(
-                                    collectionData['categoryName'],
-                                    collectionData['categoryImageUrl']);
-                            String snackbarMesg = '';
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              final rand = Random();
+                              final int index =
+                                  rand.nextInt(kCollectionImageUrls.length);
+                              final Map<String, dynamic> collectionData = {
+                                "categoryName": _collectionNameController.text,
+                                "categoryImageUrl": kCollectionImageUrls[index],
+                                "recipes": [],
+                              };
+                              final Response response =
+                                  await _backendController.addCollection(
+                                      collectionData['categoryName'],
+                                      collectionData['categoryImageUrl']);
+                              String snackbarMesg = '';
 
-                            if (response.body ==
-                                '"collection already exists"') {
-                              snackbarMesg = AppLocalizations.of(context)!
-                                  .collectionExists;
-                              Navigator.pop(context);
-                              final snackBar = SnackBar(
-                                content: Text(
-                                  snackbarMesg,
-                                  style: TextStyle(
-                                    fontFamily: GoogleFonts.cairo().fontFamily,
+                              if (response.body ==
+                                  '"collection already exists"') {
+                                snackbarMesg = AppLocalizations.of(context)!
+                                    .collectionExists;
+                                Navigator.pop(context);
+                                final snackBar = SnackBar(
+                                  content: Text(
+                                    snackbarMesg,
+                                    style: TextStyle(
+                                      fontFamily: GoogleFonts.cairo().fontFamily,
+                                    ),
                                   ),
-                                ),
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: Colors.red,
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            } else {
-                              Navigator.pop(context);
-                              Navigator.pushReplacementNamed(
-                                context,
-                                'collections/',
-                              );
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.red,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else {
+                                Navigator.pop(context);
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  'collections/',
+                                );
+                              }
                             }
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            AppLocalizations.of(context)!.submit,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              AppLocalizations.of(context)!.submit,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

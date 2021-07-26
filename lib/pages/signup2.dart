@@ -63,23 +63,31 @@ class _SignupState extends State<Signup> {
             ),
           ),
         ),
-        body: ListView(
-          shrinkWrap: true,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: SignupForm(
-                formKey: _formKey,
-                usernameController: _usernameController,
-                passwordController: _passwordController,
-                repeatPasswordController: _rePasswordController,
-                emailController: _emailController,
-                firstName: widget.firstName,
-                lastName: widget.lastName,
-                onSignup: onSignup,
-              ),
-            )
-          ],
+        body: GestureDetector(
+          onTap: () {
+            final FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: SignupForm(
+                  formKey: _formKey,
+                  usernameController: _usernameController,
+                  passwordController: _passwordController,
+                  repeatPasswordController: _rePasswordController,
+                  emailController: _emailController,
+                  firstName: widget.firstName,
+                  lastName: widget.lastName,
+                  onSignup: onSignup,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -133,8 +141,7 @@ class _SignupState extends State<Signup> {
         });
         if (_responseJson['username'] != null &&
             _responseJson['email'] != null) {
-          final String _langCode =
-              Localizations.localeOf(context).languageCode;
+          final String _langCode = Localizations.localeOf(context).languageCode;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.red,
@@ -149,8 +156,7 @@ class _SignupState extends State<Signup> {
             ),
           );
         } else if (_responseJson['username'] != null) {
-          final String _langCode =
-              Localizations.localeOf(context).languageCode;
+          final String _langCode = Localizations.localeOf(context).languageCode;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.red,

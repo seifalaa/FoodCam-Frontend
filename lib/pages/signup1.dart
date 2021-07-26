@@ -51,42 +51,50 @@ class _Signup1State extends State<Signup1> {
           ),
         ),
       ),
-      body: LoadingOverlay(
-        isLoading: _isLoading,
-        color: Colors.black,
-        opacity: 0.3,
-        progressIndicator: const CircularProgressIndicator(
-          color: kPrimaryColor,
-        ),
-        child: Center(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              SignupForm1(
-                firstNameController: _firstNameController,
-                lastNameController: _lastNameController,
-                formKey: _formKey,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 40.0),
-                child: SocialAuth(
-                  onGoogleAuth: onGoogleAuth,
-                  onFacebookAuth: onFacebookAuth,
+      body: GestureDetector(
+        onTap: () {
+          final FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: LoadingOverlay(
+          isLoading: _isLoading,
+          color: Colors.black,
+          opacity: 0.3,
+          progressIndicator: const CircularProgressIndicator(
+            color: kPrimaryColor,
+          ),
+          child: Center(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                SignupForm1(
+                  firstNameController: _firstNameController,
+                  lastNameController: _lastNameController,
+                  formKey: _formKey,
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(AppLocalizations.of(context)!.haveAccount),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(AppLocalizations.of(context)!.login),
-                  )
-                ],
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 40.0),
+                  child: SocialAuth(
+                    onGoogleAuth: onGoogleAuth,
+                    onFacebookAuth: onFacebookAuth,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(AppLocalizations.of(context)!.haveAccount),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(AppLocalizations.of(context)!.login),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
