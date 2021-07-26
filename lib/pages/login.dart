@@ -58,49 +58,50 @@ class _LoginState extends State<Login> {
             ),
           ),
         ),
-        body: Stack(
-          children: [
-            //CustomPaint(
-            //  painter: BG(context: context),
-            //),
-            Center(
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  LoginForm(
-                    emailController: _emailController,
-                    passwordController: _passwordController,
-                    formKey: _formKey,
-                    onLogin: onLogin,
+        body: GestureDetector(
+          onTap: (){
+            final FocusScopeNode currentFocus = FocusScope.of(context);
+            if(!currentFocus.hasPrimaryFocus){
+              currentFocus.unfocus();
+            }
+          },
+          child: Center(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                LoginForm(
+                  emailController: _emailController,
+                  passwordController: _passwordController,
+                  formKey: _formKey,
+                  onLogin: onLogin,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 40.0),
+                  child: SocialAuth(
+                    onFacebookAuth: onFacebookAuth,
+                    onGoogleAuth: onGoogleAuth,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40.0),
-                    child: SocialAuth(
-                      onFacebookAuth: onFacebookAuth,
-                      onGoogleAuth: onGoogleAuth,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(AppLocalizations.of(context)!.dontHaveAccount),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Signup1(),
-                            ),
-                          );
-                        },
-                        child: Text(AppLocalizations.of(context)!.signup),
-                      )
-                    ],
-                  ),
-                ],
-              ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(AppLocalizations.of(context)!.dontHaveAccount),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Signup1(),
+                          ),
+                        );
+                      },
+                      child: Text(AppLocalizations.of(context)!.signup),
+                    )
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

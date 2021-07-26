@@ -1,8 +1,9 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:foodcam_frontend/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:foodcam_frontend/constants.dart';
 class CustomButtonNavigationBar extends StatelessWidget {
   const CustomButtonNavigationBar({Key? key}) : super(key: key);
 
@@ -10,7 +11,7 @@ class CustomButtonNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final double _screenHeight = MediaQuery.of(context).size.height;
     return SizedBox(
-      height: _screenHeight * 0.109,
+      height: Platform.isIOS?_screenHeight * 0.109:_screenHeight * 0.09,
       child: ClipRRect(
         borderRadius: const BorderRadius.only(
           topRight: Radius.circular(20),
